@@ -1,9 +1,5 @@
-
-
 const Notfoun = () => {
-  return (
-    <div>Notfoun</div>
-  )
-}
+  return <div>Notfoun</div>;
+};
 
-export default Notfoun
+export default Notfoun;
