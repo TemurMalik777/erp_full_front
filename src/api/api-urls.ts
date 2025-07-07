@@ -4,4 +4,7 @@ export class ApiUrls {
 
   //groups
   public static GROUPS: string = "/group";
+
+  //course
+  public static COURSE: string = "/courses";
 }

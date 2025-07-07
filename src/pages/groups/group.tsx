@@ -1,141 +1,194 @@
 import { useEffect, useState } from "react";
-import { Outlet } from "react-router-dom";
-import { GroupService } from "@service";
-import { Button, Table, type TablePaginationConfig } from "antd";
-import type { ColumnsType } from "antd/es/table";
+import { Button, Table, message } from "antd";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import GroupModal from "./modal";
 import type { Group } from "@types";
-import GroupFormModal from "./modal";
+import { CoursService, GroupService } from "@service";
 
-const Group = () => {
-  const [groups, setGroups] = useState<Group[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+interface GroupWithId extends Group {
+  id: number;
+  created_at?: string;
+  updated_at?: string;
+}
+
+interface Course {
+  id: number;
+  title: string;
+}
+
+function Groups() {
+  const [groups, setGroups] = useState<GroupWithId[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 10,
-    total: 1000,
+    pageSize: 5,
+    total: 0,
   });
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editData, setEditData] = useState<Group | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editData, setEditData] = useState<GroupWithId | null>(null);
 
-  const featchGroups = async (page: number, pageSize: number) => {
+  const fetchGroups = async (page: number, pageSize: number) => {
     setLoading(true);
-    const response = await GroupService.getGroups();
-    if (response?.data?.data) {
-      setGroups(response.data.data);
-      setPagination({
-        ...pagination,
-        current: page,
-        pageSize: pageSize,
-        total: response.data.data.length,
-      });
+    try {
+      const response = await GroupService.getGroups();
+      if (response?.data?.data) {
+        setGroups(response.data.data);
+        setPagination({
+          ...pagination,
+          current: page,
+          pageSize,
+          total: response.data.data.length,
+        });
+      }
+    } catch {
+      message.error("Ma'lumotlarni yuklashda xatolik yuz berdi");
     }
     setLoading(false);
   };
 
-  const handleDelete = async (id: number, onSuccess: () => void) => {
+  const fetchCourses = async () => {
     try {
-      await GroupService.deleteGroup(id);
-      onSuccess();
-    } catch (err) {
-      console.error("O‘chirishda xatolik:", err);
+      const res = await CoursService.getCourses();
+      
+      if (res && res.data && res.data.courses) {
+        setCourses(res.data.courses);
+      } else {
+        setCourses([]);
+      }
+    } catch {
+      message.error("Kurslarni yuklashda xatolik");
     }
   };
 
   useEffect(() => {
-    featchGroups(pagination.current!, pagination.pageSize!);
+    fetchGroups(pagination.current!, pagination.pageSize!);
+    fetchCourses();
   }, []);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    featchGroups(pagination.current!, pagination.pageSize!);
+    fetchGroups(pagination.current!, pagination.pageSize!);
   };
-  const columns: ColumnsType<Group> = [
-    {
-      title: "Nomi",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-    },
-    {
-      title: "Kurs ID",
-      dataIndex: "course_id",
-      key: "course_id",
-    },
-    {
-      title: "Boshlanish",
-      dataIndex: "start_date",
-      key: "start_date",
-    },
-    {
-      title: "Tugash",
-      dataIndex: "end_date",
-      key: "end_date",
-    },
+
+  const handleDelete = async (id: number) => {
+    try {
+      await GroupService.deleteGroup(id);
+      message.success("Guruh o‘chirildi");
+      fetchGroups(pagination.current!, pagination.pageSize!);
+    } catch {
+      message.error("O‘chirishda xatolik yuz berdi");
+    }
+  };
+
+  const handleSubmit = async (values: Group) => {
+    const payload = {
+      name: values.name,
+      course_id: values.course_id,
+      status: values.status,
+      start_date: values.start_date,
+      end_date: values.end_date,
+    };
+
+    try {
+      if (editData) {
+        const res = await GroupService.updateGroup(editData.id, payload);
+       
+        if (res?.status === 200) {
+          message.success("Guruh tahrirlandi");
+        }
+      } else {
+        const res = await GroupService.createGroup(payload);
+        if (res?.status === 201 || res?.status === 200) {
+          message.success("Guruh yaratildi");
+        }
+      }
+      fetchGroups(pagination.current!, pagination.pageSize!);
+      setIsModalOpen(false);
+      setEditData(null);
+    } catch {
+      message.error("Yaratishda yoki tahrirlashda xatolik");
+    }
+  };
+
+  const columns: ColumnsType<GroupWithId> = [
+    { title: "Nomi", dataIndex: "name", key: "name" },
+    { title: "Status", dataIndex: "status", key: "status" },
+    { title: "Kurs ID", dataIndex: "course_id", key: "course_id" },
+    { title: "Boshlanish", dataIndex: "start_date", key: "start_date" },
+    { title: "Tugash", dataIndex: "end_date", key: "end_date" },
     {
       title: "Amallar",
+      key: "actions",
       render: (_, record) => (
-        <>
+        <div style={{ display: "flex", gap: 8 }}>
           <Button
             onClick={() => {
               setEditData(record);
-              setModalOpen(true);
+              setIsModalOpen(true);
             }}
-            style={{ marginRight: 8 }}
           >
             Tahrirlash
           </Button>
-
-          <Button
-            danger
+          <Button danger
             onClick={() => {
               if (window.confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
-                handleDelete(record.id, () =>
-                  featchGroups(pagination.current!, pagination.pageSize!)
-                );
+                  handleDelete(record.id)
+                
               }
-            }}
-          >
+            }}>
             O‘chirish
           </Button>
-        </>
+        </div>
       ),
     },
   ];
+
   return (
     <div>
-      <h1>Guruhlar</h1>
-      <Button
-        type="primary"
-        onClick={() => {
-          setEditData(null); // create uchun
-          setModalOpen(true);
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 16,
         }}
-        style={{ marginBottom: 16 }}
       >
-        Yangi guruh
-      </Button>
+        <h2>Guruhlar</h2>
+        <Button
+          type="primary"
+          onClick={() => {
+            setEditData(null);
+            setIsModalOpen(true);
+          }}
+        >
+          + Guruh qo‘shish
+        </Button>
+      </div>
+
       <Table
         columns={columns}
         dataSource={groups}
         loading={loading}
-        rowKey={(record) => record.id.toString()}
+        rowKey={(record) => record.id}
         pagination={pagination}
         onChange={handleTableChange}
       />
-      <GroupFormModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSuccess={() =>
-          featchGroups(pagination.current!, pagination.pageSize!)
-        }
-        initialValues={editData}
+
+      <GroupModal
+        visible={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditData(null);
+        }}
+        onSubmit={handleSubmit}
+        editData={editData ?? undefined}
+        courses={courses}
       />
-      <Outlet />
     </div>
   );
-};
+}
 
-export default Group;
+export default Groups;
+
+
+
+

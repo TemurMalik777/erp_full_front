@@ -6,4 +6,9 @@ import Router from "./routes/route.tsx";
 import "@ant-design/v5-patch-for-react-19";
 // import tailwindcss from '@tailwindcss/vite'
 
-createRoot(document.getElementById("root")!).render(<Router />);
+createRoot(document.getElementById("root")!).render (<Router />);
+// export default defineConfig({
+//   plugins: [
+//     tailwindcss(),
+//   ],
+// })
