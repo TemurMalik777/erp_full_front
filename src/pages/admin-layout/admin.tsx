@@ -69,13 +69,13 @@ const Admin: React.FC = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-            <Groups />
+            {/* <Groups /> */}
             {/* Outlet ichida child routes chiqadi */}
             <Outlet />
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+          №1 programmer ©{new Date().getFullYear()} Created by Khuja
         </Footer>
       </Layout>
     </Layout>
