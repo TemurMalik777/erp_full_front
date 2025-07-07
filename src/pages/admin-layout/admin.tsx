@@ -39,7 +39,7 @@ const items: MenuProps["items"] = [
   {
     key: "1",
     icon: React.createElement(UserOutlined),
-    label: <Link to="groups">Groups</Link>, // Birinchi sahifa Groups bo'ldi
+    label: <p>Groups</p>, // Birinchi sahifa Groups bo'ldi
   },
   // Kerak bo‘lsa boshqa menyularni qo‘shing
 ];
@@ -73,9 +73,9 @@ const Admin: React.FC = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
+        {/* <Footer style={{ textAlign: "center" }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        </Footer> */}
       </Layout>
     </Layout>
   );
