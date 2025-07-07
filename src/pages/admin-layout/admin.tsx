@@ -21,6 +21,7 @@ import {
 import type { MenuProps } from "antd";
 import { Layout, Menu, theme } from "antd";
 import { Groups } from "@pages";
+// import group from "../groups";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -39,7 +40,7 @@ const items: MenuProps["items"] = [
   {
     key: "1",
     icon: React.createElement(UserOutlined),
-    label: <p>Groups</p>, // Birinchi sahifa Groups bo'ldi
+    label: <Link to="/admin" >Group</Link>, // Birinchi sahifa Groups bo'ldi
   },
   // Kerak bo‘lsa boshqa menyularni qo‘shing
 ];
@@ -73,9 +74,9 @@ const Admin: React.FC = () => {
             <Outlet />
           </div>
         </Content>
-        {/* <Footer style={{ textAlign: "center" }}>
+        <Footer style={{ textAlign: "center" }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer> */}
+        </Footer>
       </Layout>
     </Layout>
   );

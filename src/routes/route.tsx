@@ -22,8 +22,8 @@ const Router = () => {
         <Route index element={<SignIn />} />
         <Route path="sign-up" element={<SignUp />} />
         {/* AdminLayout */}
-        <Route path="admin" element={<AdminLayout />}>
-          <Route path="group" element={<Groups />} />
+        <Route path="admin/" element={<AdminLayout />}>
+          <Route index element={<Groups />} />
         </Route>
         <Route path="teacher" element={<TeacherLayout />}></Route>
         <Route path="student" element={<StudentLayout />}></Route>
