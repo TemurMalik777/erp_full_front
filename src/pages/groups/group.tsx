@@ -11,8 +11,8 @@ const Group = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 5,
-    total: 0,
+    pageSize: 10,
+    total: 1000,
   });
   const [modalOpen, setModalOpen] = useState(false);
   const [editData, setEditData] = useState<Group | null>(null);
@@ -90,11 +90,13 @@ const Group = () => {
 
           <Button
             danger
-            onClick={() =>
-              handleDelete(record.id, () =>
-                featchGroups(pagination.current!, pagination.pageSize!)
-              )
-            }
+            onClick={() => {
+              if (window.confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
+                handleDelete(record.id, () =>
+                  featchGroups(pagination.current!, pagination.pageSize!)
+                );
+              }
+            }}
           >
             O‘chirish
           </Button>

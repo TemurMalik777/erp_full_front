@@ -1,22 +1,33 @@
-import { useState } from "react";
-import { authService } from "@service";
 import { useNavigate } from "react-router-dom";
+import { authService } from "@service";
 import { setItem } from "../../helpers";
-import { Button, Form, Input, Select, Card, Typography, message } from "antd";
+import { Button, Card, Typography, message, Select, Input } from "antd";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
 
 const { Title } = Typography;
+const { Option } = Select;
+
+// Yup validatsiya sxemasi
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Please enter a valid email address!")
+    .required("Please input your email!"),
+  password: Yup.string()
+    .min(6, "Password must be at least 6 characters!")
+    .required("Please input your password!"),
+  role: Yup.string().required("Please select your role!"),
+});
 
 const SignIn = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const submit = async () => {
-    setLoading(true);
+  // Submit funksiyasi
+  const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
+      const { email, password, role } = values;
       const payload = { email, password };
+
       const res = await authService.signIn(payload, role);
       if (res.status === 201) {
         setItem("access_token", res.data.access_token);
@@ -28,22 +39,13 @@ const SignIn = () => {
       console.error("Login failed:", error);
       message.error("Login failed. Please check your credentials.");
     } finally {
-      setLoading(false);
+      setSubmitting(false);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <Card
-        style={{
-          // height: "100vh",
-          // display: "flex",
-
-          width: 400,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <Card>
         <div className="text-center mb-8">
           <Title level={2} className="!mb-2">
             Sign In
@@ -51,80 +53,74 @@ const SignIn = () => {
           <p className="text-gray-500">Please enter your credentials</p>
         </div>
 
-        <Form layout="vertical" onFinish={submit}>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Please input your email!",
-              },
-              {
-                type: "email",
-                message: "Please enter a valid email address!",
-              },
-            ]}
-          >
-            <Input
-              type="email"
-              size="large"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
-            />
-          </Form.Item>
+        <Formik
+          initialValues={{ email: "", password: "", role: "" }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting, setFieldValue, values, errors, touched }) => (
+            <Form>
+              <div className="mb-4">
+                <label htmlFor="email">Email</label>
+                <Field
+                  as={Input}
+                  name="email"
+                  type="email"
+                  size="large"
+                  placeholder="Enter your email"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Please input your password!",
-              },
-              {
-                min: 6,
-                message: "Password must be at least 6 characters!",
-              },
-            ]}
-          >
-            <Input.Password
-              size="large"
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Enter your password"
-            />
-          </Form.Item>
+              <div className="mb-4">
+                <label htmlFor="password">Password</label>
+                <Field
+                  as={Input.Password}
+                  name="password"
+                  size="large"
+                  placeholder="Enter your password"
+                />
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="text-red-500 text-sm"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="role">Role</label>
+                <Select
+                  size="large"
+                  placeholder="Select your role"
+                  onChange={(value) => setFieldValue("role", value)}
+                  value={values.role || undefined}
+                >
+                  <Option value="teacher">Teacher</Option>
+                  <Option value="student">Student</Option>
+                  <Option value="admin">Admin</Option>
+                  <Option value="lid">Lid</Option>
+                </Select>
+                {errors.role && touched.role ? (
+                  <div className="text-red-500 text-sm">{errors.role}</div>
+                ) : null}
+              </div>
 
-          <Form.Item
-            label="Role"
-            name="role"
-            rules={[{ required: true, message: "Please select your role!" }]}
-          >
-            <Select
-              size="large"
-              onChange={(value) => setRole(value)}
-              placeholder="Select your role"
-            >
-              <Select.Option value="teacher">Teacher</Select.Option>
-              <Select.Option value="student">Student</Select.Option>
-              <Select.Option value="admin">Admin</Select.Option>
-              <Select.Option value="lid">Lid</Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              size="large"
-              loading={loading}
-              block
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              Sign In
-            </Button>
-          </Form.Item>
-        </Form>
+              <Button
+                type="primary"
+                htmlType="submit"
+                size="large"
+                loading={isSubmitting}
+                block
+                className="bg-blue-600 hover:bg-blue-700"
+              >
+                Sign In
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </Card>
     </div>
   );
