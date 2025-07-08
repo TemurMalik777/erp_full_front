@@ -131,12 +131,17 @@ const items: MenuProps["items"] = [
   {
     key: "2",
     icon: React.createElement(TeamOutlined),
-    label: <Link to="/student">Students</Link>,
+    label: <Link to="/admin/student">Students</Link>,
   },
   {
     key: "3",
+    icon: React.createElement(BookOutlined),
+    label: <Link to="/admin/courses">Courses</Link>,
+  },
+  {
+    key: "4",
     icon: React.createElement(UserOutlined),
-    label: <Link to="/teacher">Teacher</Link>,
+    label: <Link to="/admin/teacher">Teacher</Link>,
   },
 ];
 

@@ -1,120 +1,100 @@
 import { useEffect, useState } from "react";
 import { Button, Table, message } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
-import GroupModal from "./modal";
-import type { Group } from "@types";
-import { CoursService, GroupService } from "@service";
+import type { Course } from "@types";
+import { CoursService } from "@service";
+import Coursesmodal from "./course-modal";
 
-interface GroupWithId extends Group {
+interface CourseWithId extends Course {
   id: number;
-  created_at?: string;
-  updated_at?: string;
+  // qo‘shimcha maydonlar bo‘lsa qo‘shishingiz mumkin
 }
 
-interface Course {
-  id: number;
-  title: string;
-}
-
-function Groups() {
-  const [groups, setGroups] = useState<GroupWithId[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
+function Courses() {
+  const [courses, setCourses] = useState<CourseWithId[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 5,
-    total: 1000,
+    total: 0,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editData, setEditData] = useState<GroupWithId | null>(null);
+  const [editData, setEditData] = useState<CourseWithId | null>(null);
 
-  const fetchGroups = async (page: number, pageSize: number) => {
+  const fetchCourses = async (page: number, pageSize: number) => {
     setLoading(true);
     try {
-      const response = await GroupService.getGroups();
-      if (response?.data?.data) {
-        setGroups(response.data.data);
+      const res = await CoursService.getCourses();
+      if (res?.data?.courses) {
+        setCourses(res.data.courses);
         setPagination({
           ...pagination,
           current: page,
           pageSize,
-          total: response.data.data.length,
+          total: res.data.courses.length,
         });
       }
     } catch {
-      message.error("Ma'lumotlarni yuklashda xatolik yuz berdi");
+      message.error("Kurslarni yuklashda xatolik yuz berdi");
     }
     setLoading(false);
   };
 
-  const fetchCourses = async () => {
-    try {
-      const res = await CoursService.getCourses();
-
-      if (res && res.data && res.data.courses) {
-        setCourses(res.data.courses);
-      } else {
-        setCourses([]);
-      }
-    } catch {
-      message.error("Kurslarni yuklashda xatolik");
-    }
-  };
-
   useEffect(() => {
-    fetchGroups(pagination.current!, pagination.pageSize!);
-    fetchCourses();
+    fetchCourses(pagination.current!, pagination.pageSize!);
   }, []);
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    fetchGroups(pagination.current!, pagination.pageSize!);
+    fetchCourses(pagination.current!, pagination.pageSize!);
   };
 
   const handleDelete = async (id: number) => {
     try {
-      await GroupService.deleteGroup(id);
-      message.success("Guruh o‘chirildi");
-      fetchGroups(pagination.current!, pagination.pageSize!);
+      await CoursService.deleteCourses(id);
+      message.success("Kurs o‘chirildi");
+      fetchCourses(pagination.current!, pagination.pageSize!);
     } catch {
       message.error("O‘chirishda xatolik yuz berdi");
     }
   };
 
-  const handleSubmit = async (values: Group) => {
+  const handleSubmit = async (values: Course) => {
     const payload = {
-      name: values.name,
-      course_id: values.course_id,
-      status: values.status,
-      start_date: values.start_date,
-      end_date: values.end_date,
+      title: values.title,
+      description: values.description,
+      price: values.price,
+      duration: values.duration,
+      lessons_in_a_week: values.lessons_in_a_week,
+      lesson_duration: values.lesson_duration,
     };
 
     try {
       if (editData) {
-        const res = await GroupService.updateGroup(payload, editData.id);
+        const res = await CoursService.updateCourses(payload, editData.id);
         if (res?.status === 200) {
-          message.success("Guruh tahrirlandi");
+          message.success("Kurs tahrirlandi");
         }
       } else {
-        const res = await GroupService.createGroup(payload);
+        const res = await CoursService.createCourses(payload);
         if (res?.status === 201 || res?.status === 200) {
-          message.success("Guruh yaratildi");
+          message.success("Kurs yaratildi");
         }
       }
-      fetchGroups(pagination.current!, pagination.pageSize!);
+      fetchCourses(pagination.current!, pagination.pageSize!);
       setIsModalOpen(false);
       setEditData(null);
     } catch {
-      message.error("Yaratishda yoki tahrirlashda xatolik");
+      message.error("Yaratishda yoki tahrirlashda xatolik yuz berdi");
     }
   };
 
-  const columns: ColumnsType<GroupWithId> = [
-    { title: "Nomi", dataIndex: "name", key: "name" },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Kurs ID", dataIndex: "course_id", key: "course_id" },
-    { title: "Boshlanish", dataIndex: "start_date", key: "start_date" },
-    { title: "Tugash", dataIndex: "end_date", key: "end_date" },
+  const columns: ColumnsType<CourseWithId> = [
+    { title: "Nomi", dataIndex: "title", key: "title" },
+    { title: "Tavsif", dataIndex: "description", key: "description" },
+    { title: "Narxi", dataIndex: "price", key: "price" },
+    { title: "Davomiyligi", dataIndex: "duration", key: "duration" },
+    { title: "Haftada darslar soni", dataIndex: "lessons_in_a_week", key: "lessons_in_a_week" },
+    { title: "Dars davomiyligi", dataIndex: "lesson_duration", key: "lesson_duration" },
     {
       title: "Amallar",
       key: "actions",
@@ -152,7 +132,7 @@ function Groups() {
           marginBottom: 16,
         }}
       >
-        <h2>Guruhlar</h2>
+        <h2>Kurslar</h2>
         <Button
           type="primary"
           onClick={() => {
@@ -160,20 +140,20 @@ function Groups() {
             setIsModalOpen(true);
           }}
         >
-          + Guruh qo‘shish
+          + Kurs qo‘shish
         </Button>
       </div>
 
       <Table
         columns={columns}
-        dataSource={groups}
+        dataSource={courses}
         loading={loading}
         rowKey={(record) => record.id}
         pagination={pagination}
         onChange={handleTableChange}
       />
 
-      <GroupModal
+      <Coursesmodal
         visible={isModalOpen}
         onClose={() => {
           setIsModalOpen(false);
@@ -181,10 +161,9 @@ function Groups() {
         }}
         onSubmit={handleSubmit}
         editData={editData ?? undefined}
-        courses={courses}
       />
     </div>
   );
 }
 
-export default Groups;
+export default Courses;

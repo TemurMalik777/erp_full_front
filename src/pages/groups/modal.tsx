@@ -12,7 +12,7 @@ import * as Yup from "yup";
 import dayjs from "dayjs";
 
 const { Option } = Select;
-
+// const {mutate, isPending} = useGroupCreate()
 export interface Group {
   name: string;
   course_id: number;
@@ -126,8 +126,9 @@ const GroupModal: React.FC<GroupModalProps> = ({
               />
               <ErrorMessage name="end_date" component="div" />
             </AntForm.Item>
-
-            <Button type="primary" htmlType="submit" block>
+            <Button type="primary" htmlType="submit" 
+            // loading={isPending} 
+            block>
               Saqlash
             </Button>
           </Form>

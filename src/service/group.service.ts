@@ -1,6 +1,6 @@
 import { ApiUrls } from "@api/api-urls";
 import { apiConfig } from "@api/config";
-import type { Group } from "../types";
+import type { Group } from "@types";
 
 export const GroupService = {
   async getGroups() {
@@ -13,7 +13,7 @@ export const GroupService = {
     return res;
   },
 
-  async updateGroup(id: number, model: Partial<Group>) {
+  async updateGroup(model: Group, id: number): Promise<any> {
     const res = await apiConfig().patchRequest(
       `${ApiUrls.GROUPS}/${id}`,
       model

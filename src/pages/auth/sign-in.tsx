@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { authService } from "@service";
+// import { authService } from "@service";
 import { setItem } from "../../helpers";
 import { Button, Card, Typography, message, Select, Input } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import { useAuth } from "@hooks";
+// import Button from "antd";
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -21,20 +23,47 @@ const validationSchema = Yup.object().shape({
 
 const SignIn = () => {
   const navigate = useNavigate();
+  const { mutate, isPending } = useAuth();
+  // const submit = () => {
+  //   const payload = { email, password };
+  //   mutate(
+  //     { data: payload, role },
+  //     {
+  //       onSuccess: (res: any) => {
+  //         if (res.status === 201) {
+  //           setItem("access_token", res.data.access_token);
+  //           setItem("role", role);
+  //           navigate(`/${role}`);
+  //         }
+  //       },
+  //     }
+  //   );
+  // };
 
   // Submit funksiyasi
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
       const { email, password, role } = values;
       const payload = { email, password };
-
-      const res = await authService.signIn(payload, role);
-      if (res.status === 201) {
-        setItem("access_token", res.data.access_token);
-        setItem("role", role);
-        message.success("Login successful!");
-        navigate(`${role}`);
-      }
+      mutate(
+        { data: payload, role },
+        {
+          onSuccess: (res: any) => {
+            if (res.status === 201) {
+              setItem("access_token", res.data.access_token);
+              setItem("role", role);
+              navigate(`/${role}`);
+            }
+          },
+        }
+      );
+      // const res = await authService.signIn(payload, role);
+      // if (res.status === 201) {
+      //   setItem("access_token", res.data.access_token);
+      //   setItem("role", role);
+      //   message.success("Login successful!");
+      //   navigate(`${role}`);
+      // }
     } catch (error) {
       console.error("Login failed:", error);
       message.error("Login failed. Please check your credentials.");
@@ -44,9 +73,14 @@ const SignIn = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    // flex items-center 
+    // justify-center min-h-[50%] max-h-[50%] max-w-[50%] 
+    <div className="
+    "
+      // bg-gray-50
+    >
       <Card>
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 max-w-[50%]">
           <Title level={2} className="!mb-2">
             Sign In
           </Title>
@@ -58,7 +92,9 @@ const SignIn = () => {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, setFieldValue, values, errors, touched }) => (
+          {({
+            //  isSubmitting,
+              setFieldValue, values, errors, touched }) => (
             <Form>
               <div className="mb-4">
                 <label htmlFor="email">Email</label>
@@ -108,7 +144,7 @@ const SignIn = () => {
                 ) : null}
               </div>
 
-              <Button
+              {/* <Button
                 type="primary"
                 htmlType="submit"
                 size="large"
@@ -117,7 +153,8 @@ const SignIn = () => {
                 className="bg-blue-600 hover:bg-blue-700"
               >
                 Sign In
-              </Button>
+              </Button> */}
+              <Button type="primary" htmlType="submit" loading={isPending}>Sign In</Button>
             </Form>
           )}
         </Formik>

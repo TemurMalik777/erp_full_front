@@ -12,6 +12,7 @@ import {
   TeacherLayout,
   StudentLayout,
   Groups,
+  Course,
 } from "@pages";
 const App = lazy(() => import("../App"));
 
@@ -24,9 +25,11 @@ const Router = () => {
         {/* AdminLayout */}
         <Route path="admin/" element={<AdminLayout />}>
           <Route index element={<Groups />} />
-        </Route>
-        <Route path="teacher" element={<TeacherLayout />}></Route>
+          {/* <Route path="group" element={<Groups />} /> */}
+        <Route path="courses" element={<Course />}/>
         <Route path="student" element={<StudentLayout />}></Route>
+        <Route path="teacher" element={<TeacherLayout />}></Route>
+        </Route>
       </Route>
     )
   );
