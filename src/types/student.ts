@@ -11,4 +11,6 @@ export interface Student{
   lidId: number,
   eventsId: number[],
   groupsId: number[]
+  //   eventsId: number,
+  // groupsId: number
 }

@@ -24,23 +24,6 @@ const validationSchema = Yup.object().shape({
 const SignIn = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useAuth();
-  // const submit = () => {
-  //   const payload = { email, password };
-  //   mutate(
-  //     { data: payload, role },
-  //     {
-  //       onSuccess: (res: any) => {
-  //         if (res.status === 201) {
-  //           setItem("access_token", res.data.access_token);
-  //           setItem("role", role);
-  //           navigate(`/${role}`);
-  //         }
-  //       },
-  //     }
-  //   );
-  // };
-
-  // Submit funksiyasi
   const handleSubmit = async (values: any, { setSubmitting }: any) => {
     try {
       const { email, password, role } = values;

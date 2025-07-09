@@ -32,6 +32,9 @@
       "@hooks": [
         "./src/hooks"
       ],
+      "@helpers": [
+        "./src/helpers"
+      ],
     },
     /* Bundler mode */
     "moduleResolution": "bundler",

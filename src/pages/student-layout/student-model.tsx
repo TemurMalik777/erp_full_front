@@ -50,8 +50,8 @@ const StudentModal: React.FC<StudentModalProps> = ({
     lidId: 0,
     // eventsId: [],
     // groupsId: [],
-    eventsId: [] as number[],
-    groupsId: [] as number[],
+    eventsId:[],
+    groupsId:[],
   };
 
   return (
