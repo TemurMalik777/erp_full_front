@@ -14,8 +14,8 @@ function Courses() {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 5,
-    total: 0,
+    pageSize: 10,
+    total: 1000,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState<CourseWithId | null>(null);
@@ -34,7 +34,7 @@ function Courses() {
         });
       }
     } catch {
-      message.error("Kurslarni yuklashda xatolik yuz berdi");
+      message.error("Failed to load courses");
     }
     setLoading(false);
   };
@@ -50,10 +50,10 @@ function Courses() {
   const handleDelete = async (id: number) => {
     try {
       await CoursService.deleteCourses(id);
-      message.success("Kurs o‘chirildi");
+      message.success("Course deleted");
       fetchCourses(pagination.current!, pagination.pageSize!);
     } catch {
-      message.error("O‘chirishda xatolik yuz berdi");
+      message.error("An error occurred while deleting");
     }
   };
 
@@ -71,31 +71,39 @@ function Courses() {
       if (editData) {
         const res = await CoursService.updateCourses(payload, editData.id);
         if (res?.status === 200) {
-          message.success("Kurs tahrirlandi");
+          message.success("Course updated");
         }
       } else {
         const res = await CoursService.createCourses(payload);
         if (res?.status === 201 || res?.status === 200) {
-          message.success("Kurs yaratildi");
+          message.success("Course created");
         }
       }
       fetchCourses(pagination.current!, pagination.pageSize!);
       setIsModalOpen(false);
       setEditData(null);
     } catch {
-      message.error("Yaratishda yoki tahrirlashda xatolik yuz berdi");
+      message.error("An error occurred while creating or updating");
     }
   };
 
   const columns: ColumnsType<CourseWithId> = [
-    { title: "Nomi", dataIndex: "title", key: "title" },
-    { title: "Tavsif", dataIndex: "description", key: "description" },
-    { title: "Narxi", dataIndex: "price", key: "price" },
-    { title: "Davomiyligi", dataIndex: "duration", key: "duration" },
-    { title: "Haftada darslar soni", dataIndex: "lessons_in_a_week", key: "lessons_in_a_week" },
-    { title: "Dars davomiyligi", dataIndex: "lesson_duration", key: "lesson_duration" },
+    { title: "Title", dataIndex: "title", key: "title" },
+    { title: "Description", dataIndex: "description", key: "description" },
+    { title: "Price", dataIndex: "price", key: "price" },
+    { title: "Duration", dataIndex: "duration", key: "duration" },
     {
-      title: "Amallar",
+      title: "Lessons per Week",
+      dataIndex: "lessons_in_a_week",
+      key: "lessons_in_a_week",
+    },
+    {
+      title: "Lesson Duration",
+      dataIndex: "lesson_duration",
+      key: "lesson_duration",
+    },
+    {
+      title: "Actions",
       key: "actions",
       render: (_, record) => (
         <div style={{ display: "flex", gap: 8 }}>
@@ -105,17 +113,17 @@ function Courses() {
               setIsModalOpen(true);
             }}
           >
-            Tahrirlash
+            Edit
           </Button>
           <Button
             danger
             onClick={() => {
-              if (window.confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
+              if (window.confirm("Are you sure you want to delete this course?")) {
                 handleDelete(record.id);
               }
             }}
           >
-            O‘chirish
+            Delete
           </Button>
         </div>
       ),
@@ -131,7 +139,7 @@ function Courses() {
           marginBottom: 16,
         }}
       >
-        <h2>Kurslar</h2>
+        <h2>Courses</h2>
         <Button
           type="primary"
           onClick={() => {
@@ -139,7 +147,7 @@ function Courses() {
             setIsModalOpen(true);
           }}
         >
-          + Kurs qo‘shish
+          + Add Course
         </Button>
       </div>
 

@@ -11,4 +11,7 @@ export class ApiUrls {
   //student
   public static STUDENT: string = "/student";
 
+  //barnch
+  public static BRANCH: string = "/branches";
+
 }

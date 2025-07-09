@@ -1,144 +1,3 @@
-// import React from "react";
-// import { Modal, Input, Form as AntForm, Button, Option  } from "antd";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import * as Yup from "yup";
-// import type { Course } from "@types";
-// const { Option } = Select;
-
-// interface CourseModalProps {
-//   visible: boolean;
-//   onClose: () => void;
-//   onSubmit: (values: Course) => void;
-//   editData?: Course;
-// }
-
-// const validationSchema = Yup.object({
-//   title: Yup.string().required("Kurs nomi majburiy"),
-//   description: Yup.string().required("Tavsif majburiy"),
-//   price: Yup.number()
-//     .typeError("Narx butun son bo‘lishi kerak")
-//     .min(0, "Narx 0 dan kichik bo‘lmasligi kerak")
-//     .integer("Narx butun son bo‘lishi kerak")
-//     .required("Narx majburiy"),
-//   duration: Yup.string().required("Davomiylik majburiy"),
-//   lessons_in_a_week: Yup.number()
-//     .typeError("Haftadagi darslar soni butun son bo‘lishi kerak")
-//     .min(1, "Haftadagi darslar soni 1 dan kichik bo‘lmasligi kerak")
-//     .integer("Haftadagi darslar soni butun son bo‘lishi kerak")
-//     .required("Haftadagi darslar soni majburiy"),
-//   lesson_duration: Yup.string().required("Dars davomiyligi majburiy"),
-// });
-
-// const CourseModal: React.FC<CourseModalProps> = ({
-//   visible,
-//   onClose,
-//   onSubmit,
-//   editData,
-// }) => {
-//   const initialValues: Course = editData || {
-//     title: "",
-//     description: "",
-//     price: "",
-//     duration: "",
-//     lessons_in_a_week: "",
-//     lesson_duration: "",
-//   };
-
-//   return (
-//     <Modal
-//       title={editData ? "Kursni tahrirlash" : "Kurs qo‘shish"}
-//       open={visible}
-//       onCancel={onClose}
-//       footer={null}
-//       destroyOnHidden
-//     >
-//       <Formik
-//         enableReinitialize
-//         initialValues={initialValues}
-//         validationSchema={validationSchema}
-//         onSubmit={onSubmit}
-//       >
-//         {() => (
-//           <Form>
-//             <AntForm.Item label="Kurs nomi">
-//               <Field as={Input} name="title" placeholder="Kurs nomi" />
-//               <ErrorMessage name="title">
-//                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-//               </ErrorMessage>
-//             </AntForm.Item>
-
-//             <AntForm.Item label="Tavsif">
-//               <Field
-//                 as={Input.TextArea}
-//                 name="description"
-//                 placeholder="Kurs tavsifi"
-//                 rows={4}
-//               />
-//               <ErrorMessage name="description">
-//                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-//               </ErrorMessage>
-//             </AntForm.Item>
-
-//             <AntForm.Item label="Narxi">
-//               <Field
-//                 as={Input}
-//                 type="number"
-//                 name="price"
-//                 placeholder="Kurs narxi"
-//               />
-//               <ErrorMessage name="price">
-//                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-//               </ErrorMessage>
-//             </AntForm.Item>
-
-//             <AntForm.Item label="Davomiyligi">
-//               <Field as="select" name="duration">
-//                 <option value="">Davomiylikni tanlang</option>
-//                 <option value="3 oy">3 oy</option>
-//                 <option value="6 oy">6 oy</option>
-//                 <option value="12 oy">12 oy</option>
-//               </Field>
-//               <ErrorMessage name="duration">
-//                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-//               </ErrorMessage>
-//             </AntForm.Item>
-
-//             <AntForm.Item label="Haftadagi darslar soni">
-//               <Field as="select" name="lessons_in_a_week">
-//                 <option value="">Haftadagi darslar sonini tanlang</option>
-//                 <option value="3">3</option>
-//                 <option value="5">5</option>
-//               </Field>
-//               <ErrorMessage name="lessons_in_a_week">
-//                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-//               </ErrorMessage>
-//             </AntForm.Item>
-
-//             <AntForm.Item label="Dars davomiyligi">
-//               <Field as="select" name="lesson_duration">
-//                 <option value="">Dars davomiyligini tanlang</option>
-//                 <option value="2 soat">2 soat</option>
-//                 <option value="4 soat">4 soat</option>
-//               </Field>
-//               <ErrorMessage name="lesson_duration">
-//                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-//               </ErrorMessage>
-//             </AntForm.Item>
-
-//             <Button type="primary" htmlType="submit" block>
-//               Saqlash
-//             </Button>
-//           </Form>
-//         )}
-//       </Formik>
-//     </Modal>
-//   );
-// };
-
-// export default CourseModal;
-
-
-
 import React from "react";
 import { Modal, Input, Form as AntForm, Button, Select } from "antd";
 import { Formik, Form, ErrorMessage, useFormikContext, Field } from "formik";
@@ -155,23 +14,22 @@ interface CourseModalProps {
 }
 
 const validationSchema = Yup.object({
-  title: Yup.string().required("Kurs nomi majburiy"),
-  description: Yup.string().required("Tavsif majburiy"),
+  title: Yup.string().required("Course title is required"),
+  description: Yup.string().required("Description is required"),
   price: Yup.number()
-    .typeError("Narx butun son bo‘lishi kerak")
-    .min(0, "Narx 0 dan kichik bo‘lmasligi kerak")
-    .integer("Narx butun son bo‘lishi kerak")
-    .required("Narx majburiy"),
-  duration: Yup.string().required("Davomiylik majburiy"),
+    .typeError("Price must be a whole number")
+    .min(0, "Price cannot be less than 0")
+    .integer("Price must be an integer")
+    .required("Price is required"),
+  duration: Yup.string().required("Duration is required"),
   lessons_in_a_week: Yup.number()
-    .typeError("Haftadagi darslar soni butun son bo‘lishi kerak")
-    .min(1, "Haftadagi darslar soni 1 dan kichik bo‘lmasligi kerak")
-    .integer("Haftadagi darslar soni butun son bo‘lishi kerak")
-    .required("Haftadagi darslar soni majburiy"),
-  lesson_duration: Yup.string().required("Dars davomiyligi majburiy"),
+    .typeError("Lessons per week must be a whole number")
+    .min(1, "Lessons per week must be at least 1")
+    .integer("Lessons per week must be an integer")
+    .required("Lessons per week is required"),
+  lesson_duration: Yup.string().required("Lesson duration is required"),
 });
 
-// Antd Select uchun alohida komponent
 const FormikSelect = ({
   label,
   name,
@@ -184,11 +42,11 @@ const FormikSelect = ({
   const { setFieldValue, values } = useFormikContext<Course>();
 
   return (
-    <AntForm.Item label={label}>
+    <AntForm.Item label={label} labelCol={{ span: 24 }}>
       <Select
         value={values[name] || undefined}
         onChange={(value) => setFieldValue(name, value)}
-        placeholder={`${label}ni tanlang`}
+        placeholder={`Select ${label.toLowerCase()}`}
         allowClear
       >
         {options.map((opt) => (
@@ -221,7 +79,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
 
   return (
     <Modal
-      title={editData ? "Kursni tahrirlash" : "Kurs qo‘shish"}
+      title={editData ? "Edit Course" : "Add Course"}
       open={visible}
       onCancel={onClose}
       footer={null}
@@ -235,31 +93,19 @@ const CourseModal: React.FC<CourseModalProps> = ({
       >
         {() => (
           <Form>
-            <AntForm.Item label="Kurs nomi">
-              <Field as={Input} name="title" placeholder="Kurs nomi" />
+            <AntForm.Item label="Course Title" labelCol={{ span: 24 }}>
+              <Field as={Input} name="title" placeholder="Enter course title" />
               <ErrorMessage name="title">
                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
               </ErrorMessage>
             </AntForm.Item>
 
-            <AntForm.Item label="Tavsif">
-              <Field
-                as={Input.TextArea}
-                name="description"
-                placeholder="Kurs tavsifi"
-                rows={4}
-              />
-              <ErrorMessage name="description">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
-            </AntForm.Item>
-
-            <AntForm.Item label="Narxi">
+            <AntForm.Item label="Price" labelCol={{ span: 24 }}>
               <Field
                 as={Input}
                 type="number"
                 name="price"
-                placeholder="Kurs narxi"
+                placeholder="Enter course price"
               />
               <ErrorMessage name="price">
                 {(msg) => <div style={{ color: "red" }}>{msg}</div>}
@@ -267,17 +113,17 @@ const CourseModal: React.FC<CourseModalProps> = ({
             </AntForm.Item>
 
             <FormikSelect
-              label="Davomiyligi"
+              label="Duration"
               name="duration"
               options={[
-                { value: "3 oy", label: "3 oy" },
-                { value: "6 oy", label: "6 oy" },
-                { value: "12 oy", label: "12 oy" },
+                { value: "3 months", label: "3 months" },
+                { value: "6 months", label: "6 months" },
+                { value: "12 months", label: "12 months" },
               ]}
             />
 
             <FormikSelect
-              label="Haftadagi darslar soni"
+              label="Lessons per Week"
               name="lessons_in_a_week"
               options={[
                 { value: 3, label: "3" },
@@ -286,16 +132,28 @@ const CourseModal: React.FC<CourseModalProps> = ({
             />
 
             <FormikSelect
-              label="Dars davomiyligi"
+              label="Lesson Duration"
               name="lesson_duration"
               options={[
-                { value: "2 soat", label: "2 soat" },
-                { value: "4 soat", label: "4 soat" },
+                { value: "2 hours", label: "2 hours" },
+                { value: "4 hours", label: "4 hours" },
               ]}
             />
 
+            <AntForm.Item label="Description" labelCol={{ span: 24 }}>
+              <Field
+                as={Input.TextArea}
+                name="description"
+                placeholder="Enter course description"
+                rows={4}
+              />
+              <ErrorMessage name="description">
+                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              </ErrorMessage>
+            </AntForm.Item>
+
             <Button type="primary" htmlType="submit" block>
-              Saqlash
+              Save
             </Button>
           </Form>
         )}

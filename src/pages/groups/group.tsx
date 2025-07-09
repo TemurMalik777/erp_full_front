@@ -42,7 +42,7 @@ function Groups() {
         });
       }
     } catch {
-      message.error("Ma'lumotlarni yuklashda xatolik yuz berdi");
+      message.error("Failed to load groups");
     }
     setLoading(false);
   };
@@ -50,14 +50,13 @@ function Groups() {
   const fetchCourses = async () => {
     try {
       const res = await CoursService.getCourses();
-
       if (res && res.data && res.data.courses) {
         setCourses(res.data.courses);
       } else {
         setCourses([]);
       }
     } catch {
-      message.error("Kurslarni yuklashda xatolik");
+      message.error("Failed to load courses");
     }
   };
 
@@ -73,10 +72,10 @@ function Groups() {
   const handleDelete = async (id: number) => {
     try {
       await GroupService.deleteGroup(id);
-      message.success("Guruh o‘chirildi");
+      message.success("Group deleted successfully");
       fetchGroups(pagination.current!, pagination.pageSize!);
     } catch {
-      message.error("O‘chirishda xatolik yuz berdi");
+      message.error("Failed to delete group");
     }
   };
 
@@ -93,30 +92,30 @@ function Groups() {
       if (editData) {
         const res = await GroupService.updateGroup(payload, editData.id);
         if (res?.status === 200) {
-          message.success("Guruh tahrirlandi");
+          message.success("Group updated successfully");
         }
       } else {
         const res = await GroupService.createGroup(payload);
         if (res?.status === 201 || res?.status === 200) {
-          message.success("Guruh yaratildi");
+          message.success("Group created successfully");
         }
       }
       fetchGroups(pagination.current!, pagination.pageSize!);
       setIsModalOpen(false);
       setEditData(null);
     } catch {
-      message.error("Yaratishda yoki tahrirlashda xatolik");
+      message.error("Error creating or updating group");
     }
   };
 
   const columns: ColumnsType<GroupWithId> = [
-    { title: "Nomi", dataIndex: "name", key: "name" },
+    { title: "Name", dataIndex: "name", key: "name" },
     { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Kurs ID", dataIndex: "course_id", key: "course_id" },
-    { title: "Boshlanish", dataIndex: "start_date", key: "start_date" },
-    { title: "Tugash", dataIndex: "end_date", key: "end_date" },
+    { title: "Course ID", dataIndex: "course_id", key: "course_id" },
+    { title: "Start Date", dataIndex: "start_date", key: "start_date" },
+    { title: "End Date", dataIndex: "end_date", key: "end_date" },
     {
-      title: "Amallar",
+      title: "Actions",
       key: "actions",
       render: (_, record) => (
         <div style={{ display: "flex", gap: 8 }}>
@@ -126,17 +125,17 @@ function Groups() {
               setIsModalOpen(true);
             }}
           >
-            Tahrirlash
+            Edit
           </Button>
           <Button
             danger
             onClick={() => {
-              if (window.confirm("Haqiqatan ham o'chirmoqchimisiz?")) {
+              if (window.confirm("Are you sure you want to delete this group?")) {
                 handleDelete(record.id);
               }
             }}
           >
-            O‘chirish
+            Delete
           </Button>
         </div>
       ),
@@ -152,7 +151,7 @@ function Groups() {
           marginBottom: 16,
         }}
       >
-        <h2>Guruhlar</h2>
+        <h2>Groups</h2>
         <Button
           type="primary"
           onClick={() => {
@@ -160,7 +159,7 @@ function Groups() {
             setIsModalOpen(true);
           }}
         >
-          + Guruh qo‘shish
+          + Add Group
         </Button>
       </div>
 
@@ -188,3 +187,4 @@ function Groups() {
 }
 
 export default Groups;
+1

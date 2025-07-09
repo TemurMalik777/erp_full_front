@@ -5,7 +5,6 @@ import { StudentService } from "@service";
 import StudentModal from "./student-model";
 import type { Student } from "@types";
 
-
 function Student() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
@@ -31,7 +30,7 @@ function Student() {
         });
       }
     } catch {
-      message.error("Talabalarni yuklashda xatolik yuz berdi");
+      message.error("Failed to load students");
     }
     setLoading(false);
   };
@@ -47,10 +46,10 @@ function Student() {
   const handleDelete = async (id: number) => {
     try {
       await StudentService.deleteStudent(id);
-      message.success("Talaba o‘chirildi");
+      message.success("Student deleted successfully");
       fetchStudents(pagination.current!, pagination.pageSize!);
     } catch {
-      message.error("O‘chirishda xatolik yuz berdi");
+      message.error("Error occurred while deleting");
     }
   };
 
@@ -59,35 +58,31 @@ function Student() {
       if (editData?.id != null) {
         const res = await StudentService.updateStudent(values, editData.id);
         if (res?.status === 200) {
-          message.success("Talaba tahrirlandi");
+          message.success("Student updated successfully");
         }
       } else {
         const res = await StudentService.createStudent(values);
         if (res?.status === 201 || res?.status === 200) {
-          message.success("Talaba yaratildi");
+          message.success("Student created successfully");
         }
       }
       fetchStudents(pagination.current!, pagination.pageSize!);
       setIsModalOpen(false);
       setEditData(null);
     } catch {
-      message.error("Saqlashda xatolik yuz berdi");
+      message.error("Error occurred while saving");
     }
   };
 
   const columns: ColumnsType<Student> = [
-    { title: "Ism", dataIndex: "first_name", key: "first_name" },
-    { title: "Familiya", dataIndex: "last_name", key: "last_name" },
+    { title: "First Name", dataIndex: "first_name", key: "first_name" },
+    { title: "Last Name", dataIndex: "last_name", key: "last_name" },
     { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Telefon", dataIndex: "phone", key: "phone" },
-    { title: "Jinsi", dataIndex: "gender", key: "gender" },
+    { title: "Phone", dataIndex: "phone", key: "phone" },
+    { title: "Gender", dataIndex: "gender", key: "gender" },
+    { title: "Date of Birth", dataIndex: "date_of_birth", key: "date_of_birth" },
     {
-      title: "Tug‘ilgan sana",
-      dataIndex: "date_of_birth",
-      key: "date_of_birth",
-    },
-    {
-      title: "Amallar",
+      title: "Actions",
       key: "actions",
       render: (_, record) => (
         <div style={{ display: "flex", gap: 8 }}>
@@ -97,17 +92,17 @@ function Student() {
               setIsModalOpen(true);
             }}
           >
-            Tahrirlash
+            Edit
           </Button>
           <Button
             danger
             onClick={() => {
-              if (window.confirm("Haqiqatan ham o‘chirmoqchimisiz?") && record.id !== undefined) {
+              if (window.confirm("Are you sure you want to delete this student?") && record.id !== undefined) {
                 handleDelete(record.id);
               }
             }}
           >
-            O‘chirish
+            Delete
           </Button>
         </div>
       ),
@@ -123,7 +118,7 @@ function Student() {
           marginBottom: 16,
         }}
       >
-        <h2>Talabalar</h2>
+        <h2>Students</h2>
         <Button
           type="primary"
           onClick={() => {
@@ -131,7 +126,7 @@ function Student() {
             setIsModalOpen(true);
           }}
         >
-          + Talaba qo‘shish
+          + Add Student
         </Button>
       </div>
 
@@ -139,7 +134,6 @@ function Student() {
         columns={columns}
         dataSource={students}
         loading={loading}
-        // rowKey={(record) => record.id}
         rowKey={(record) => record.id ?? record.email}
         pagination={pagination}
         onChange={handleTableChange}

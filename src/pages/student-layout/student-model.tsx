@@ -13,24 +13,24 @@ interface StudentModalProps {
 }
 
 const validationSchema = Yup.object({
-  first_name: Yup.string().required("Ism majburiy"),
-  last_name: Yup.string().required("Familiya majburiy"),
+  first_name: Yup.string().required("First name is required"),
+  last_name: Yup.string().required("Last name is required"),
   email: Yup.string()
-    .email("Email manzili noto‘g‘ri formatda")
-    .required("Email majburiy"),
-  phone: Yup.string().required("Telefon majburiy"),
+    .email("Invalid email format")
+    .required("Email is required"),
+  phone: Yup.string().required("Phone number is required"),
   password_hash: Yup.string()
-    .min(8, "Parol kamida 8 ta belgidan iborat bo‘lishi kerak")
-    .required("Parol majburiy"),
-  gender: Yup.string().required("Jins majburiy"),
-  date_of_birth: Yup.string().required("Tug‘ilgan sana majburiy"),
-  lidId: Yup.number().required("Lid ID majburiy"),
+    .min(8, "Password must be at least 8 characters")
+    .required("Password is required"),
+  gender: Yup.string().required("Gender is required"),
+  date_of_birth: Yup.string().required("Date of birth is required"),
+  lidId: Yup.number().required("Lid ID is required"),
   eventsId: Yup.array()
     .of(Yup.number())
-    .min(1, "Kamida bitta voqea ID bo‘lishi kerak"),
+    .min(1, "At least one event ID is required"),
   groupsId: Yup.array()
     .of(Yup.number())
-    .min(1, "Kamida bitta guruh ID bo‘lishi kerak"),
+    .min(1, "At least one group ID is required"),
 });
 
 const StudentModal: React.FC<StudentModalProps> = ({
@@ -48,19 +48,17 @@ const StudentModal: React.FC<StudentModalProps> = ({
     gender: "",
     date_of_birth: "",
     lidId: 0,
-    // eventsId: [],
-    // groupsId: [],
-    eventsId:[],
-    groupsId:[],
+    eventsId: [],
+    groupsId: [],
   };
 
   return (
     <Modal
-      title={editData ? "Talabani tahrirlash" : "Talaba qo‘shish"}
+      title={editData ? "Edit Student" : "Add Student"}
       open={visible}
       onCancel={onClose}
       footer={null}
-      destroyOnHidden 
+      destroyOnHidden
     >
       <Formik
         enableReinitialize
@@ -70,15 +68,15 @@ const StudentModal: React.FC<StudentModalProps> = ({
       >
         {({ setFieldValue, values }) => (
           <Form>
-            <AntForm.Item label="Ism">
-              <Field as={Input} name="first_name" placeholder="Ism" />
+            <AntForm.Item label="First Name">
+              <Field as={Input} name="first_name" placeholder="First Name" />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="first_name" component="div" />
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Familiya">
-              <Field as={Input} name="last_name" placeholder="Familiya" />
+            <AntForm.Item label="Last Name">
+              <Field as={Input} name="last_name" placeholder="Last Name" />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="last_name" component="div" />
               </div>
@@ -91,36 +89,36 @@ const StudentModal: React.FC<StudentModalProps> = ({
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Telefon">
-              <Field as={Input} name="phone" placeholder="Telefon raqami" />
+            <AntForm.Item label="Phone">
+              <Field as={Input} name="phone" placeholder="Phone Number" />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="phone" component="div" />
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Parol">
+            <AntForm.Item label="Password">
               <Field
                 as={Input.Password}
                 name="password_hash"
-                placeholder="Parol"
+                placeholder="Password"
               />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="password_hash" component="div" />
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Jinsi">
+            <AntForm.Item label="Gender">
               <Field
                 as={Input}
                 name="gender"
-                placeholder="Jins (masalan: erkak/ayol)"
+                placeholder="Gender (e.g. male/female)"
               />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="gender" component="div" />
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Tug‘ilgan sana">
+            <AntForm.Item label="Date of Birth">
               <DatePicker
                 format="YYYY-MM-DD"
                 value={
@@ -148,7 +146,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Voqea ID (vergul bilan ajrating)">
+            <AntForm.Item label="Event IDs (comma-separated)">
               <Input
                 value={
                   Array.isArray(values.eventsId)
@@ -162,14 +160,14 @@ const StudentModal: React.FC<StudentModalProps> = ({
                     .filter((id) => !isNaN(id));
                   setFieldValue("eventsId", array);
                 }}
-                placeholder="Masalan: 1,2,3"
+                placeholder="e.g. 1,2,3"
               />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="eventsId" component="div" />
               </div>
             </AntForm.Item>
 
-            <AntForm.Item label="Guruh ID (vergul bilan ajrating)">
+            <AntForm.Item label="Group IDs (comma-separated)">
               <Input
                 value={
                   Array.isArray(values.groupsId)
@@ -183,7 +181,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
                     .filter((id) => !isNaN(id));
                   setFieldValue("groupsId", array);
                 }}
-                placeholder="Masalan: 5,6"
+                placeholder="e.g. 5,6"
               />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="groupsId" component="div" />
@@ -191,7 +189,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
             </AntForm.Item>
 
             <Button type="primary" htmlType="submit" block>
-              Saqlash
+              Save
             </Button>
           </Form>
         )}
