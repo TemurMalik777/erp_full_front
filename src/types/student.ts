@@ -9,6 +9,6 @@ export interface Student{
   gender: string,
   date_of_birth: string,
   lidId: number,
-  eventsId: number,
-  groupsId: number
+  eventsId: number[],
+  groupsId: number[]
 }

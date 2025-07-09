@@ -7,7 +7,6 @@ import Coursesmodal from "./course-modal";
 
 interface CourseWithId extends Course {
   id: number;
-  // qo‘shimcha maydonlar bo‘lsa qo‘shishingiz mumkin
 }
 
 function Courses() {

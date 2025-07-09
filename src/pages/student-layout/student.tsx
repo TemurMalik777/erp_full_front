@@ -4,12 +4,6 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { StudentService } from "@service";
 import StudentModal from "./student-model";
 import type { Student } from "@types";
-// import type { Student } from "./student-types";
-// // BIRINCHISI
-// import { Student } from "@/types/student"; // ← bu joyda eventsId: number
-
-// // IKKINCHISI
-// import { Student } from "./student-model"; // ← bu joyda eventsId: number[]
 
 
 function Student() {
@@ -158,7 +152,6 @@ function Student() {
           setEditData(null);
         }}
         onSubmit={handleSubmit}
-        // onSubmit: (values: Student) => Promise<void>;
         editData={editData ?? undefined}
       />
     </div>
