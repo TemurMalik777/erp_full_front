@@ -73,12 +73,12 @@ const GroupModal: React.FC<GroupModalProps> = ({
       >
         {({ setFieldValue, values }) => (
           <Form>
-            <AntForm.Item label="Groups name">
+            <AntForm.Item label="Groups name"  labelCol={{ span: 24 }}>
               <Field as={Input} name="name" placeholder="Groups name" />
               <ErrorMessage name="name" component="div" />
             </AntForm.Item>
 
-            <AntForm.Item label="Course">
+            <AntForm.Item label="Course"  labelCol={{ span: 24 }}>
               <Select
                 value={values.course_id || undefined}
                 onChange={(value) => setFieldValue("course_id", value)}
@@ -94,7 +94,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
               <ErrorMessage name="course_id" component="div" />
             </AntForm.Item>
 
-            <AntForm.Item label="Status">
+            <AntForm.Item label="Status"  labelCol={{ span: 24 }}>
               <Select
                 value={values.status || undefined}
                 onChange={(value) => setFieldValue("status", value)}
@@ -107,7 +107,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
               <ErrorMessage name="status" component="div" />
             </AntForm.Item>
 
-            <AntForm.Item label="Start date">
+            <AntForm.Item label="Start date"  labelCol={{ span: 24 }}>
               <DatePicker
                 style={{ width: "100%" }}
                 value={values.start_date ? dayjs(values.start_date) : undefined}
@@ -118,7 +118,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
               <ErrorMessage name="start_date" component="div" />
             </AntForm.Item>
 
-            <AntForm.Item label="End date">
+            <AntForm.Item label="End date"  labelCol={{ span: 24 }}>
               <DatePicker
                 style={{ width: "100%" }}
                 value={values.end_date ? dayjs(values.end_date) : undefined}

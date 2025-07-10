@@ -23,7 +23,7 @@ function Groups() {
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 5,
-    total: 1000,
+    total: 1,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState<GroupWithId | null>(null);
