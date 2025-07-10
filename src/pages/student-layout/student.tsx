@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Button, Table, message } from "antd";
 import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
-import { StudentService } from "@service";
+import { StudentService } from "../../service/student.service";
 import StudentModal from "./student-model";
-import type { Student } from "@types";
+import type { Student } from "../../types/student";
 
 function Student() {
   const [students, setStudents] = useState<Student[]>([]);
@@ -30,7 +30,7 @@ function Student() {
         });
       }
     } catch {
-      message.error("Failed to load students");
+      message.error("An error occurred while loading students");
     }
     setLoading(false);
   };
@@ -49,7 +49,7 @@ function Student() {
       message.success("Student deleted successfully");
       fetchStudents(pagination.current!, pagination.pageSize!);
     } catch {
-      message.error("Error occurred while deleting");
+      message.error("An error occurred while deleting");
     }
   };
 
@@ -70,7 +70,7 @@ function Student() {
       setIsModalOpen(false);
       setEditData(null);
     } catch {
-      message.error("Error occurred while saving");
+      message.error("An error occurred while saving");
     }
   };
 
@@ -97,7 +97,10 @@ function Student() {
           <Button
             danger
             onClick={() => {
-              if (window.confirm("Are you sure you want to delete this student?") && record.id !== undefined) {
+              if (
+                window.confirm("Are you sure you want to delete this student?") &&
+                record.id !== undefined
+              ) {
                 handleDelete(record.id);
               }
             }}
@@ -145,7 +148,10 @@ function Student() {
           setIsModalOpen(false);
           setEditData(null);
         }}
-        onSubmit={handleSubmit}
+        onSubmit={async (values) => {
+          const { confirm_password, password_hash, ...studentData } = values;
+          await handleSubmit(studentData as Student);
+        }}
         editData={editData ?? undefined}
       />
     </div>

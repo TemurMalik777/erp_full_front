@@ -26,6 +26,7 @@ const BranchModal: React.FC<BranchModalProps> = ({
 }) => {
   // Initial values: use editData if exists
   const initialValues: Branch = editData || {
+    id:0,
     name: "",
     address: "",
     call_number: "",

@@ -1,3 +1,7 @@
 export * from "./useAuth"
 export * from "./useGroup"
 export * from "./useWorker"
+export * from "./useCourse"
+export * from "./useBranch"
+export * from "./useStudent"
+export * from "./useTeacher"
