@@ -4,6 +4,7 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import GroupModal from "./modal";
 import type { Group } from "@types";
 import { CoursService, GroupService } from "@service";
+import { PopConfirm } from "@components";
 
 interface GroupWithId extends Group {
   id: number;
@@ -22,8 +23,7 @@ function Groups() {
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 5,
-    total: 1,
+    pageSize: 3,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState<GroupWithId | null>(null);
@@ -39,6 +39,8 @@ function Groups() {
           current: page,
           pageSize,
           total: response.data.data.length,
+          showSizeChanger: true,
+          pageSizeOptions: ["3", "4", "5", "10"],
         });
       }
     } catch {
@@ -127,16 +129,7 @@ function Groups() {
           >
             Edit
           </Button>
-          <Button
-            danger
-            onClick={() => {
-              if (window.confirm("Are you sure you want to delete this group?")) {
-                handleDelete(record.id);
-              }
-            }}
-          >
-            Delete
-          </Button>
+          <PopConfirm onConfirm={() => handleDelete(record.id)} />
         </div>
       ),
     },

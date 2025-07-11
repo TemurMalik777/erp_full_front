@@ -4,6 +4,7 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import type { Course } from "@types";
 import { CoursService } from "@service";
 import Coursesmodal from "./course-modal";
+import { PopConfirm } from "@components";
 
 interface CourseWithId extends Course {
   id: number;
@@ -15,7 +16,6 @@ function Courses() {
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
-    total: 1000,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState<CourseWithId | null>(null);
@@ -31,6 +31,8 @@ function Courses() {
           current: page,
           pageSize,
           total: res.data.courses.length,
+          showSizeChanger: true,
+          pageSizeOptions: ["3", "4", "5", "10"],
         });
       }
     } catch {
@@ -115,16 +117,9 @@ function Courses() {
           >
             Edit
           </Button>
-          <Button
-            danger
-            onClick={() => {
-              if (window.confirm("Are you sure you want to delete this course?")) {
-                handleDelete(record.id);
-              }
-            }}
-          >
-            Delete
-          </Button>
+          <PopConfirm
+            onConfirm={() => record.id !== undefined && handleDelete(record.id)}
+          />
         </div>
       ),
     },

@@ -8,7 +8,7 @@ import { type Group } from "@types";
 
 export const useGroup = () => {
   const queryClient = useQueryClient();
-  const { data } = useQuery({
+  const { data,refetch } = useQuery({
     queryKey: ["groups"],
     queryFn: async () => GroupService.getGroups(),
   });
@@ -43,6 +43,7 @@ export const useGroup = () => {
 
   return {
     data,
+    refetch,
     useGroupCreate,
     useGroupDelete,
     useGroupUpdate,

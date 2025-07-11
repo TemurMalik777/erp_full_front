@@ -80,7 +80,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
       open={visible}
       onCancel={onClose}
       footer={null}
-      destroyOnClose
+      destroyOnHidden
     >
       <Formik
         enableReinitialize

@@ -4,6 +4,7 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { BranchService, TeacherService } from "@service";
 import type { Branch, Teacher } from "@types";
 import TeacherModal from "./teacher-modal";
+import { PopConfirm } from "@components";
 function TeacherPage() {
   const [teachers, setTeachers] = useState<Teacher[]>([]);
   const [loading, setLoading] = useState(false);
@@ -13,7 +14,6 @@ function TeacherPage() {
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
     pageSize: 10,
-    total: 10,
   });
 
   const fetchTeachers = async () => {
@@ -24,7 +24,11 @@ function TeacherPage() {
         setTeachers(res.data.teachers);
         setPagination((prev) => ({
           ...prev,
+          current: 1,
+          pageSize: 10,
           total: res.data.teachers.length,
+          showSizeChanger: true,
+          pageSizeOptions: ["3", "4", "5", "10"],
         }));
       }
     } catch {
@@ -59,7 +63,6 @@ function TeacherPage() {
     fetchTeachers();
     fetchBranch();
   }, []);
-
 
   const handleSubmit = async (values: Teacher) => {
     try {
@@ -123,9 +126,9 @@ function TeacherPage() {
           >
             Edit
           </Button>
-          <Button danger onClick={() => record.id && handleDelete(record.id)}>
-            Delete
-          </Button>
+          <PopConfirm
+            onConfirm={() => record.id !== undefined && handleDelete(record.id)}
+          />
         </div>
       ),
     },

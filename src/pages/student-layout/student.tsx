@@ -4,14 +4,14 @@ import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
 import { StudentService } from "../../service/student.service";
 import StudentModal from "./student-model";
 import type { Student } from "../../types/student";
+import { PopConfirm } from "@components";
 
 function Student() {
   const [students, setStudents] = useState<Student[]>([]);
   const [loading, setLoading] = useState(false);
   const [pagination, setPagination] = useState<TablePaginationConfig>({
     current: 1,
-    pageSize: 5,
-    total: 0,
+    pageSize: 3,
   });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState<Student | null>(null);
@@ -27,6 +27,8 @@ function Student() {
           current: page,
           pageSize,
           total: res.data.students.length,
+          showSizeChanger: true,
+          pageSizeOptions: ["3", "4", "5", "10"],
         });
       }
     } catch {
@@ -80,7 +82,11 @@ function Student() {
     { title: "Email", dataIndex: "email", key: "email" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
     { title: "Gender", dataIndex: "gender", key: "gender" },
-    { title: "Date of Birth", dataIndex: "date_of_birth", key: "date_of_birth" },
+    {
+      title: "Date of Birth",
+      dataIndex: "date_of_birth",
+      key: "date_of_birth",
+    },
     {
       title: "Actions",
       key: "actions",
@@ -94,19 +100,9 @@ function Student() {
           >
             Edit
           </Button>
-          <Button
-            danger
-            onClick={() => {
-              if (
-                window.confirm("Are you sure you want to delete this student?") &&
-                record.id !== undefined
-              ) {
-                handleDelete(record.id);
-              }
-            }}
-          >
-            Delete
-          </Button>
+          <PopConfirm
+            onConfirm={() => record.id !== undefined && handleDelete(record.id)}
+          />
         </div>
       ),
     },

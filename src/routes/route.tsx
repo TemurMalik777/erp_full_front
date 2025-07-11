@@ -11,12 +11,12 @@ import {
   AdminLayout,
   TeacherLayout,
   StudentLayout,
-  Groups,
   Course,
   ProtectChildrem,
   LoginChildren,
   Branch,
   Worker,
+  Groups,
 } from "@pages";
 const App = lazy(() => import("../App"));
 
