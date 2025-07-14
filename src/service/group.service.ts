@@ -1,10 +1,10 @@
 import { ApiUrls } from "@api/api-urls";
 import { apiConfig } from "@api/config";
-import type { Group } from "@types";
+import type { Group, ParamsType } from "@types";
 
 export const GroupService = {
-  async getGroups() {
-    const res = await apiConfig().getRequest(ApiUrls.GROUPS);
+  async getGroups(params: ParamsType) {
+    const res = await apiConfig().getRequest(ApiUrls.GROUPS, params );
     return res;
   },
 

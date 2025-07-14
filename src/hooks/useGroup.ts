@@ -1,17 +1,25 @@
 import { GroupService } from "@service";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { type Group } from "@types";
-
-export const useGroup = () => {
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { type Group, type ParamsType } from "@types";
+import { useNavigate } from "react-router-dom";
+export const useGroup = (params: ParamsType) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data,refetch } = useQuery({
-    queryKey: ["groups"],
-    queryFn: async () => GroupService.getGroups(),
+  const { data } = useQuery({
+    queryKey: ["groups", params],
+    queryFn: async () => GroupService.getGroups(params),
   });
+  const handlePagination = (pagination: any, setParams: any)=>{
+    const { current, pageSize } = pagination;
+    setParams({
+      page: current!,
+      limit: pageSize!,
+    });
+    const searchParams = new URLSearchParams();
+    searchParams.set("page", current!.toString());
+    searchParams.set("limit", pageSize!.toString());
+    navigate({ search: `?${searchParams.toString()}` });
+  }
 
   const useGroupCreate = () => {
     return useMutation({
@@ -43,9 +51,9 @@ export const useGroup = () => {
 
   return {
     data,
-    refetch,
     useGroupCreate,
     useGroupDelete,
     useGroupUpdate,
+    handlePagination,
   };
 };

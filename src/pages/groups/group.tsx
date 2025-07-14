@@ -1,181 +1,107 @@
-import { useEffect, useState } from "react";
-import { Button, Table, message } from "antd";
-import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import {useEffect, useState } from "react";
+import { Button, Space, Table, type TablePaginationConfig } from "antd";
 import GroupModal from "./modal";
-import type { Group } from "@types";
-import { CoursService, GroupService } from "@service";
-import { PopConfirm } from "@components";
+import type { Group, 
+    // TablePagination
 
-interface GroupWithId extends Group {
-  id: number;
-  created_at?: string;
-  updated_at?: string;
-}
+ } from "@types";
+import { PopConfirm, GroupColumns } from "@components";
+import { useLocation } from "react-router-dom";
+import { 
+    useGeneral,
+     useGroup } from "@hooks";
 
-interface Course {
-  id: number;
-  title: string;
-}
+
 
 function Groups() {
-  const [groups, setGroups] = useState<GroupWithId[]>([]);
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [pagination, setPagination] = useState<TablePaginationConfig>({
-    current: 1,
-    pageSize: 3,
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<"create" | "update">("create");
+  const [update, setUpdate] = useState<Group | null>(null);
+  const [params, setParams] = useState({
+    page: 1,
+    limit: 10,
   });
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editData, setEditData] = useState<GroupWithId | null>(null);
-
-  const fetchGroups = async (page: number, pageSize: number) => {
-    setLoading(true);
-    try {
-      const response = await GroupService.getGroups();
-      if (response?.data?.data) {
-        setGroups(response.data.data);
-        setPagination({
-          ...pagination,
-          current: page,
-          pageSize,
-          total: response.data.data.length,
-          showSizeChanger: true,
-          pageSizeOptions: ["3", "4", "5", "10"],
-        });
-      }
-    } catch {
-      message.error("Failed to load groups");
-    }
-    setLoading(false);
-  };
-
-  const fetchCourses = async () => {
-    try {
-      const res = await CoursService.getCourses();
-      if (res && res.data && res.data.courses) {
-        setCourses(res.data.courses);
-      } else {
-        setCourses([]);
-      }
-    } catch {
-      message.error("Failed to load courses");
-    }
-  };
-
+  const location = useLocation();
   useEffect(() => {
-    fetchGroups(pagination.current!, pagination.pageSize!);
-    fetchCourses();
-  }, []);
-
+    const searchParams = new URLSearchParams(location.search);
+    const page = searchParams.get("page");
+    const limit = searchParams.get("limit");
+    if (page && limit) {
+      setParams(() => ({
+        page: Number(page),
+        limit: Number(limit),
+      }));
+    }
+  }, [location.search]);
+  const { data, useGroupDelete } = useGroup(params);
+  const { handlePagination } = useGeneral();
+  const { mutate: deleteFn, isPending: isDeleting } = useGroupDelete();
+  const deleteItem = (id: number) => {
+    deleteFn(id);
+  };
+  const editItem = (record: Group) => {
+    setUpdate(record);
+    setMode("update"); 
+    setOpen(true);
+  };
+  const toggle = () => {
+    setOpen(!open);
+    if (update) {
+      setUpdate(null);
+    }
+  };
+//   const handleTableChange = (paginnation: TablePagination) => {
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    fetchGroups(pagination.current!, pagination.pageSize!);
+    handlePagination({ pagination, setParams });
   };
-
-  const handleDelete = async (id: number) => {
-    try {
-      await GroupService.deleteGroup(id);
-      message.success("Group deleted successfully");
-      fetchGroups(pagination.current!, pagination.pageSize!);
-    } catch {
-      message.error("Failed to delete group");
-    }
-  };
-
-  const handleSubmit = async (values: Group) => {
-    const payload = {
-      name: values.name,
-      course_id: values.course_id,
-      status: values.status,
-      start_date: values.start_date,
-      end_date: values.end_date,
-    };
-
-    try {
-      if (editData) {
-        const res = await GroupService.updateGroup(payload, editData.id);
-        if (res?.status === 200) {
-          message.success("Group updated successfully");
-        }
-      } else {
-        const res = await GroupService.createGroup(payload);
-        if (res?.status === 201 || res?.status === 200) {
-          message.success("Group created successfully");
-        }
-      }
-      fetchGroups(pagination.current!, pagination.pageSize!);
-      setIsModalOpen(false);
-      setEditData(null);
-    } catch {
-      message.error("Error creating or updating group");
-    }
-  };
-
-  const columns: ColumnsType<GroupWithId> = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Status", dataIndex: "status", key: "status" },
-    { title: "Course ID", dataIndex: "course_id", key: "course_id" },
-    { title: "Start Date", dataIndex: "start_date", key: "start_date" },
-    { title: "End Date", dataIndex: "end_date", key: "end_date" },
+  const columns = [
+    ...(GroupColumns ?? []),
     {
       title: "Actions",
       key: "actions",
-      render: (_, record) => (
-        <div style={{ display: "flex", gap: 8 }}>
-          <Button
-            onClick={() => {
-              setEditData(record);
-              setIsModalOpen(true);
-            }}
-          >
-            Edit
+      render: (_: any, record: Group) => (
+        <Space size="middle">
+          <Button type="primary" onClick={() => editItem(record)}>
+            {/* <EditOutlined/> */}
+            edit
           </Button>
-          <PopConfirm onConfirm={() => handleDelete(record.id)} />
-        </div>
+          <PopConfirm
+            onConfirm={() => deleteItem(record.id!)}
+            loading={isDeleting}
+          />
+        </Space>
       ),
     },
   ];
-
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 16,
-        }}
-      >
-        <h2>Groups</h2>
-        <Button
-          type="primary"
-          onClick={() => {
-            setEditData(null);
-            setIsModalOpen(true);
-          }}
-        >
-          + Add Group
-        </Button>
-      </div>
-
-      <Table
-        columns={columns}
-        dataSource={groups}
-        loading={loading}
-        rowKey={(record) => record.id}
-        pagination={pagination}
-        onChange={handleTableChange}
+    <>
+      {open && (
+        <GroupModal
+        // <ModalProps
+          open={open}
+          toggle={toggle}
+          update={update}
+          mode={mode}
+        />
+      )}
+      <h1>Groups</h1>
+      <Button type="primary" onClick={() => setOpen(true)}>
+        Add group
+      </Button>
+      <Table <Group>
+      columns={columns}
+      dataSource={data?.data.data}
+      rowKey={(row) => row.id!}
+      pagination={{
+        current: params.page,
+        pageSize: params.limit,
+        total: data?.data.total,
+        showSizeChanger: true,
+        pageSizeOptions:["3", "4","5", "6", "10"],
+      }}
+      onChange={handleTableChange}
       />
-
-      <GroupModal
-        visible={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setEditData(null);
-        }}
-        onSubmit={handleSubmit}
-        editData={editData ?? undefined}
-        courses={courses}
-      />
-    </div>
+    </>
   );
 }
 
