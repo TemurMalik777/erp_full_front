@@ -12,7 +12,6 @@ interface BranchModalProps {
    mode: "create" | "update";
 }
 
-// Validation schema
 const validationSchema = Yup.object({
   name: Yup.string().required("Branch name is required"),
   address: Yup.string().required("Address is required"),
@@ -25,7 +24,6 @@ const BranchModal: React.FC<BranchModalProps> = ({
   onSubmit,
   editData,
 }) => {
-  // Initial values: use editData if exists
   const initialValues: Branch = editData || {
     id:0,
     name: "",
