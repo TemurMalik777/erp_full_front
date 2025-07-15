@@ -1,17 +1,10 @@
-import {useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
 import GroupModal from "./modal";
-import type { Group, 
-    // TablePagination
-
- } from "@types";
+import type { Group } from "@types";
 import { PopConfirm, GroupColumns } from "@components";
-import { useLocation } from "react-router-dom";
-import { 
-    useGeneral,
-     useGroup } from "@hooks";
-
-
+import { Link, useLocation } from "react-router-dom";
+import { useGeneral, useGroup } from "@hooks";
 
 function Groups() {
   const [open, setOpen] = useState(false);
@@ -19,7 +12,7 @@ function Groups() {
   const [update, setUpdate] = useState<Group | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 10,
+    limit: 3,
   });
   const location = useLocation();
   useEffect(() => {
@@ -41,7 +34,7 @@ function Groups() {
   };
   const editItem = (record: Group) => {
     setUpdate(record);
-    setMode("update"); 
+    setMode("update");
     setOpen(true);
   };
   const toggle = () => {
@@ -50,7 +43,6 @@ function Groups() {
       setUpdate(null);
     }
   };
-//   const handleTableChange = (paginnation: TablePagination) => {
   const handleTableChange = (pagination: TablePaginationConfig) => {
     handlePagination({ pagination, setParams });
   };
@@ -62,13 +54,13 @@ function Groups() {
       render: (_: any, record: Group) => (
         <Space size="middle">
           <Button type="primary" onClick={() => editItem(record)}>
-            {/* <EditOutlined/> */}
             edit
           </Button>
           <PopConfirm
             onConfirm={() => deleteItem(record.id!)}
             loading={isDeleting}
           />
+          <Link to={`group/${record.id}`}>view</Link>
         </Space>
       ),
     },
@@ -77,7 +69,6 @@ function Groups() {
     <>
       {open && (
         <GroupModal
-        // <ModalProps
           open={open}
           toggle={toggle}
           update={update}
@@ -88,18 +79,18 @@ function Groups() {
       <Button type="primary" onClick={() => setOpen(true)}>
         Add group
       </Button>
-      <Table <Group>
-      columns={columns}
-      dataSource={data?.data.data}
-      rowKey={(row) => row.id!}
-      pagination={{
-        current: params.page,
-        pageSize: params.limit,
-        total: data?.data.total,
-        showSizeChanger: true,
-        pageSizeOptions:["3", "4","5", "6", "10"],
-      }}
-      onChange={handleTableChange}
+      <Table<Group>
+        columns={columns}
+        dataSource={data?.data.data}
+        rowKey={(row) => row.id!}
+        pagination={{
+          current: params.page,
+          pageSize: params.limit,
+          total: data?.data.total,
+          showSizeChanger: true,
+          pageSizeOptions: ["3", "4", "5", "6", "10"],
+        }}
+        onChange={handleTableChange}
       />
     </>
   );

@@ -11,13 +11,12 @@ export interface ModalProps {
   update: object | null;
 }
 
-
 export interface ParamsType {
   page: number;
   limit: number;
 }
 
 export interface PaginationConfig {
-    pagination: TablePaginationConfig;
-    setParams: (params: ParamsType) => void;
+  pagination: TablePaginationConfig;
+  setParams: (params: ParamsType) => void;
 }

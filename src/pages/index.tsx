@@ -12,5 +12,6 @@ const ProtectChildrem = lazy(() => import("./protect-route/layout-protect"));
 const LoginChildren = lazy(() => import("./protect-route/login-protect"));
 const Branch = lazy(() => import("./branch/branch"));
 const Worker = lazy(() => import("./worker/worker"));
+const SingleGroup = lazy(() => import("./groups/single-group"));
 
-export { SignIn, SignUp, AdminLayout, TeacherLayout, StudentLayout, Groups ,Course, Student, ProtectChildrem, LoginChildren, Branch, Worker};
+export { SignIn, SignUp, AdminLayout, TeacherLayout, StudentLayout, Groups ,Course, Student, ProtectChildrem, LoginChildren, Branch, Worker, SingleGroup};

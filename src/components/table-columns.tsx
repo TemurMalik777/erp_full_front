@@ -17,7 +17,6 @@ export const GroupColumns: TableProps<Group>["columns"] = [
     title: "Status",
     dataIndex: "status",
     key: "status",
-    // render: (status) => <span>{status ? "Active" : "Inactive"}</span>
   },
   {
     title: "Start Date",

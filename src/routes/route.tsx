@@ -17,7 +17,9 @@ import {
   Branch,
   Worker,
   Groups,
+  SingleGroup,
 } from "@pages";
+import Notfoun from "../not-found/notfoun";
 const App = lazy(() => import("../App"));
 
 const Router = () => {
@@ -33,7 +35,6 @@ const Router = () => {
           }
         />
         <Route path="sign-up" element={<SignUp />} />
-        {/* AdminLayout */}
         <Route
           path="admin/"
           element={
@@ -48,8 +49,10 @@ const Router = () => {
           <Route path="branches" element={<Branch />} />
           <Route path="student" element={<StudentLayout />}></Route>
           <Route path="teacher" element={<TeacherLayout />}></Route>
+          <Route path="group/:id" element={<SingleGroup />}></Route>
         </Route>
         <Route path="worker" element={<Worker />}></Route>
+        <Route path="*" element={<Notfoun />}></Route>
       </Route>
     )
   );
