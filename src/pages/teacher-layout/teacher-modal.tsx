@@ -11,6 +11,7 @@ interface TeacherModalProps {
   onSubmit: (values: Teacher) => Promise<void>;
   editData?: Teacher;
   branches: Branch[];
+  mode: "create" | "update";
 }
 
 const roles = ["main teacher", "admin", "assistant"];

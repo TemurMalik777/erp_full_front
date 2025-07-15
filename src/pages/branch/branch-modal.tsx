@@ -9,6 +9,7 @@ interface BranchModalProps {
   onClose: () => void;
   onSubmit: (values: Branch) => void;
   editData?: Branch;
+   mode: "create" | "update";
 }
 
 // Validation schema

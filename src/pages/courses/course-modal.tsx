@@ -11,6 +11,7 @@ interface CourseModalProps {
   onClose: () => void;
   onSubmit: (values: Course) => void;
   editData?: Course;
+  mode: "create" | "update";
 }
 
 const validationSchema = Yup.object({

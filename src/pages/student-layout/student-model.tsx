@@ -29,6 +29,7 @@ interface StudentModalProps {
   onClose: () => void;
   onSubmit: (values: Student) => Promise<void>;
   editData?: Student;
+  mode: "create" | "update";
 }
 
 const createValidationSchema = (isEdit: boolean) =>
