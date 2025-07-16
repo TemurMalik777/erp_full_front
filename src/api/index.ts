@@ -24,4 +24,9 @@ axiosInstance.interceptors.response.use(
   }
 );
 
+export const logout = () => {
+  clearStorage();
+  window.location.href = "/";
+}
+
 export default axiosInstance;

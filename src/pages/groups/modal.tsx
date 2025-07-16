@@ -43,11 +43,11 @@ const GroupModal: React.FC<GroupModalProps> = ({
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("Nomi majburiy"),
-    course_id: Yup.number().required("Kurs ID majburiy"),
-    status: Yup.string().required("Status majburiy"),
-    start_date: Yup.string().required("Boshlanish sanasi kerak"),
-    end_date: Yup.string().required("Tugash sanasi kerak"),
+    name: Yup.string().required("Name is required"),
+    course_id: Yup.number().required("Course is required"),
+    status: Yup.string().required("Status is required"),
+    start_date: Yup.string().required("Start date is required"),
+    end_date: Yup.string().required("End date is required"),
   });
 
   const handleSubmit = (values: Group) => {
@@ -61,7 +61,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
   return (
     <Modal
       open={open}
-      title={mode === "create" ? "Yangi guruh qo'shish" : "Guruhni tahrirlash"}
+      title={mode === "create" ? "Add new group" : "Edit group"}
       onCancel={toggle}
       footer={null}
       destroyOnHidden
@@ -74,7 +74,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
       >
         {({ setFieldValue, values }) => (
           <Form>
-            <AntForm.Item label="Nomi">
+            <AntForm.Item label="Name" labelCol={{ span: 24 }}>
               <Field name="name" as={Input} />
               <ErrorMessage
                 name="name"
@@ -99,7 +99,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
               <ErrorMessage name="course_id" component="div" />
             </AntForm.Item>
 
-            <AntForm.Item label="Holati">
+            <AntForm.Item label="Status" labelCol={{ span: 24 }}>
               <Field name="status" as={Select} style={{ width: "100%" }}>
                 <Option value="active">Active</Option>
                 <Option value="inactive">Inactive</Option>
@@ -110,7 +110,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
               />
             </AntForm.Item>
 
-            <AntForm.Item label="Boshlanish sanasi">
+            <AntForm.Item label="Start date" labelCol={{ span: 24 }}>
               <DatePicker
                 style={{ width: "100%" }}
                 value={values.start_date ? dayjs(values.start_date) : null}
@@ -124,7 +124,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
               />
             </AntForm.Item>
 
-            <AntForm.Item label="Tugash sanasi">
+            <AntForm.Item label="End date" labelCol={{ span: 24 }}>
               <DatePicker
                 style={{ width: "100%" }}
                 value={values.end_date ? dayjs(values.end_date) : null}
@@ -145,7 +145,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
                 loading={isLoading}
                 block
               >
-                {mode === "create" ? "Qo'shish" : "Saqlash"}
+                {mode === "update" ? "update" : "create"}
               </Button>
             </AntForm.Item>
           </Form>

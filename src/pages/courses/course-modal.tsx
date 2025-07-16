@@ -12,6 +12,7 @@ interface CourseModalProps {
   onSubmit: (values: Course) => void;
   editData?: Course;
   mode: "create" | "update";
+  loading?: boolean;
 }
 
 const validationSchema = Yup.object({
@@ -35,6 +36,7 @@ const FormikSelect = ({
   label,
   name,
   options,
+  
 }: {
   label: string;
   name: keyof Course;
@@ -68,6 +70,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
   onClose,
   onSubmit,
   editData,
+  mode,
 }) => {
   const initialValues: Course = editData || {
     title: "",
@@ -154,7 +157,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
             </AntForm.Item>
 
             <Button type="primary" htmlType="submit" block>
-              Save
+              {mode === "update" ? "update" : "create"}
             </Button>
           </Form>
         )}

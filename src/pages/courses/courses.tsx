@@ -5,6 +5,7 @@ import type { Course } from "@types";
 import { PopConfirm } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useCourse } from "@hooks";
+import { EditOutlined } from "@ant-design/icons";
 
 interface CourseWithId extends Course {
   id: number;
@@ -18,9 +19,9 @@ function Courses() {
     page: 1,
     limit: 10,
   });
-  
+
   const location = useLocation();
-  
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const page = searchParams.get("page");
@@ -33,9 +34,11 @@ function Courses() {
     }
   }, [location.search]);
 
-  const { data, useCourseDelete } = useCourse();
+  const { data, useCourseDelete, useCourseCreate, useCourseUpdate } = useCourse();
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useCourseDelete();
+  const { mutate: createFn, isPending: isCreating } = useCourseCreate();
+  const { mutate: updateFn, isPending: isUpdating } = useCourseUpdate();
 
   const deleteItem = (id: number) => {
     deleteFn(id);
@@ -54,6 +57,30 @@ function Courses() {
     }
   };
 
+  const handleSubmit = (values: Course) => {
+    if (mode === "create") {
+      const { id, ...createData } = values;
+      createFn(createData as Omit<Course, 'id'>, {
+        onSuccess: () => {
+          toggle();
+        },
+      });
+    } else if (mode === "update" && editData) {
+       const updateData = {
+          title: values.title,
+          price: values.price,
+          duration: values.duration,
+          lessons_in_a_week: values.lessons_in_a_week,
+          lesson_duration: values.lesson_duration,
+          description: values.description,
+        };
+        updateFn({ model: updateData, id: editData.id }, {
+          onSuccess: () => {
+            toggle();
+          },
+        });
+    }
+  }
   const handleTableChange = (pagination: TablePaginationConfig) => {
     handlePagination({ pagination, setParams });
   };
@@ -79,7 +106,7 @@ function Courses() {
       render: (_: any, record: CourseWithId) => (
         <Space size="middle">
           <Button type="primary" onClick={() => editItem(record)}>
-            Edit
+            <EditOutlined />
           </Button>
           <PopConfirm
             onConfirm={() => deleteItem(record.id!)}
@@ -96,16 +123,27 @@ function Courses() {
         <Coursesmodal
           visible={isModalOpen}
           onClose={toggle}
-          onSubmit={() => {}}
+          onSubmit={handleSubmit}
           editData={editData ?? undefined}
           mode={mode}
+          loading={isCreating || isUpdating}
         />
       )}
-      <h1>Courses</h1>
-      <Button type="primary" onClick={() => setIsModalOpen(true)}>
-        + Add Course
-      </Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+          alignItems: "center",
+        }}
+      >
+        <h1>Courses</h1>
+        <Button type="primary" onClick={() => {setIsModalOpen(true); setMode("create");}}>
+          + Add Course
+        </Button>
+      </div>
       <Table<CourseWithId>
+        bordered
         columns={columns}
         dataSource={data?.data.courses}
         rowKey={(row) => row.id!}
@@ -121,5 +159,4 @@ function Courses() {
     </>
   );
 }
-
 export default Courses;

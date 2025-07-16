@@ -5,7 +5,7 @@ import type { Group } from "@types";
 import { PopConfirm, GroupColumns } from "@components";
 import { Link, useLocation } from "react-router-dom";
 import { useGeneral, useGroup } from "@hooks";
-
+import { EditOutlined } from "@ant-design/icons";
 function Groups() {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"create" | "update">("create");
@@ -54,7 +54,7 @@ function Groups() {
       render: (_: any, record: Group) => (
         <Space size="middle">
           <Button type="primary" onClick={() => editItem(record)}>
-            edit
+            <EditOutlined />
           </Button>
           <PopConfirm
             onConfirm={() => deleteItem(record.id!)}
@@ -68,18 +68,21 @@ function Groups() {
   return (
     <>
       {open && (
-        <GroupModal
-          open={open}
-          toggle={toggle}
-          update={update}
-          mode={mode}
-        />
+        <GroupModal open={open} toggle={toggle} update={update} 
+        mode={mode}
+         />
       )}
-      <h1>Groups</h1>
-      <Button type="primary" onClick={() => setOpen(true)}>
-        Add group
-      </Button>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",  marginBottom: "16px" }}>
+        <h1>Groups</h1>
+        <Button
+          type="primary"
+          onClick={() => { setOpen(true); setMode("create"); }}
+        >
+          + Add group
+        </Button>
+      </div>
       <Table<Group>
+        bordered
         columns={columns}
         dataSource={data?.data.data}
         rowKey={(row) => row.id!}

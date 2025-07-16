@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
-import type { Branch, Teacher } from "@types";
+import type { 
+   Teacher } from "@types";
 import TeacherModal from "./teacher-modal";
 import { PopConfirm } from "@components";
 import { useLocation } from "react-router-dom";
-import { useGeneral, useTeachers, useBranch, useDeleteTeacher } from "@hooks";
+import { useGeneral, useTeachers, 
+   useDeleteTeacher } from "@hooks";
+import { EditOutlined } from "@ant-design/icons";
 
 function TeacherPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,9 +17,9 @@ function TeacherPage() {
     page: 1,
     limit: 10,
   });
-  
+
   const location = useLocation();
-  
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const page = searchParams.get("page");
@@ -30,11 +33,9 @@ function TeacherPage() {
   }, [location.search]);
 
   const { data } = useTeachers();
-  const { data: branchData } = useBranch();
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useDeleteTeacher();
 
-  const branches = branchData?.data?.branch || [];
 
   const deleteItem = (id: number) => {
     deleteFn(id);
@@ -64,24 +65,12 @@ function TeacherPage() {
     { title: "Phone", dataIndex: "phone", key: "phone" },
     { title: "Role", dataIndex: "role", key: "role" },
     {
-      title: "Branches",
-      dataIndex: "branchId",
-      key: "branchId",
-      render: (branchId?: number[]) => {
-        if (!Array.isArray(branchId)) return "—";
-        const branchNames = branchId
-          .map((id) => branches.find((branch: Branch) => branch.id === id)?.name)
-          .filter(Boolean);
-        return branchNames.length > 0 ? branchNames.join(", ") : "—";
-      },
-    },
-    {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Teacher) => (
         <Space size="middle">
           <Button type="primary" onClick={() => editItem(record)}>
-            Edit
+            <EditOutlined />
           </Button>
           <PopConfirm
             onConfirm={() => deleteItem(record.id!)}
@@ -100,18 +89,27 @@ function TeacherPage() {
           onClose={toggle}
           editData={editData ?? undefined}
           mode={mode}
-          branches={branches}
           onSubmit={async (values) => {
             console.log(values);
             toggle();
           }}
         />
       )}
-      <h1>Teachers</h1>
-      <Button type="primary" onClick={() => setIsModalOpen(true)}>
-        + Add Teacher
-      </Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "16px",
+          alignItems: "center",
+        }}
+      >
+        <h1>Teachers</h1>
+        <Button type="primary" onClick={() => { setIsModalOpen(true); setMode("create"); }}>
+          + Add Teacher
+        </Button>
+      </div>
       <Table<Teacher>
+        bordered
         columns={columns}
         dataSource={data?.data.teachers}
         rowKey={(row) => row.id!}
