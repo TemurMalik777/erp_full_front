@@ -19,7 +19,7 @@ import {
   Groups,
   SingleGroup,
 } from "@pages";
-import Notfoun from "../not-found/notfoun";
+import Notfoun from "../not-found/notfound";
 const App = lazy(() => import("../App"));
 
 const Router = () => {

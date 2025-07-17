@@ -1,15 +1,15 @@
 import React from "react";
-import { Modal, Input, Form as AntForm, Button, Select, Spin } from "antd";
+import { Modal, Input, Form as AntForm, Button, Select, Spin, message } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import type { Branch, Teacher } from "@types";
 import { MaskedInput } from "antd-mask-input";
 import { useBranch } from "@hooks";
+import { useCreateTeacher, useUpdateTeacher } from "../../hooks/useTeacher"
 
 interface TeacherModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (values: Teacher) => Promise<void>;
   editData?: Teacher;
   mode: "create" | "update";
 }
@@ -25,9 +25,6 @@ const validationSchema = (isEdit: boolean) =>
       .required("Email is required"),
     phone: Yup.string().required("Phone number is required"),
     role: Yup.string().required("Role is required"),
-    branchId: Yup.array()
-      .min(1, "At least one branch must be selected")
-      .required(),
     ...(isEdit
       ? {}
       : {
@@ -40,7 +37,6 @@ const validationSchema = (isEdit: boolean) =>
 const TeacherModal: React.FC<TeacherModalProps> = ({
   visible,
   onClose,
-  onSubmit,
   editData,
   mode,
 }) => {
@@ -48,6 +44,8 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
 
   const { data: branchData, isLoading } = useBranch();
   const branches: Branch[] = branchData?.data?.branch || [];
+  const { mutate: createFn } = useCreateTeacher();
+  const { mutate: updateFn } = useUpdateTeacher();
 
   const initialValues: Teacher = {
     first_name: editData?.first_name || "",
@@ -58,6 +56,32 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
     role: editData?.role || "",
     branchId: editData?.branchId || [],
   };
+
+   const handleSubmit = async (values: Teacher) => {
+      const { 
+        password,
+         ...rest } = values;
+
+      const payload: any = {
+        ...rest,
+        ...(editData? {} : { password }
+          ),
+      };
+      console.log(payload);
+      try {
+        if (editData && editData.id != null) {
+          updateFn({ model: payload, id: editData.id });
+          console.log("editData", editData);
+
+        } else {
+          createFn(payload);
+        }
+        onClose();
+      } catch (error) {
+        console.error(error);
+        message.error("An error occurred while saving.");
+      }
+    };
 
   return (
     <Modal
@@ -75,7 +99,7 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
           enableReinitialize
           initialValues={initialValues}
           validationSchema={validationSchema(isEdit)}
-          onSubmit={onSubmit}
+          onSubmit={handleSubmit}
         >
           {({ setFieldValue }) => (
             <Form>

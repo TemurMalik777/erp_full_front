@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
-import type { 
-   Teacher } from "@types";
+import type { Teacher } from "@types";
 import TeacherModal from "./teacher-modal";
 import { PopConfirm } from "@components";
 import { useLocation } from "react-router-dom";
-import { useGeneral, useTeachers, 
-   useDeleteTeacher } from "@hooks";
+import { useGeneral, useTeachers, useDeleteTeacher } from "@hooks";
 import { EditOutlined } from "@ant-design/icons";
 
 function TeacherPage() {
@@ -35,7 +33,6 @@ function TeacherPage() {
   const { data } = useTeachers();
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useDeleteTeacher();
-
 
   const deleteItem = (id: number) => {
     deleteFn(id);
@@ -89,10 +86,10 @@ function TeacherPage() {
           onClose={toggle}
           editData={editData ?? undefined}
           mode={mode}
-          onSubmit={async (values) => {
-            console.log(values);
-            toggle();
-          }}
+          // onSubmit={async (values) => {
+          //   console.log(values);
+          //   toggle();
+          // }}
         />
       )}
       <div
@@ -104,7 +101,13 @@ function TeacherPage() {
         }}
       >
         <h1>Teachers</h1>
-        <Button type="primary" onClick={() => { setIsModalOpen(true); setMode("create"); }}>
+        <Button
+          type="primary"
+          onClick={() => {
+            setIsModalOpen(true);
+            setMode("create");
+          }}
+        >
           + Add Teacher
         </Button>
       </div>
