@@ -35,6 +35,9 @@
       "@helpers": [
         "./src/helpers"
       ],
+      "@validations": [
+        "./src/validations"
+      ],
     },
     /* Bundler mode */
     "moduleResolution": "bundler",

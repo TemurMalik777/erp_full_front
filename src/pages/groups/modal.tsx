@@ -7,11 +7,10 @@ import {
   Button,
 } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import dayjs from "dayjs";
 import type { Group } from "@types";
 import { useCourse, useGroup } from "@hooks";
-
+import { GroupValidation } from "@validations";
 const { Option } = Select;
 
 interface GroupModalProps {
@@ -42,14 +41,6 @@ const GroupModal: React.FC<GroupModalProps> = ({
     end_date: update?.end_date || "",
   };
 
-  const validationSchema = Yup.object({
-    name: Yup.string().required("Name is required"),
-    course_id: Yup.number().required("Course is required"),
-    status: Yup.string().required("Status is required"),
-    start_date: Yup.string().required("Start date is required"),
-    end_date: Yup.string().required("End date is required"),
-  });
-
   const handleSubmit = (values: Group) => {
     if (mode === "create") {
       createFn(values, { onSuccess: toggle });
@@ -69,7 +60,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
       <Formik
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        validationSchema={validationSchema}
+        validationSchema={GroupValidation}
         enableReinitialize
       >
         {({ setFieldValue, values }) => (

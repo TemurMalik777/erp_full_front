@@ -14,6 +14,7 @@ export default defineConfig({
       { find: "@service", replacement: "/src/service" },
       { find: "@hooks", replacement: "/src/hooks" },
       { find: "@helpers", replacement: "/src/helpers" },
+      { find: "@validations", replacement: "/src/validations" },
     ],
   },
 });

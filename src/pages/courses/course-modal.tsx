@@ -1,10 +1,9 @@
 import React from "react";
 import { Modal, Input, Form as AntForm, Button, Select } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
 import type { Course } from "@types";
 import { useCourse } from "@hooks";
-
+import { CourseValidation } from "@validations";
 const { Option } = Select;
 
 interface CourseModalProps {
@@ -34,22 +33,6 @@ const CourseModal: React.FC<CourseModalProps> = ({
     lesson_duration: editData?.lesson_duration || "",
   };
 
-  const validationSchema = Yup.object({
-    title: Yup.string().required("Title is required"),
-    description: Yup.string().required("Description is required"),
-    price: Yup.number()
-      .typeError("Must be a number")
-      .min(0)
-      .integer()
-      .required("Price is required"),
-    duration: Yup.string().required("Duration is required"),
-    lessons_in_a_week: Yup.number()
-      .typeError("Must be a number")
-      .min(1)
-      .required("Lessons per week is required"),
-    lesson_duration: Yup.string().required("Lesson duration is required"),
-  });
-
   const handleSubmit = (values: Course) => {
     if (mode === "create") {
       const { id, ...payload } = values;
@@ -69,7 +52,7 @@ const CourseModal: React.FC<CourseModalProps> = ({
     >
       <Formik
         initialValues={initialValues}
-        validationSchema={validationSchema}
+        validationSchema={CourseValidation}
         onSubmit={handleSubmit}
         enableReinitialize
       >
