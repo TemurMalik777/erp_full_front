@@ -5,30 +5,19 @@ import {
   Form as AntForm,
   Button,
   DatePicker,
-  InputNumber,
   Select,
+  message,
 } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import dayjs from "dayjs";
 import { MaskedInput } from "antd-mask-input";
-
-export interface Student {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-  password_hash: string;
-  confirm_password: string;
-  gender: string;
-  date_of_birth: string;
-  lidId: number;
-}
+import type { Student } from "@types";
+import { useStudent } from "@hooks";
 
 interface StudentModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (values: Student) => Promise<void>;
   editData?: Student;
   mode: "create" | "update";
   loading?: boolean;
@@ -44,7 +33,6 @@ const createValidationSchema = (isEdit: boolean) =>
     phone: Yup.string().required("Phone number is required"),
     gender: Yup.string().required("Gender is required"),
     date_of_birth: Yup.string().required("Date of birth is required"),
-    lidId: Yup.number().required("Lid ID is required"),
     ...(isEdit
       ? {}
       : {
@@ -60,13 +48,14 @@ const createValidationSchema = (isEdit: boolean) =>
 const StudentModal: React.FC<StudentModalProps> = ({
   visible,
   onClose,
-  onSubmit,
   editData,
   mode,
   loading = false,
 }) => {
   const isEdit = !!editData;
-
+  const { useStudentCreate, useStudentUpdate } = useStudent();
+  const { mutate: createFn } = useStudentCreate();
+  const { mutate: updateFn } = useStudentUpdate();
   const initialValues: Student = {
     first_name: editData?.first_name || "",
     last_name: editData?.last_name || "",
@@ -76,7 +65,32 @@ const StudentModal: React.FC<StudentModalProps> = ({
     confirm_password: "",
     gender: editData?.gender || "",
     date_of_birth: editData?.date_of_birth || "",
-    lidId: editData?.lidId || 0,
+  };
+
+  const handleSubmit = async (values: Student) => {
+    const { confirm_password, password_hash, ...rest } = values;
+
+    const payload: any = {
+      ...rest,
+      ...(editData
+        ? {}
+        : {
+            password_hash: values.password_hash,
+            confirm_password: values.confirm_password,
+          }),
+    };
+    console.log(payload);
+    try {
+      if (editData && editData.id != null) {
+        updateFn({ model: payload, id: editData.id });
+      } else {
+        createFn(payload);
+      }
+      onClose();
+    } catch (error) {
+      console.error(error);
+      message.error("An error occurred while saving.");
+    }
   };
 
   return (
@@ -91,10 +105,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
         enableReinitialize
         initialValues={initialValues}
         validationSchema={createValidationSchema(isEdit)}
-        onSubmit={(values) => {
-          const { confirm_password, ...data } = values;
-          return onSubmit(data as Student);
-        }}
+        onSubmit={handleSubmit}
       >
         {({ setFieldValue, values }) => (
           <Form>
@@ -130,7 +141,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
                     }
                     onBlur={field.onBlur}
                     mask="+\9\9\8 (00) 000-00-00"
-                    />
+                  />
                 )}
               </Field>
               <div style={{ color: "red" }}>
@@ -197,23 +208,6 @@ const StudentModal: React.FC<StudentModalProps> = ({
               />
               <div style={{ color: "red" }}>
                 <ErrorMessage name="date_of_birth" />
-              </div>
-            </AntForm.Item>
-
-            <AntForm.Item label="Lid ID" labelCol={{ span: 24 }}>
-              <Field name="lidId">
-                {({ field }: any) => (
-                  <InputNumber
-                    {...field}
-                    value={values.lidId}
-                    onChange={(val) => setFieldValue("lidId", val)}
-                    style={{ width: "100%" }}
-                    min={0}
-                  />
-                )}
-              </Field>
-              <div style={{ color: "red" }}>
-                <ErrorMessage name="lidId" />
               </div>
             </AntForm.Item>
 

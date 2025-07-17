@@ -30,12 +30,9 @@ function Student() {
     }
   }, [location.search]);
 
-  const { data, useStudentDelete, useStudentCreate, useStudentUpdate } =
-    useStudent();
+  const { data, useStudentDelete } = useStudent();
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useStudentDelete();
-  const { mutate: createFn, isPending: isCreating } = useStudentCreate();
-  const { mutate: updateFn, isPending: isUpdating } = useStudentUpdate();
 
   const deleteItem = (id: number) => {
     deleteFn(id);
@@ -51,40 +48,6 @@ function Student() {
     setIsModalOpen(!isModalOpen);
     if (editData) {
       setEditData(null);
-    }
-  };
-
-  const handleSubmit = async (values: Student) => {
-    const apiData = {
-      first_name: values.first_name,
-      last_name: values.last_name,
-      email: values.email,
-      phone: values.phone,
-      confirm_password: values.confirm_password,
-      password_hash: values.password_hash,
-      gender: values.gender,
-      date_of_birth: values.date_of_birth,
-      lidId: values.lidId,
-      ...(mode === "create" && { password_hash: values.password_hash }),
-    };
-
-    if (mode === "create") {
-      createFn(apiData, {
-        onSuccess: toggle,
-        onError: (error) => {
-          console.error("Create error:", error);
-        },
-      });
-    } else if (mode === "update" && editData?.id !== undefined) {
-      updateFn(
-        { model: apiData, id: editData.id },
-        {
-          onSuccess: toggle,
-          onError: (error) => {
-            console.error("Update error:", error);
-          },
-        }
-      );
     }
   };
 
@@ -128,8 +91,6 @@ function Student() {
           onClose={toggle}
           editData={editData ?? undefined}
           mode={mode}
-          onSubmit={handleSubmit}
-          loading={isCreating || isUpdating}
         />
       )}
       <div
