@@ -86,10 +86,6 @@ function TeacherPage() {
           onClose={toggle}
           editData={editData ?? undefined}
           mode={mode}
-          // onSubmit={async (values) => {
-          //   console.log(values);
-          //   toggle();
-          // }}
         />
       )}
       <div

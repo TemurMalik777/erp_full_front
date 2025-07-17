@@ -1,12 +1,9 @@
-
 const SingleGroup = () => {
   return (
     <div>
-        <h1>
-            Yolg'iz Bori
-        </h1>
+      <h1>Yolg'iz Bori</h1>
     </div>
-  )
-}
+  );
+};
 
-export default SingleGroup
+export default SingleGroup;

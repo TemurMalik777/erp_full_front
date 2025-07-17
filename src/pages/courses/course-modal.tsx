@@ -1,164 +1,168 @@
 import React from "react";
 import { Modal, Input, Form as AntForm, Button, Select } from "antd";
-import { Formik, Form, ErrorMessage, useFormikContext, Field } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import type { Course } from "@types";
+import { useCourse } from "@hooks";
 
 const { Option } = Select;
 
 interface CourseModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (values: Course) => void;
   editData?: Course;
   mode: "create" | "update";
-  loading?: boolean;
 }
-
-const validationSchema = Yup.object({
-  title: Yup.string().required("Course title is required"),
-  description: Yup.string().required("Description is required"),
-  price: Yup.number()
-    .typeError("Price must be a whole number")
-    .min(0, "Price cannot be less than 0")
-    .integer("Price must be an integer")
-    .required("Price is required"),
-  duration: Yup.string().required("Duration is required"),
-  lessons_in_a_week: Yup.number()
-    .typeError("Lessons per week must be a whole number")
-    .min(1, "Lessons per week must be at least 1")
-    .integer("Lessons per week must be an integer")
-    .required("Lessons per week is required"),
-  lesson_duration: Yup.string().required("Lesson duration is required"),
-});
-
-const FormikSelect = ({
-  label,
-  name,
-  options,
-  
-}: {
-  label: string;
-  name: keyof Course;
-  options: { value: string | number; label: string }[];
-}) => {
-  const { setFieldValue, values } = useFormikContext<Course>();
-
-  return (
-    <AntForm.Item label={label} labelCol={{ span: 24 }}>
-      <Select
-        value={values[name] || undefined}
-        onChange={(value) => setFieldValue(name, value)}
-        placeholder={`Select ${label.toLowerCase()}`}
-        allowClear
-      >
-        {options.map((opt) => (
-          <Option key={opt.value} value={opt.value}>
-            {opt.label}
-          </Option>
-        ))}
-      </Select>
-      <ErrorMessage name={name}>
-        {(msg) => <div style={{ color: "red", marginTop: 5 }}>{msg}</div>}
-      </ErrorMessage>
-    </AntForm.Item>
-  );
-};
 
 const CourseModal: React.FC<CourseModalProps> = ({
   visible,
   onClose,
-  onSubmit,
   editData,
   mode,
 }) => {
-  const initialValues: Course = editData || {
-    title: "",
-    description: "",
-    price: "",
-    duration: "",
-    lessons_in_a_week: "",
-    lesson_duration: "",
+  const { useCourseCreate, useCourseUpdate } = useCourse();
+  const { mutate: createFn, isPending: isCreating } = useCourseCreate();
+  const { mutate: updateFn, isPending: isUpdating } = useCourseUpdate();
+  const isLoading = isCreating || isUpdating;
+
+  const initialValues: Course = {
+    title: editData?.title || "",
+    description: editData?.description || "",
+    price: editData?.price || "",
+    duration: editData?.duration || "",
+    lessons_in_a_week: editData?.lessons_in_a_week || "",
+    lesson_duration: editData?.lesson_duration || "",
+  };
+
+  const validationSchema = Yup.object({
+    title: Yup.string().required("Title is required"),
+    description: Yup.string().required("Description is required"),
+    price: Yup.number()
+      .typeError("Must be a number")
+      .min(0)
+      .integer()
+      .required("Price is required"),
+    duration: Yup.string().required("Duration is required"),
+    lessons_in_a_week: Yup.number()
+      .typeError("Must be a number")
+      .min(1)
+      .required("Lessons per week is required"),
+    lesson_duration: Yup.string().required("Lesson duration is required"),
+  });
+
+  const handleSubmit = (values: Course) => {
+    if (mode === "create") {
+      const { id, ...payload } = values;
+      createFn(payload as Omit<Course, "id">, { onSuccess: onClose });
+    } else if (mode === "update" && editData?.id) {
+      updateFn({ model: values, id: editData.id }, { onSuccess: onClose });
+    }
   };
 
   return (
     <Modal
-      title={editData ? "Edit Course" : "Add Course"}
       open={visible}
       onCancel={onClose}
+      title={mode === "create" ? "Add Course" : "Edit Course"}
       footer={null}
       destroyOnHidden
     >
       <Formik
-        enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
+        enableReinitialize
       >
-        {() => (
+        {({ values, setFieldValue }) => (
           <Form>
-            <AntForm.Item label="Course Title" labelCol={{ span: 24 }}>
+            <AntForm.Item label="Title" labelCol={{ span: 24 }}>
               <Field as={Input} name="title" placeholder="Enter course title" />
-              <ErrorMessage name="title">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
+              <ErrorMessage
+                name="title"
+                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              />
             </AntForm.Item>
 
             <AntForm.Item label="Price" labelCol={{ span: 24 }}>
               <Field
                 as={Input}
-                type="number"
                 name="price"
-                placeholder="Enter course price"
+                type="number"
+                placeholder="Enter price"
               />
-              <ErrorMessage name="price">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
+              <ErrorMessage
+                name="price"
+                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              />
             </AntForm.Item>
 
-            <FormikSelect
-              label="Duration"
-              name="duration"
-              options={[
-                { value: "3 months", label: "3 months" },
-                { value: "6 months", label: "6 months" },
-                { value: "12 months", label: "12 months" },
-              ]}
-            />
+            <AntForm.Item label="Duration" labelCol={{ span: 24 }}>
+              <Select
+                value={values.duration || undefined}
+                onChange={(val) => setFieldValue("duration", val)}
+                placeholder="Select duration"
+                style={{ width: "100%" }}
+              >
+                <Option value="3 months">3 months</Option>
+                <Option value="6 months">6 months</Option>
+                <Option value="12 months">12 months</Option>
+              </Select>
+              <ErrorMessage
+                name="duration"
+                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              />
+            </AntForm.Item>
 
-            <FormikSelect
-              label="Lessons per Week"
-              name="lessons_in_a_week"
-              options={[
-                { value: 3, label: "3" },
-                { value: 5, label: "5" },
-              ]}
-            />
+            <AntForm.Item label="Lessons / Week" labelCol={{ span: 24 }}>
+              <Select
+                value={values.lessons_in_a_week || undefined}
+                onChange={(val) => setFieldValue("lessons_in_a_week", val)}
+                placeholder="Select lessons per week"
+                style={{ width: "100%" }}
+              >
+                <Option value={3}>3</Option>
+                <Option value={5}>5</Option>
+              </Select>
+              <ErrorMessage
+                name="lessons_in_a_week"
+                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              />
+            </AntForm.Item>
 
-            <FormikSelect
-              label="Lesson Duration"
-              name="lesson_duration"
-              options={[
-                { value: "2 hours", label: "2 hours" },
-                { value: "4 hours", label: "4 hours" },
-              ]}
-            />
+            <AntForm.Item label="Lesson Duration" labelCol={{ span: 24 }}>
+              <Select
+                value={values.lesson_duration || undefined}
+                onChange={(val) => setFieldValue("lesson_duration", val)}
+                placeholder="Select lesson duration"
+                style={{ width: "100%" }}
+              >
+                <Option value="2 hours">2 hours</Option>
+                <Option value="4 hours">4 hours</Option>
+              </Select>
+              <ErrorMessage
+                name="lesson_duration"
+                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
+              />
+            </AntForm.Item>
 
             <AntForm.Item label="Description" labelCol={{ span: 24 }}>
-              <Field
-                as={Input.TextArea}
+              <Field as={Input.TextArea} name="description" rows={4} />
+              <ErrorMessage
                 name="description"
-                placeholder="Enter course description"
-                rows={4}
+                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
               />
-              <ErrorMessage name="description">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
             </AntForm.Item>
 
-            <Button type="primary" htmlType="submit" block>
-              {mode === "update" ? "update" : "create"}
-            </Button>
+            <AntForm.Item>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={isLoading}
+                block
+              >
+                {mode === "update" ? "Update" : "Create"}
+              </Button>
+            </AntForm.Item>
           </Form>
         )}
       </Formik>

@@ -34,12 +34,9 @@ const Branch = () => {
     }
   }, [location.search]);
 
-  const { data, useBranchDelete, useBranchCreate, useBranchUpdate } =
-    useBranch();
+  const { data, useBranchDelete } = useBranch();
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useBranchDelete();
-  const { mutate: createFn, isPending: isCreating } = useBranchCreate();
-  const { mutate: updateFn, isPending: isUpdating } = useBranchUpdate();
 
   const deleteItem = (id: number) => {
     deleteFn(id);
@@ -57,29 +54,6 @@ const Branch = () => {
       setEditData(null);
     }
   };
-
-const handleSubmit = (values: Branch) => {
-  if (mode === "create") {
-    const { id, ...createData } = values;
-    createFn(createData as Omit<Branch, 'id'>, {
-      onSuccess: () => {
-        toggle();
-      },
-    });
-  } else if (mode === "update" && editData) {
-     const updateData = {
-        name: values.name,
-        address: values.address,
-        call_number: values.call_number,
-      };
-      updateFn({ model: updateData, id: editData.id }, {
-        onSuccess: () => {
-          toggle();
-        },
-      });
-  }
-};
-
 
   const handleTableChange = (pagination: TablePaginationConfig) => {
     handlePagination({ pagination, setParams });
@@ -114,8 +88,6 @@ const handleSubmit = (values: Branch) => {
           onClose={toggle}
           editData={editData ?? undefined}
           mode={mode}
-          onSubmit={handleSubmit}
-          loading={isCreating || isUpdating}
         />
       )}
       <div

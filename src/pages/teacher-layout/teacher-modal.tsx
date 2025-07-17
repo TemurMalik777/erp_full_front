@@ -1,11 +1,19 @@
 import React from "react";
-import { Modal, Input, Form as AntForm, Button, Select, Spin, message } from "antd";
+import {
+  Modal,
+  Input,
+  Form as AntForm,
+  Button,
+  Select,
+  Spin,
+  message,
+} from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import type { Branch, Teacher } from "@types";
 import { MaskedInput } from "antd-mask-input";
 import { useBranch } from "@hooks";
-import { useCreateTeacher, useUpdateTeacher } from "../../hooks/useTeacher"
+import { useCreateTeacher, useUpdateTeacher } from "../../hooks/useTeacher";
 
 interface TeacherModalProps {
   visible: boolean;
@@ -57,31 +65,27 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
     branchId: editData?.branchId || [],
   };
 
-   const handleSubmit = async (values: Teacher) => {
-      const { 
-        password,
-         ...rest } = values;
+  const handleSubmit = async (values: Teacher) => {
+    const { password, ...rest } = values;
 
-      const payload: any = {
-        ...rest,
-        ...(editData? {} : { password }
-          ),
-      };
-      console.log(payload);
-      try {
-        if (editData && editData.id != null) {
-          updateFn({ model: payload, id: editData.id });
-          console.log("editData", editData);
-
-        } else {
-          createFn(payload);
-        }
-        onClose();
-      } catch (error) {
-        console.error(error);
-        message.error("An error occurred while saving.");
-      }
+    const payload: any = {
+      ...rest,
+      ...(editData ? {} : { password }),
     };
+    console.log(payload);
+    try {
+      if (editData && editData.id != null) {
+        updateFn({ model: payload, id: editData.id });
+        console.log("editData", editData);
+      } else {
+        createFn(payload);
+      }
+      onClose();
+    } catch (error) {
+      console.error(error);
+      message.error("An error occurred while saving.");
+    }
+  };
 
   return (
     <Modal

@@ -2,7 +2,7 @@ import { getItem } from "@helpers";
 import type { ProtectedRoute } from "@types";
 import { Navigate } from "react-router-dom";
 
-const LoginChildrem = ({ children }:ProtectedRoute) => {
+const LoginChildrem = ({ children }: ProtectedRoute) => {
   const isAuth = getItem("access_token");
   const role = getItem("role");
   if (isAuth) {

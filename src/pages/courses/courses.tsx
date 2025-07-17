@@ -34,11 +34,9 @@ function Courses() {
     }
   }, [location.search]);
 
-  const { data, useCourseDelete, useCourseCreate, useCourseUpdate } = useCourse();
+  const { data, useCourseDelete } = useCourse();
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useCourseDelete();
-  const { mutate: createFn, isPending: isCreating } = useCourseCreate();
-  const { mutate: updateFn, isPending: isUpdating } = useCourseUpdate();
 
   const deleteItem = (id: number) => {
     deleteFn(id);
@@ -57,30 +55,6 @@ function Courses() {
     }
   };
 
-  const handleSubmit = (values: Course) => {
-    if (mode === "create") {
-      const { id, ...createData } = values;
-      createFn(createData as Omit<Course, 'id'>, {
-        onSuccess: () => {
-          toggle();
-        },
-      });
-    } else if (mode === "update" && editData) {
-       const updateData = {
-          title: values.title,
-          price: values.price,
-          duration: values.duration,
-          lessons_in_a_week: values.lessons_in_a_week,
-          lesson_duration: values.lesson_duration,
-          description: values.description,
-        };
-        updateFn({ model: updateData, id: editData.id }, {
-          onSuccess: () => {
-            toggle();
-          },
-        });
-    }
-  }
   const handleTableChange = (pagination: TablePaginationConfig) => {
     handlePagination({ pagination, setParams });
   };
@@ -123,10 +97,8 @@ function Courses() {
         <Coursesmodal
           visible={isModalOpen}
           onClose={toggle}
-          onSubmit={handleSubmit}
           editData={editData ?? undefined}
           mode={mode}
-          loading={isCreating || isUpdating}
         />
       )}
       <div
@@ -138,7 +110,13 @@ function Courses() {
         }}
       >
         <h1>Courses</h1>
-        <Button type="primary" onClick={() => {setIsModalOpen(true); setMode("create");}}>
+        <Button
+          type="primary"
+          onClick={() => {
+            setIsModalOpen(true);
+            setMode("create");
+          }}
+        >
           + Add Course
         </Button>
       </div>

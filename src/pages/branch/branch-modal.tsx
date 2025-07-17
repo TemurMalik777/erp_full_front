@@ -1,14 +1,14 @@
 import React from "react";
-import { Modal, Input, Form as AntForm, Button } from "antd";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Modal, Input, Form as AntForm, Button, Space } from "antd";
+import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import type { Branch } from "@types";
 import { MaskedInput } from "antd-mask-input";
+import { useBranch } from "@hooks";
 
 interface BranchModalProps {
   visible: boolean;
   onClose: () => void;
-  onSubmit: (values: Branch) => void;
   editData?: Branch;
   mode: "create" | "update";
   loading?: boolean;
@@ -23,7 +23,6 @@ const validationSchema = Yup.object({
 const BranchModal: React.FC<BranchModalProps> = ({
   visible,
   onClose,
-  onSubmit,
   editData,
   mode,
   loading = false,
@@ -33,6 +32,36 @@ const BranchModal: React.FC<BranchModalProps> = ({
     name: "",
     address: "",
     call_number: "",
+  };
+
+  const { useBranchCreate, useBranchUpdate } = useBranch();
+  const { mutate: createFn } = useBranchCreate();
+  const { mutate: updateFn } = useBranchUpdate();
+
+  const handleSubmit = (values: Branch) => {
+    if (mode === "create") {
+      const { id, ...createData } = values;
+      createFn(createData as Omit<Branch, "id">, {
+        onSuccess: () => {
+          onClose();
+        },
+      });
+    } else if (mode === "update" && editData) {
+      const updateData = {
+        name: values.name,
+        address: values.address,
+        call_number: values.call_number,
+      };
+      const id = editData.id!;
+      updateFn(
+        { model: updateData, id },
+        {
+          onSuccess: () => {
+            onClose();
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -47,45 +76,55 @@ const BranchModal: React.FC<BranchModalProps> = ({
         enableReinitialize
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={onSubmit}
+        onSubmit={handleSubmit}
       >
-        {() => (
+        {({ errors, touched }) => (
           <Form>
-            {/* Branch Name */}
-            <AntForm.Item label="Branch Name" labelCol={{ span: 24 }}>
+            <AntForm.Item
+              label="Branch Name"
+              labelCol={{ span: 24 }}
+              validateStatus={touched.name && errors.name ? "error" : ""}
+              help={touched.name && errors.name}
+            >
               <Field as={Input} name="name" placeholder="Enter branch name" />
-              <ErrorMessage name="name">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
             </AntForm.Item>
 
-            {/* Address */}
-            <AntForm.Item label="Address" labelCol={{ span: 24 }}>
+            <AntForm.Item
+              label="Address"
+              labelCol={{ span: 24 }}
+              validateStatus={touched.address && errors.address ? "error" : ""}
+              help={touched.address && errors.address}
+            >
               <Field as={Input} name="address" placeholder="Enter address" />
-              <ErrorMessage name="address">
-                {(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              </ErrorMessage>
             </AntForm.Item>
 
-            <AntForm.Item label="Phone" labelCol={{ span: 24 }}>
+            <AntForm.Item
+              label="Phone"
+              labelCol={{ span: 24 }}
+              validateStatus={
+                touched.call_number && errors.call_number ? "error" : ""
+              }
+              help={touched.call_number && errors.call_number}
+            >
               <Field name="call_number">
                 {({ field }: any) => (
                   <MaskedInput
                     {...field}
-                    value={field.value || ""}
                     mask="+\9\9\8 (00) 000-00-00"
+                    placeholder="+998 (__) ___-__-__"
                   />
                 )}
               </Field>
-              <div style={{ color: "red" }}>
-                <ErrorMessage name="call_number" />
-              </div>
             </AntForm.Item>
 
-            {/* Submit Button */}
-            <Button type="primary" htmlType="submit" block loading={loading}>
-              {mode === "update" ? "Update" : "Create"}
-            </Button>
+            <Space
+              style={{ width: "100%", marginTop: 16 }}
+              direction="vertical"
+            >
+              <Button type="primary" htmlType="submit" block loading={loading}>
+                {mode === "update" ? "Update" : "Create"}
+              </Button>
+            </Space>
           </Form>
         )}
       </Formik>

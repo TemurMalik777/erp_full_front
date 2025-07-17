@@ -68,15 +68,23 @@ function Groups() {
   return (
     <>
       {open && (
-        <GroupModal open={open} toggle={toggle} update={update} 
-        mode={mode}
-         />
+        <GroupModal open={open} toggle={toggle} update={update} mode={mode} />
       )}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center",  marginBottom: "16px" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "16px",
+        }}
+      >
         <h1>Groups</h1>
         <Button
           type="primary"
-          onClick={() => { setOpen(true); setMode("create"); }}
+          onClick={() => {
+            setOpen(true);
+            setMode("create");
+          }}
         >
           + Add group
         </Button>
