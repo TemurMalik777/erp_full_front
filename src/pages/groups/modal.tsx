@@ -10,7 +10,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import dayjs from "dayjs";
 import type { Group } from "@types";
 import { useCourse, useGroup } from "@hooks";
-import { GroupValidation } from "@validations";
+import { GroupValidation } from "@utils";
 const { Option } = Select;
 
 interface GroupModalProps {

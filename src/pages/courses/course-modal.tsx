@@ -3,7 +3,7 @@ import { Modal, Input, Form as AntForm, Button, Select } from "antd";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import type { Course } from "@types";
 import { useCourse } from "@hooks";
-import { CourseValidation } from "@validations";
+import { CourseValidation } from "@utils";
 const { Option } = Select;
 
 interface CourseModalProps {

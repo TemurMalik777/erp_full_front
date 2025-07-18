@@ -13,7 +13,7 @@ import dayjs from "dayjs";
 import { MaskedInput } from "antd-mask-input";
 import type { Student } from "@types";
 import { useStudent } from "@hooks";
-import { StudentValidation } from "@validations";
+import { StudentValidation } from "@utils";
 interface StudentModalProps {
   visible: boolean;
   onClose: () => void;

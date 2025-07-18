@@ -35,8 +35,8 @@
       "@helpers": [
         "./src/helpers"
       ],
-      "@validations": [
-        "./src/validations"
+      "@utils": [
+        "./src/utils"
       ],
     },
     /* Bundler mode */

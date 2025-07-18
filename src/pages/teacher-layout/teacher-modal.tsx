@@ -13,7 +13,7 @@ import type { Branch, Teacher } from "@types";
 import { MaskedInput } from "antd-mask-input";
 import { useBranch } from "@hooks";
 import { useCreateTeacher, useUpdateTeacher } from "../../hooks/useTeacher";
-import { TeacherValidation } from "@validations";
+import { TeacherValidation } from "@utils";
 interface TeacherModalProps {
   visible: boolean;
   onClose: () => void;

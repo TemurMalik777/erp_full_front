@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal, Input, Form as AntForm, Button, Space } from "antd";
 import { Formik, Form, Field } from "formik";
-import { BranchValidation } from "@validations";
+import { BranchValidation } from "@utils";
 import type { Branch } from "@types";
 import { MaskedInput } from "antd-mask-input";
 import { useBranch } from "@hooks";
