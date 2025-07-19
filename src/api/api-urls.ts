@@ -12,7 +12,7 @@ export class ApiUrls {
   public static TEACHER: string = "/teacher";
 
   //student
-  public static STUDENT: string = "/student";
+  public static STUDENT: string = "/students";
 
   //barnch
   public static BRANCH: string = "/branches";

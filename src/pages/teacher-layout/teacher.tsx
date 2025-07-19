@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
 import type { Teacher } from "@types";
 import TeacherModal from "./teacher-modal";
-import { PopConfirm } from "@components";
+import { PopConfirm, TeacherColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useTeachers, useDeleteTeacher } from "@hooks";
 import { EditOutlined } from "@ant-design/icons";
@@ -56,11 +56,7 @@ function TeacherPage() {
   };
 
   const columns = [
-    { title: "First Name", dataIndex: "first_name", key: "first_name" },
-    { title: "Last Name", dataIndex: "last_name", key: "last_name" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Phone", dataIndex: "phone", key: "phone" },
-    { title: "Role", dataIndex: "role", key: "role" },
+    ...(TeacherColumns ?? []),
     {
       title: "Actions",
       key: "actions",

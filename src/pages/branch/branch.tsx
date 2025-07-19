@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
 import BranchModal from "./branch-modal";
 import type { Branch } from "@types";
-import { PopConfirm } from "@components";
+import { PopConfirm, BranchColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useBranch } from "@hooks";
 import { EditOutlined } from "@ant-design/icons";
@@ -60,9 +60,7 @@ const Branch = () => {
   };
 
   const columns = [
-    { title: "Name", dataIndex: "name", key: "name" },
-    { title: "Address", dataIndex: "address", key: "address" },
-    { title: "Phone Number", dataIndex: "call_number", key: "call_number" },
+    ...(BranchColumns<BranchWithId>() ?? []),
     {
       title: "Actions",
       key: "actions",

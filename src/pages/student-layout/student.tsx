@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
 import StudentModal from "./student-model";
-import { PopConfirm } from "@components";
+import { PopConfirm, StudentColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useStudent } from "@hooks";
 import { EditOutlined } from "@ant-design/icons";
@@ -56,16 +56,7 @@ function Student() {
   };
 
   const columns = [
-    { title: "First Name", dataIndex: "first_name", key: "first_name" },
-    { title: "Last Name", dataIndex: "last_name", key: "last_name" },
-    { title: "Email", dataIndex: "email", key: "email" },
-    { title: "Phone", dataIndex: "phone", key: "phone" },
-    { title: "Gender", dataIndex: "gender", key: "gender" },
-    {
-      title: "Date of Birth",
-      dataIndex: "date_of_birth",
-      key: "date_of_birth",
-    },
+    ...(StudentColumns ?? []),
     {
       title: "Actions",
       key: "actions",

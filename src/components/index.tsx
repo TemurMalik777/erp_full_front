@@ -1,4 +1,15 @@
 import PopConfirm from "./pop-confirm";
-import {GroupColumns} from "./table-columns";
+import { GroupColumns } from "./table-columns";
+import { CourseColumns } from "./table-columns";
+import { StudentColumns } from "./table-columns";
+import { BranchColumns } from "./table-columns";
+import { TeacherColumns } from "./table-columns";
 
-export { PopConfirm, GroupColumns };
+export {
+  PopConfirm,
+  GroupColumns,
+  TeacherColumns,
+  StudentColumns,
+  CourseColumns,
+  BranchColumns,
+};
