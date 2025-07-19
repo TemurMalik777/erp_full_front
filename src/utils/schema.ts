@@ -1,9 +1,17 @@
 import * as Yup from "yup";
 //--Branch--
 export const BranchValidation = Yup.object({
-  name: Yup.string().required("Branch name is required"),
-  address: Yup.string().required("Address is required"),
-  call_number: Yup.string().required("Phone number is required"),
+  name: Yup.string()
+    .trim()
+    .max(50, "Branch nomi 50 belgidan oshmasligi kerak")
+    .required("Branch nomi majburiy"),
+    
+  address: Yup.string()
+    .trim()
+    .required("Manzil majburiy"),
+
+  call_number: Yup.string()
+    .required("Telefon raqam majburiy"),
 });
 
 
@@ -13,14 +21,11 @@ export const CourseValidation = Yup.object({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
   price: Yup.number()
-    .typeError("Must be a number")
-    .min(0)
-    .integer()
+    .typeError("Price must be a number")
     .required("Price is required"),
   duration: Yup.string().required("Duration is required"),
   lessons_in_a_week: Yup.number()
-    .typeError("Must be a number")
-    .min(1)
+    .typeError("Lessons per week must be a number")
     .required("Lessons per week is required"),
   lesson_duration: Yup.string().required("Lesson duration is required"),
 });
@@ -36,6 +41,9 @@ export const GroupValidation = Yup.object({
     .required("Status is required"),
   start_date: Yup.string().required("Start date is required"),
   end_date: Yup.string().required("End date is required"),
+  start_time: Yup.string().required("Start date is required"),
+  end_time: Yup.string().required("End date is required"),
+  roomId: Yup.number().required("Course is required"),
 });
 
 
@@ -62,6 +70,31 @@ export const StudentValidation = (isEdit: boolean) =>
             .required("Confirm password is required"),
         }),
   });
+// export const StudentValidation = (isEdit: boolean) =>
+//   Yup.object({
+//     first_name: Yup.string().required("First name is required"),
+//     last_name: Yup.string().required("Last name is required"),
+//     email: Yup.string()
+//       .email("Invalid email format")
+//       .required("Email is required"),
+//     phone: Yup.string().required("Phone number is required"),
+//     gender: Yup.string().required("Gender is required"),
+//     date_of_birth: Yup.string().required("Date of birth is required"),
+//     ...(isEdit
+//       ? {}
+//       : {
+//           password_hash: Yup.string()
+//             .min(8, "Password must be at least 8 characters")
+//             .required("Password is required"),
+//           confirm_password: Yup.string()
+//             .oneOf([Yup.ref("password_hash")], "Passwords do not match")
+//             .required("Confirm password is required"),
+//         }),
+//   });
+
+// // Tiplarni ajratib olish:
+// export type CreateStudentFormType = Yup.InferType<ReturnType<typeof StudentValidation>>; // isEdit = false
+// export type EditStudentFormType = Omit<CreateStudentFormType, "password_hash" | "confirm_password">;
 
 
 
@@ -95,4 +128,20 @@ export const SignInValidation = Yup.object().shape({
     .min(6, "Password must be at least 6 characters!")
     .required("Please input your password!"),
   role: Yup.string().required("Please select your role!"),
+});
+
+
+//--Room--
+export const RoomValidation = Yup.object({
+  branchId: Yup.number()
+    .typeError("Filial ID raqam bo'lishi kerak")
+    .required("Filial ID majburiy"),
+  name: Yup.string()
+    .required("Xona nomi majburiy")
+    .min(2, "Xona nomi kamida 2 ta belgidan iborat bo'lishi kerak"),
+  capacity: Yup.number()
+    .typeError("Sigim raqam bolishi kerak")
+    .required("Sigim majburiy")
+    .positive("Sigim musbat son bolishi kerak")
+    .integer("Sigim butun son bolishi kerak"),
 });

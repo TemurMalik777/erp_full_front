@@ -2,6 +2,7 @@ import {
   type Branch,
   type Course,
   type Group,
+  type Room,
   type Student,
   type Teacher,
 } from "@types";
@@ -33,6 +34,22 @@ export const GroupColumns: TableProps<Group>["columns"] = [
     title: "End Date",
     dataIndex: "end_date",
     key: "end_date",
+  },
+  {
+    title: "Start time",
+    dataIndex: "start_time",
+    key: "start_time",
+  },
+  {
+    title: "End Time",
+    dataIndex: "end_time",
+    key: "end_time",
+  },
+  {
+    title: "Rooms",
+    dataIndex: "roomId",
+    key: "roomId",
+    // render: (rooms: { name: string }) => <span>{rooms.name}</span>,
   },
 ];
 
@@ -123,7 +140,6 @@ export const StudentColumns: TableProps<Student>["columns"] = [
     key: "date_of_birth",
   },
 ];
-
 export const TeacherColumns: TableProps<Teacher>["columns"] = [
   {
     title: "First Name",
@@ -149,5 +165,26 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
     title: "Role",
     dataIndex: "role",
     key: "role",
+  },
+];
+
+export const RoomColumns: TableProps<Room>["columns"] = [
+  {
+    title: "Branches",
+    dataIndex: "branchId",
+    key: "branchId",
+    // render: (branch: { title: string }) => <span>{branch.title}</span>,
+    // render: (branch: { name: string }) => <span>{branch.name}</span>,
+    render: (branch: Room) => <span>{branch?.name}</span>,
+  },
+  {
+    title: "Name",
+    dataIndex: "name",
+    key: "name",
+  },
+  {
+    title: "Capacity",
+    dataIndex: "capacity",
+    key: "capacity",
   },
 ];

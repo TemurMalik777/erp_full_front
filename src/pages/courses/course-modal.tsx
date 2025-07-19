@@ -1,9 +1,11 @@
 import React from "react";
 import { Modal, Input, Form as AntForm, Button, Select } from "antd";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useForm, Controller } from "react-hook-form";
 import type { Course } from "@types";
 import { useCourse } from "@hooks";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { CourseValidation } from "@utils";
+
 const { Option } = Select;
 
 interface CourseModalProps {
@@ -24,16 +26,24 @@ const CourseModal: React.FC<CourseModalProps> = ({
   const { mutate: updateFn, isPending: isUpdating } = useCourseUpdate();
   const isLoading = isCreating || isUpdating;
 
-  const initialValues: Course = {
-    title: editData?.title || "",
-    description: editData?.description || "",
-    price: editData?.price || "",
-    duration: editData?.duration || "",
-    lessons_in_a_week: editData?.lessons_in_a_week || "",
-    lesson_duration: editData?.lesson_duration || "",
-  };
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Course>({
+    resolver: yupResolver(CourseValidation),
+    defaultValues: {
+      title: editData?.title || "",
+      description: editData?.description || "",
+      // price: editData?.price || "",
+      price: editData ? editData.price : undefined,
+      duration: editData?.duration || "",
+      lessons_in_a_week: editData ? editData.lessons_in_a_week : undefined,
+      lesson_duration: editData?.lesson_duration || "",
+    },
+  });
 
-  const handleSubmit = (values: Course) => {
+  const onSubmit = (values: Course) => {
     if (mode === "create") {
       const { id, ...payload } = values;
       createFn(payload as Omit<Course, "id">, { onSuccess: onClose });
@@ -50,105 +60,101 @@ const CourseModal: React.FC<CourseModalProps> = ({
       footer={null}
       destroyOnHidden
     >
-      <Formik
-        initialValues={initialValues}
-        validationSchema={CourseValidation}
-        onSubmit={handleSubmit}
-        enableReinitialize
-      >
-        {({ values, setFieldValue }) => (
-          <Form>
-            <AntForm.Item label="Title" labelCol={{ span: 24 }}>
-              <Field as={Input} name="title" placeholder="Enter course title" />
-              <ErrorMessage
-                name="title"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-            </AntForm.Item>
+      <AntForm layout="vertical" onFinish={handleSubmit(onSubmit)}>
+        <AntForm.Item label="Title">
+          <Controller
+            control={control}
+            name="title"
+            render={({ field }) => (
+              <Input {...field} placeholder="Enter course title" />
+            )}
+          />
+          {errors.title && (
+            <div style={{ color: "red" }}>{errors.title.message}</div>
+          )}
+        </AntForm.Item>
 
-            <AntForm.Item label="Price" labelCol={{ span: 24 }}>
-              <Field
-                as={Input}
-                name="price"
-                type="number"
-                placeholder="Enter price"
-              />
-              <ErrorMessage
-                name="price"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-            </AntForm.Item>
+        <AntForm.Item label="Price">
+          <Controller
+            control={control}
+            name="price"
+            render={({ field }) => (
+              <Input {...field} type="number" placeholder="Enter price" />
+            )}
+          />
+          {errors.price && (
+            <div style={{ color: "red" }}>{errors.price.message}</div>
+          )}
+        </AntForm.Item>
 
-            <AntForm.Item label="Duration" labelCol={{ span: 24 }}>
-              <Select
-                value={values.duration || undefined}
-                onChange={(val) => setFieldValue("duration", val)}
-                placeholder="Select duration"
-                style={{ width: "100%" }}
-              >
+        <AntForm.Item label="Duration">
+          <Controller
+            control={control}
+            name="duration"
+            render={({ field }) => (
+              <Select {...field} placeholder="Select duration">
                 <Option value="3 months">3 months</Option>
                 <Option value="6 months">6 months</Option>
                 <Option value="12 months">12 months</Option>
               </Select>
-              <ErrorMessage
-                name="duration"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-            </AntForm.Item>
+            )}
+          />
+          {errors.duration && (
+            <div style={{ color: "red" }}>{errors.duration.message}</div>
+          )}
+        </AntForm.Item>
 
-            <AntForm.Item label="Lessons / Week" labelCol={{ span: 24 }}>
-              <Select
-                value={values.lessons_in_a_week || undefined}
-                onChange={(val) => setFieldValue("lessons_in_a_week", val)}
-                placeholder="Select lessons per week"
-                style={{ width: "100%" }}
-              >
+        <AntForm.Item label="Lessons / Week">
+          <Controller
+            control={control}
+            name="lessons_in_a_week"
+            render={({ field }) => (
+              <Select {...field} placeholder="Select lessons per week">
                 <Option value={3}>3</Option>
                 <Option value={5}>5</Option>
               </Select>
-              <ErrorMessage
-                name="lessons_in_a_week"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-            </AntForm.Item>
+            )}
+          />
+          {errors.lessons_in_a_week && (
+            <div style={{ color: "red" }}>
+              {errors.lessons_in_a_week.message}
+            </div>
+          )}
+        </AntForm.Item>
 
-            <AntForm.Item label="Lesson Duration" labelCol={{ span: 24 }}>
-              <Select
-                value={values.lesson_duration || undefined}
-                onChange={(val) => setFieldValue("lesson_duration", val)}
-                placeholder="Select lesson duration"
-                style={{ width: "100%" }}
-              >
+        <AntForm.Item label="Lesson Duration">
+          <Controller
+            control={control}
+            name="lesson_duration"
+            render={({ field }) => (
+              <Select {...field} placeholder="Select lesson duration">
                 <Option value="2 hours">2 hours</Option>
                 <Option value="4 hours">4 hours</Option>
               </Select>
-              <ErrorMessage
-                name="lesson_duration"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-            </AntForm.Item>
+            )}
+          />
+          {errors.lesson_duration && (
+            <div style={{ color: "red" }}>{errors.lesson_duration.message}</div>
+          )}
+        </AntForm.Item>
 
-            <AntForm.Item label="Description" labelCol={{ span: 24 }}>
-              <Field as={Input.TextArea} name="description" rows={4} />
-              <ErrorMessage
-                name="description"
-                render={(msg) => <div style={{ color: "red" }}>{msg}</div>}
-              />
-            </AntForm.Item>
+        <AntForm.Item label="Description">
+          <Controller
+            control={control}
+            name="description"
+            render={({ field }) => <Input.TextArea {...field} rows={4} />}
+          />
+          {errors.description && (
+            <div style={{ color: "red" }}>{errors.description.message}</div>
+          )}
+        </AntForm.Item>
 
-            <AntForm.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                loading={isLoading}
-                block
-              >
-                {mode === "update" ? "Update" : "Create"}
-              </Button>
-            </AntForm.Item>
-          </Form>
-        )}
-      </Formik>
+        <AntForm.Item>
+          <Button type="primary" htmlType="submit" loading={isLoading} block>
+            {mode === "update" ? "Update" : "Create"}
+          </Button>
+        </AntForm.Item>
+      </AntForm>
     </Modal>
   );
 };

@@ -4,6 +4,7 @@ import { CourseColumns } from "./table-columns";
 import { StudentColumns } from "./table-columns";
 import { BranchColumns } from "./table-columns";
 import { TeacherColumns } from "./table-columns";
+import { RoomColumns } from "./table-columns";
 
 export {
   PopConfirm,
@@ -12,4 +13,5 @@ export {
   StudentColumns,
   CourseColumns,
   BranchColumns,
+  RoomColumns,
 };

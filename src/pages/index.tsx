@@ -13,6 +13,23 @@ const LoginChildren = lazy(() => import("./protect-route/login-protect"));
 const Branch = lazy(() => import("./branch/branch"));
 const Worker = lazy(() => import("./worker/worker"));
 const SingleGroup = lazy(() => import("./groups/single-group"));
-const  Notfoun= lazy(() => import("./not-found/notfound"));
+const Notfoun = lazy(() => import("./not-found/notfound"));
+const Room = lazy(() => import("./rooms/room"));
 
-export { SignIn, SignUp, AdminLayout, TeacherLayout, StudentLayout, Groups ,Course, Student, ProtectChildrem, LoginChildren, Branch, Worker, SingleGroup, Notfoun};
+export {
+  SignIn,
+  SignUp,
+  AdminLayout,
+  TeacherLayout,
+  StudentLayout,
+  Groups,
+  Course,
+  Student,
+  ProtectChildrem,
+  LoginChildren,
+  Branch,
+  Worker,
+  SingleGroup,
+  Notfoun,
+  Room,
+};

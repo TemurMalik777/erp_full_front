@@ -5,6 +5,7 @@ import {
   ForkOutlined,
   TeamOutlined,
   UserOutlined,
+  HomeOutlined
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Layout, Menu, theme } from "antd";
@@ -24,6 +25,7 @@ const siderStyle: React.CSSProperties = {
   scrollbarGutter: "stable",
 };
 
+// const location = useLocation()
 const items: MenuProps["items"] = [
   {
     key: "1",
@@ -50,6 +52,11 @@ const items: MenuProps["items"] = [
     icon: React.createElement(UserOutlined),
     label: <Link to="/admin/teacher">Teacher</Link>,
   },
+  {
+    key: "6",
+    icon: React.createElement(HomeOutlined),
+    label: <Link to="/admin/rooms">Rooms</Link>,
+  },
 ];
 
 const Admin: React.FC = () => {
@@ -65,6 +72,7 @@ const Admin: React.FC = () => {
           mode="inline"
           defaultSelectedKeys={[location.pathname]}
           items={items}
+          // selectedKeys={[location.pathname.slice(1)]}
         />
       </Sider>
       <Layout>

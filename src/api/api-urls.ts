@@ -16,5 +16,8 @@ export class ApiUrls {
 
   //barnch
   public static BRANCH: string = "/branches";
+  
+  //room
+  public static ROOM: string = "/rooms";
 
 }
