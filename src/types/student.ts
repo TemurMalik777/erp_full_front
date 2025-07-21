@@ -14,3 +14,10 @@ export interface Student {
   //   eventsId: number,
   // groupsId: number
 }
+
+export interface GroupStudent {
+  first_name: string;
+  last_name: string;
+  phone: string;
+  attendance: any;
+}

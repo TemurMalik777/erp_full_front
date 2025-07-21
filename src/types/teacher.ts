@@ -8,3 +8,11 @@ export interface Teacher {
   role: string;
   branchId: number[];
 }
+
+export interface GroupTeachers {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+  role: "main teacher" | "assistant teacher";
+}

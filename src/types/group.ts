@@ -1,3 +1,7 @@
+import type { Lessons } from "./general";
+import type { Student } from "./student";
+import type {  Teacher } from "./teacher";
+
 export interface Group {
   id?: number;
   name: string;
@@ -10,3 +14,15 @@ export interface Group {
   end_time: string
   roomId:number
 }
+
+export interface GroupLessons {
+   lessons: Lessons[]
+  }
+
+  export interface GroupStudents {
+    students: Student[]
+  }
+
+  export interface GroupTeachers {
+    teachers: Teacher[]
+  }

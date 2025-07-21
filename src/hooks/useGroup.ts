@@ -2,14 +2,37 @@ import { GroupService } from "@service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type Group, type ParamsType } from "@types";
 import { useNavigate } from "react-router-dom";
-export const useGroup = (params: ParamsType) => {
+export const useGroup = (params: ParamsType, id?: number) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data } = useQuery({
+    enabled: !id,
     queryKey: ["groups", params],
     queryFn: async () => GroupService.getGroups(params),
   });
-  const handlePagination = (pagination: any, setParams: any)=>{
+
+  const groupStudentsQuery = useQuery({
+    enabled: !!id,
+    queryKey: ["group-students"],
+    queryFn: async () => GroupService.getGroupsStudent( id!),
+  });
+  const students = groupStudentsQuery.data;
+
+  const groupLessonsQuery = useQuery({
+    enabled: !!id,
+    queryKey: ["group-lessons"],
+    queryFn: async () => GroupService.getGroupsLessons(id!),
+  });
+  const lessons = groupLessonsQuery.data;
+
+  const groupTeachersQuery = useQuery({
+    enabled: !!id,
+    queryKey: ["group-teachers"],
+    queryFn: async () => GroupService.getGroupsTeachers(id!),
+  });
+  const teachers = groupTeachersQuery.data;
+
+  const handlePagination = (pagination: any, setParams: any) => {
     const { current, pageSize } = pagination;
     setParams({
       page: current!,
@@ -19,7 +42,7 @@ export const useGroup = (params: ParamsType) => {
     searchParams.set("page", current!.toString());
     searchParams.set("limit", pageSize!.toString());
     navigate({ search: `?${searchParams.toString()}` });
-  }
+  };
 
   const useGroupCreate = () => {
     return useMutation({
@@ -51,6 +74,9 @@ export const useGroup = (params: ParamsType) => {
 
   return {
     data,
+    students,
+    lessons,
+    teachers,
     useGroupCreate,
     useGroupDelete,
     useGroupUpdate,

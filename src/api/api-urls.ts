@@ -1,23 +1,36 @@
 export class ApiUrls {
-  //Auth
+  //AUTH
   public static AUTH: string = "/log-in";
 
-  //groups
+  //GROUPS
   public static GROUPS: string = "/group";
 
-  //course
+  //COURSE
   public static COURSE: string = "/courses";
 
-  //teacher
+  //TEACHER
   public static TEACHER: string = "/teacher";
 
-  //student
+  //STUDENT
   public static STUDENT: string = "/students";
 
-  //barnch
+  //BRANCH
   public static BRANCH: string = "/branches";
-  
-  //room
+
+  //ROOM
   public static ROOM: string = "/rooms";
 
+  // LESSONS
+  public static LESSONS: string = "/lessons";
+  public static GROUP_LESSONS: string = this.LESSONS + "/group";
+
+  // GROUP TEACHERS
+  public static GROUP_TEACHERS: string = "/group-teachers";
+  public static GROUP_TEACHERS_BY_GROUP_ID: string =
+    this.GROUP_TEACHERS + "/by-group";
+
+  // GROUP STUDENTS
+  public static GROUP_STUDENTS: string = "/group-students";
+  public static GROUP_STUDENTS_BY_GROUP_ID: string =
+    this.GROUP_STUDENTS + "/by-group";
 }
