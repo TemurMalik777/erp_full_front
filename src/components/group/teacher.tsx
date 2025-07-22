@@ -1,17 +1,3 @@
-// import type { GroupTeachers } from "@types";
-// const GroupTeacher = ({teachers}:GroupTeachers) => {
-//     console.log("gudgahdfyewb", teachers);
-//   return (
-//     <div>
-//       <h1>GroupTeachr</h1>
-//     </div>
-//   );
-// };
-
-// export default GroupTeacher;
-
-
-
 import { Card, Avatar } from "antd";
 import {
   UserOutlined,

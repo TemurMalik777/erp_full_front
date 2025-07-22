@@ -6,3 +6,4 @@ export * from "./general.ts";
 export * from "./branch.ts";
 export * from "./teacher.ts";
 export * from "./room.ts";
+export * from "./lesson.ts";

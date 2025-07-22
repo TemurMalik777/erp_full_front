@@ -35,7 +35,6 @@ const CourseModal: React.FC<CourseModalProps> = ({
     defaultValues: {
       title: editData?.title || "",
       description: editData?.description || "",
-      // price: editData?.price || "",
       price: editData ? editData.price : undefined,
       duration: editData?.duration || "",
       lessons_in_a_week: editData ? editData.lessons_in_a_week : undefined,

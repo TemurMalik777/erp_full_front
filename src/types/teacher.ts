@@ -9,7 +9,7 @@ export interface Teacher {
   branchId: number[];
 }
 
-export interface GroupTeachers {
+export interface GroupTeachers1 {
   first_name: string;
   last_name: string;
   email: string;

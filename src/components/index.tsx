@@ -8,6 +8,7 @@ import { RoomColumns } from "./table-columns";
 import GroupTeacher from "./group/teacher";
 import GroupLesson from "./group/lesson";
 import GroupStudent from "./group/student";
+import LessonList from "./lessons-list/lesson-list";
 
 export {
   PopConfirm,
@@ -20,4 +21,5 @@ export {
   GroupTeacher,
   GroupLesson,
   GroupStudent,
+  LessonList,
 };
