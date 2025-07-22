@@ -1,9 +1,14 @@
 import type { GroupLessons, Lessons } from "@types";
-import { Button } from "antd";
+import { Button, Tooltip } from "antd";
 import { useRef, useState } from "react";
+import dayjs from "dayjs";
+import { LessonModal } from "./lesson-modal";
+
 const LessonList = ({ lessons }: GroupLessons) => {
+  const [selectedLesson, setSelectedLesson] = useState<Lessons | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollPosition, setScrollPosition] = useState(0);
+
   const handleScroll = () => {
     if (containerRef.current) {
       setScrollPosition(containerRef.current.scrollLeft);
@@ -32,20 +37,33 @@ const LessonList = ({ lessons }: GroupLessons) => {
   };
 
   return (
-    <div className="flex gap-2 items-center">
+    <div className="flex gap-1 items-center">
       <Button type="primary" onClick={goPrev} disabled={isStartDisabled()}>
         prev
       </Button>
       <div
-        className="overflow-scroll flex gap-1 [&::-webkit-scrollbar]:hidden"
-        // className="overflow-x-auto flex gap-1 [&::-webkit-scrollbar]:hidden"
+        className="overflow-scroll flex 
+        gap-[4px]
+        [&::-webkit-scrollbar]:hidden
+        "
         ref={containerRef}
         onScroll={handleScroll}
       >
         {lessons.map((lessons: Lessons, index: number) => {
+          const formattedDate = dayjs(lessons.date).format("MM.DD");
           return (
-            <div key={lessons.id} className="p-3 bg-[#ccc] rounded-lg">
-              <span>{index + 1}</span>
+            <div
+              key={lessons.id}
+              className="min-w-[40px] h-[30px] bg-[#ccc] rounded-sm flex items-center justify-center "
+            >
+              <Tooltip key={lessons.id} title={`Dars ${index + 1}`}>
+                <div
+                  className="gap-4 min-w-[10px] max-w-[10px] h-[30px] bg-[#ccc] rounded-sm flex items-center justify-center cursor-pointer"
+                  onClick={() => setSelectedLesson(lessons)}
+                >
+                  <span>{formattedDate}</span>
+                </div>
+              </Tooltip>
             </div>
           );
         })}
@@ -53,6 +71,14 @@ const LessonList = ({ lessons }: GroupLessons) => {
       <Button type="primary" onClick={goNext} disabled={isEndDisabled()}>
         prev
       </Button>
+
+      {selectedLesson && (
+        <LessonModal
+          lesson={selectedLesson}
+          open={!!selectedLesson}
+          onClose={() => setSelectedLesson(null)}
+        />
+      )}
     </div>
   );
 };
