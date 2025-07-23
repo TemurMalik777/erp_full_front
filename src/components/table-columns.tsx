@@ -47,9 +47,8 @@ export const GroupColumns: TableProps<Group>["columns"] = [
   },
   {
     title: "Rooms",
-    dataIndex: "roomId",
     key: "roomId",
-    // render: (rooms: { name: string }) => <span>{rooms.name}</span>,
+    render: (rooms: { name: string }) => <span>{rooms.name}</span>,
   },
 ];
 
@@ -171,11 +170,8 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
 export const RoomColumns: TableProps<Room>["columns"] = [
   {
     title: "Branches",
-    dataIndex: "branchId",
     key: "branchId",
-    // render: (branch: { title: string }) => <span>{branch.title}</span>,
-    // render: (branch: { name: string }) => <span>{branch.name}</span>,
-    render: (branch: Room) => <span>{branch?.name}</span>,
+    render: (branchs: any) => <span>{branchs?.branch?.name}</span>,
   },
   {
     title: "Name",

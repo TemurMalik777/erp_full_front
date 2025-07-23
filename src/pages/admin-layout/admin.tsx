@@ -15,15 +15,6 @@ import { logout } from "@api/index";
 
 const { Header, Content, Footer, Sider } = Layout;
 
-const siderStyle: React.CSSProperties = {
-  overflow: "auto",
-  height: "100vh",
-  position: "sticky",
-  insetInlineStart: 0,
-  top: 0,
-  bottom: 0,
-};
-
 const items: MenuProps["items"] = [
   {
     key: "/admin",
@@ -87,7 +78,7 @@ const Admin: React.FC = () => {
 
   return (
     <Layout hasSider>
-      <Sider style={siderStyle}>
+      <Sider>
         <Menu
           theme="dark"
           mode="inline"

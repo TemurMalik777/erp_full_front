@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Space, Table, type TablePaginationConfig } from "antd";
 import RoomModal from "./room-modal";
 import type { Room } from "@types";
-import { PopConfirm, RoomColumns,  } from "@components";
+import { PopConfirm, RoomColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useRoom } from "@hooks";
 import { EditOutlined } from "@ant-design/icons";
@@ -15,7 +15,6 @@ function Rooms() {
     page: 1,
     limit: 3,
   });
-
   const location = useLocation();
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -32,7 +31,7 @@ function Rooms() {
   const { data, useRoomDelete } = useRoom(params);
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useRoomDelete();
-
+  console.log(data);
   const deleteItem = (id: number) => {
     deleteFn(id);
   };

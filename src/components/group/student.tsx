@@ -7,7 +7,6 @@ function GroupStudents({ students }: any) {
   
   return (
     <div>
-      {/* <h2 className="text-lg font-semibold mb-4">Students</h2> */}
       <Collapse accordion>
         {students.map((item: any) => {
           const student = item.student

@@ -10,7 +10,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import dayjs from "dayjs";
 import type { Group } from "@types";
-import { useCourse, useGroup } from "@hooks";
+import { useCourse, useGroup, useRoom } from "@hooks";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { GroupValidation } from "@utils";
 
@@ -33,8 +33,10 @@ const GroupModal: React.FC<GroupModalProps> = ({
   const { mutate: createFn, isPending: isCreating } = useGroupCreate();
   const { mutate: updateFn, isPending: isUpdating } = useGroupUpdate();
   const { data } = useCourse();
+  // const { data: dataRomm } = useRoom();
+  const { data: dataRomm } = useRoom({ page: 1, limit: 100 });
   const courses = data?.data.courses || [];
-  const room = data?.data.roomes || [];
+  const rooms = dataRomm?.data.rooms || [];
 
   const isLoading = isCreating || isUpdating;
 
@@ -56,7 +58,8 @@ const GroupModal: React.FC<GroupModalProps> = ({
     },
     resolver: yupResolver(GroupValidation),
   });
-console.log("Rooms list:", room);
+console.log("Rooms list:", rooms);
+console.log("Courses list:", courses);
 
   const onSubmit = (values: Group) => {
     if (mode === "create") {
@@ -215,7 +218,7 @@ console.log("Rooms list:", room);
                 onChange={field.onChange}
                 placeholder="Choose rooms"
               >
-                {room.map((rooms: any) => (
+                {rooms.map((rooms: any) => (
                   <Option key={rooms.id} value={rooms.id}>
                     {rooms.name}
                   </Option>
