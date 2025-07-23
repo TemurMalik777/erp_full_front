@@ -5,7 +5,7 @@ import type { Group } from "@types";
 import { PopConfirm, GroupColumns } from "@components";
 import { Link, useLocation } from "react-router-dom";
 import { useGeneral, useGroup } from "@hooks";
-import { EditOutlined, ContactsOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined  } from "@ant-design/icons";
 function Groups() {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"create" | "update">("create");
@@ -60,7 +60,7 @@ function Groups() {
             onConfirm={() => deleteItem(record.id!)}
             loading={isDeleting}
           />
-          <Link to={`group/${record.id}`}><ContactsOutlined style={{ fontSize: '40px' }}/></Link>
+          <Link to={`group/${record.id}`}><EyeOutlined  style={{ fontSize: '30px' }}/></Link>
         </Space>
       ),
     },

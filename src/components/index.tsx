@@ -1,4 +1,5 @@
 import PopConfirm from "./pop-confirm";
+import PopConfirmLogout from "./out-confirm";
 import { GroupColumns } from "./table-columns";
 import { CourseColumns } from "./table-columns";
 import { StudentColumns } from "./table-columns";
@@ -12,6 +13,7 @@ import LessonList from "./lessons-list/lesson-list";
 
 export {
   PopConfirm,
+  PopConfirmLogout,
   GroupColumns,
   TeacherColumns,
   StudentColumns,

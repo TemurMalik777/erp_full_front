@@ -1,16 +1,16 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, useLocation } from "react-router-dom";
 import {
   BookOutlined,
   ForkOutlined,
   TeamOutlined,
   UserOutlined,
-  HomeOutlined
+  HomeOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Button, Layout, Menu, theme } from "antd";
-import { LogoutOutlined } from "@ant-design/icons";
 import { logout } from "@api/index";
+import { PopConfirmLogout } from "@components";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -25,44 +25,45 @@ const siderStyle: React.CSSProperties = {
   scrollbarGutter: "stable",
 };
 
-// const location = useLocation()
 const items: MenuProps["items"] = [
   {
-    key: "1",
+    key: "/admin",
     icon: React.createElement(UserOutlined),
     label: <Link to="/admin">Group</Link>,
   },
   {
-    key: "2",
+    key: "/admin/student",
     icon: React.createElement(TeamOutlined),
     label: <Link to="/admin/student">Students</Link>,
   },
   {
-    key: "3",
+    key: "/admin/courses",
     icon: React.createElement(BookOutlined),
     label: <Link to="/admin/courses">Courses</Link>,
   },
   {
-    key: "4",
+    key: "/admin/branches",
     icon: React.createElement(ForkOutlined),
     label: <Link to="/admin/branches">Branch</Link>,
   },
   {
-    key: "5",
+    key: "/admin/teacher",
     icon: React.createElement(UserOutlined),
     label: <Link to="/admin/teacher">Teacher</Link>,
   },
   {
-    key: "6",
+    key: "/admin/rooms",
     icon: React.createElement(HomeOutlined),
     label: <Link to="/admin/rooms">Rooms</Link>,
   },
 ];
 
 const Admin: React.FC = () => {
+  const location = useLocation();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
   return (
     <Layout hasSider>
       <Sider style={siderStyle}>
@@ -70,9 +71,8 @@ const Admin: React.FC = () => {
         <Menu
           theme="dark"
           mode="inline"
-          defaultSelectedKeys={[location.pathname]}
+          selectedKeys={[location.pathname]}
           items={items}
-          // selectedKeys={[location.pathname.slice(1)]}
         />
       </Sider>
       <Layout>
@@ -90,9 +90,8 @@ const Admin: React.FC = () => {
           <Button
             type="primary"
             style={{ margin: "16px" }}
-            onClick={() => logout()}
           >
-            <LogoutOutlined />
+            <PopConfirmLogout onConfirm={() => logout()} />
           </Button>
         </Header>
         <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
