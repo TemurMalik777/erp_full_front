@@ -17,7 +17,6 @@ const statusOptions = [
 ];
 
 export const LessonModal = ({ lesson, open, onClose, 
-    // onSave
  }: LessonModalProps) => {
   const [editableLesson, setEditableLesson] = useState<Lessons>(lesson || {} as Lessons);
   const [isSaving, setIsSaving] = useState(false);

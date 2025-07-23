@@ -56,7 +56,6 @@ const StudentModal: React.FC<StudentModalProps> = ({
             confirm_password: values.confirm_password,
           }),
     };
-    console.log(payload);
     try {
       if (editData && editData.id != null) {
         updateFn({ model: payload, id: editData.id });

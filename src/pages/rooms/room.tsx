@@ -31,7 +31,6 @@ function Rooms() {
   const { data, useRoomDelete } = useRoom(params);
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useRoomDelete();
-  console.log(data);
   const deleteItem = (id: number) => {
     deleteFn(id);
   };

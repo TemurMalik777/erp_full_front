@@ -53,11 +53,9 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
       ...rest,
       ...(editData ? {} : { password }),
     };
-    console.log(payload);
     try {
       if (editData && editData.id != null) {
         updateFn({ model: payload, id: editData.id });
-        console.log("editData", editData);
       } else {
         createFn(payload);
       }
