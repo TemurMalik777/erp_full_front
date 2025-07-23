@@ -16,7 +16,8 @@ const PopConfirmLogout = ({ onConfirm, title }: PopConfirmProps) => {
       cancelText="No"
       onConfirm={onConfirm}
     >
-      <Button type="primary" >
+      <Button type="primary" 
+            style={{ margin: "16px" }} >
         <LogoutOutlined />
       </Button>
     </AntPopconfirm>

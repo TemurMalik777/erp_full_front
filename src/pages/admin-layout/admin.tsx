@@ -8,7 +8,9 @@ import {
   HomeOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Button, Layout, Menu, theme } from "antd";
+import { 
+  // Button,
+   Layout, Menu, theme } from "antd";
 import { logout } from "@api/index";
 import { PopConfirmLogout } from "@components";
 
@@ -87,12 +89,12 @@ const Admin: React.FC = () => {
           }}
         >
           <h1 style={{ margin: "0 16px" }}>Admin Panel</h1>
-          <Button
+          {/* <Button
             type="primary"
             style={{ margin: "16px" }}
-          >
+          > */}
             <PopConfirmLogout onConfirm={() => logout()} />
-          </Button>
+          {/* </Button> */}
         </Header>
         <Content style={{ margin: "24px 16px 0", overflow: "initial" }}>
           <div

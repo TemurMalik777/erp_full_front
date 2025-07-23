@@ -56,6 +56,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
     },
     resolver: yupResolver(GroupValidation),
   });
+console.log("Rooms list:", room);
 
   const onSubmit = (values: Group) => {
     if (mode === "create") {
@@ -221,7 +222,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
                 ))}
               </Select>
             )}
-          />
+            />
         </AntForm.Item>
         <AntForm.Item>
           <Button type="primary" htmlType="submit" block loading={isLoading}>
