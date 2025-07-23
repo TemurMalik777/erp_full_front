@@ -1,4 +1,4 @@
-import { Collapse, Card } from "antd";
+import { Collapse } from "antd";
 
 const { Panel } = Collapse;
 
