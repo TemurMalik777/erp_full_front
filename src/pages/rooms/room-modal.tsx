@@ -78,7 +78,7 @@ const RoomModal: React.FC<RoomModalProps> = ({
           <Controller
             name="name"
             control={control}
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} placeholder="Name" />}
           />
         </AntForm.Item>
 

@@ -81,11 +81,12 @@ const GroupModal: React.FC<GroupModalProps> = ({
           label="Name"
           validateStatus={errors.name && "error"}
           help={errors.name?.message}
-        >
+          >
           <Controller
             name="name"
             control={control}
-            render={({ field }) => <Input {...field} />}
+            render={({ field }) => <Input {...field} placeholder="Name" />}
+            
           />
         </AntForm.Item>
         <AntForm.Item
@@ -162,80 +163,6 @@ const GroupModal: React.FC<GroupModalProps> = ({
             )}
           />
         </AntForm.Item>
-        {/* <AntForm.Item
-          label="Start Time"
-          validateStatus={errors.start_date && "error"}
-          help={errors.start_date?.message}
-        >
-          <Controller
-            name="start_time"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value) : null}
-                onChange={(_, dateString) => field.onChange(dateString)}
-              />
-            )}
-          />
-        </AntForm.Item>
-
-        <AntForm.Item
-          label="End Time"
-          validateStatus={errors.end_date && "error"}
-          help={errors.end_date?.message}
-        >
-          <Controller
-            name="end_time"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value) : null}
-                onChange={(_, dateString) => field.onChange(dateString)}
-              />
-            )}
-          />
-        </AntForm.Item> */}
-        {/* <AntForm.Item
-          label="Start Time"
-          validateStatus={errors.start_time && "error"}
-          help={errors.start_time?.message}
-        >
-          <Controller
-            name="start_time"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                showTime={{ format: "HH:mm" }}
-                format="HH:mm"
-                style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value) : null}
-                onChange={(value) => field.onChange(value?.toISOString())}
-              />
-            )}
-          />
-        </AntForm.Item>
-
-        <AntForm.Item
-          label="End Time"
-          validateStatus={errors.end_time && "error"}
-          help={errors.end_time?.message}
-        >
-          <Controller
-            name="end_time"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                showTime={{ format: "HH:mm" }}
-                format="HH:mm"
-                style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value) : null}
-                onChange={(value) => field.onChange(value?.toISOString())}
-              />
-            )}
-          />
-        </AntForm.Item> */}
         <AntForm.Item
           label="Start Time"
           validateStatus={errors.start_time && "error"}
