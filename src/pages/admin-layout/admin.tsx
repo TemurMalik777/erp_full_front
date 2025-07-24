@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Outlet, Link, useLocation } from "react-router-dom";
 import {
   BookOutlined,
@@ -8,6 +8,7 @@ import {
   HomeOutlined,
   SettingOutlined,
   LogoutOutlined,
+  AppstoreOutlined,
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
 import { Layout, Menu, Avatar, Dropdown, Space } from "antd";
@@ -18,7 +19,7 @@ const { Header, Content, Footer, Sider } = Layout;
 const items: MenuProps["items"] = [
   {
     key: "/admin",
-    icon: <UserOutlined />,
+    icon: <AppstoreOutlined />,
     label: <Link to="/admin">Group</Link>,
   },
   {
@@ -50,6 +51,7 @@ const items: MenuProps["items"] = [
 
 const Admin: React.FC = () => {
   const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
 
   const userMenuItems: MenuProps["items"] = [
     {
@@ -78,7 +80,12 @@ const Admin: React.FC = () => {
 
   return (
     <Layout hasSider>
-      <Sider>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+      >
+        <div />
         <Menu
           theme="dark"
           mode="inline"
