@@ -12,6 +12,7 @@ const ProtectChildrem = lazy(() => import("./protect-route/layout-protect"));
 const LoginChildren = lazy(() => import("./protect-route/login-protect"));
 const Branch = lazy(() => import("./branch/branch"));
 const Worker = lazy(() => import("./worker/worker"));
+const Reducer = lazy(() => import("./worker/useReducer"));
 const SingleGroup = lazy(() => import("./groups/single-group"));
 const Notfoun = lazy(() => import("./not-found/notfound"));
 const Room = lazy(() => import("./rooms/room"));
@@ -32,4 +33,5 @@ export {
   SingleGroup,
   Notfoun,
   Room,
+  Reducer,
 };

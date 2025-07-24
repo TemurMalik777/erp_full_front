@@ -36,9 +36,10 @@ const CourseModal: React.FC<CourseModalProps> = ({
       title: editData?.title || "",
       description: editData?.description || "",
       price: editData ? editData.price : undefined,
-      duration: editData?.duration || "",
+      duration: editData ? editData.lessons_in_a_week : undefined,
       lessons_in_a_week: editData ? editData.lessons_in_a_week : undefined,
-      lesson_duration: editData?.lesson_duration || "",
+      lessons_in_a_month: editData ? editData.lessons_in_a_week : undefined,
+      lesson_duration: editData ? editData.lesson_duration : undefined,
     },
   });
 
@@ -92,9 +93,9 @@ const CourseModal: React.FC<CourseModalProps> = ({
             name="duration"
             render={({ field }) => (
               <Select {...field} placeholder="Select duration">
-                <Option value="3 months">3 months</Option>
-                <Option value="6 months">6 months</Option>
-                <Option value="12 months">12 months</Option>
+                <Option value={3}>3 months</Option>
+                <Option value={6}>6 months</Option>
+                <Option value={12}>12 months</Option>
               </Select>
             )}
           />
@@ -121,14 +122,33 @@ const CourseModal: React.FC<CourseModalProps> = ({
           )}
         </AntForm.Item>
 
+        <AntForm.Item label="Lessons / Months">
+          <Controller
+            control={control}
+            name="lessons_in_a_month"
+            render={({ field }) => (
+              <Select {...field} placeholder="Select lessons per months">
+                <Option value={12}>12</Option>
+                <Option value={20}>20</Option>
+              </Select>
+            )}
+          />
+          {errors.lessons_in_a_month && (
+            <div style={{ color: "red" }}>
+              {errors.lessons_in_a_month.message}
+            </div>
+          )}
+        </AntForm.Item>
+
         <AntForm.Item label="Lesson Duration">
           <Controller
             control={control}
             name="lesson_duration"
             render={({ field }) => (
               <Select {...field} placeholder="Select lesson duration">
-                <Option value="2 hours">2 hours</Option>
-                <Option value="4 hours">4 hours</Option>
+                <Option value={120}>2 hour</Option>
+                <Option value={180}>3 hour</Option>
+                <Option value={240}>4 hour</Option>
               </Select>
             )}
           />

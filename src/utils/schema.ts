@@ -23,12 +23,20 @@ export const CourseValidation = Yup.object({
   price: Yup.number()
     .typeError("Price must be a number")
     .required("Price is required"),
-  duration: Yup.string().required("Duration is required"),
+  duration: Yup.number()
+    .typeError("Duration must be a number")
+    .required("Duration is required"),
   lessons_in_a_week: Yup.number()
     .typeError("Lessons per week must be a number")
     .required("Lessons per week is required"),
-  lesson_duration: Yup.string().required("Lesson duration is required"),
+  lessons_in_a_month: Yup.number()
+    .typeError("Lessons per week must be a number")
+    .required("Lessons per week is required"),
+  lesson_duration: Yup.number()
+    .typeError("Lesson duration must be a number")
+    .required("Lesson duration is required"),
 });
+
 
 
 
