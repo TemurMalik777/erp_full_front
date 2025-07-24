@@ -1,3 +1,5 @@
+import { GeneralService } from "@service";
+import { useMutation } from "@tanstack/react-query";
 import { type PaginationConfig } from "@types";
 import { useNavigate } from "react-router-dom";
 
@@ -16,5 +18,19 @@ export const useGeneral = () => {
     navigate({ search: `?${searchParams.toString()}` });
   };
 
-  return { handlePagination };
+  const updateLessonStatus = () => {
+  return useMutation({
+    mutationFn: ({
+      id,
+      status,
+      note,
+    }: {
+      id: number;
+      status: string;
+      note?: string;
+    }) => GeneralService.updateLessonStatus(id, { status, note }),
+  });
+};
+
+  return { handlePagination, updateLessonStatus };
 };
