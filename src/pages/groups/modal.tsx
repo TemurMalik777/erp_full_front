@@ -58,7 +58,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
     },
     resolver: yupResolver(GroupValidation),
   });
-console.log("Rooms list:", rooms);
+console.log("hello", rooms.name);
 console.log("Courses list:", courses);
 
   const onSubmit = (values: Group) => {

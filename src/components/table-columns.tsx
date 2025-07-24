@@ -47,8 +47,18 @@ export const GroupColumns: TableProps<Group>["columns"] = [
   },
   {
     title: "Rooms",
+    // dataIndex: "roomId",
     key: "roomId",
-    render: (rooms: { name: string }) => <span>{rooms.name}</span>,
+    render: (rooms: any) => <span>{rooms.name}</span>,
+    // render: (rooms: any) => {
+    //   if (Array.isArray(rooms)) {
+    //     return <span>{rooms.map((r) => r.name).join(", ")}</span>;
+    //   }
+    //   if (rooms?.name) {
+    //     return <span>{rooms.name}</span>; // bitta room bo‘lishi mumkin
+    //   }
+    //   return <span>-</span>; // hech narsa yo‘q
+    // },
   },
 ];
 

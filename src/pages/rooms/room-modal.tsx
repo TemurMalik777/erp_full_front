@@ -19,6 +19,7 @@ interface RoomModalProps {
   toggle: () => void;
   update: Room | null;
   mode: "create" | "update";
+  editData?: Room;
 }
 
 const RoomModal: React.FC<RoomModalProps> = ({
@@ -26,6 +27,7 @@ const RoomModal: React.FC<RoomModalProps> = ({
   toggle,
   update,
   mode,
+  editData
 }) => {
   const { useRoomCreate, useRoomUpdate } = useRoom({ page: 1, limit: 10 });
   const { mutate: createFn, isPending: isCreating } = useRoomCreate();
@@ -45,7 +47,7 @@ const RoomModal: React.FC<RoomModalProps> = ({
     defaultValues: {
       name: update?.name || "",
       branchId: update?.branchId || 0,
-      capacity: update?.capacity || 0,
+      capacity: editData ? editData.capacity : undefined,
     },
     resolver: yupResolver(RoomValidation),
   });
@@ -116,7 +118,7 @@ const RoomModal: React.FC<RoomModalProps> = ({
             name="capacity"
             control={control}
             render={({ field }) => (
-              <InputNumber {...field} min={1} style={{ width: "100%" }} />
+              <InputNumber {...field} value={field.value ?? null} style={{ width: "100%" }} />
             )}
           />
         </AntForm.Item>
