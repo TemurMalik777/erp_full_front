@@ -188,8 +188,27 @@ export const RoomColumns: TableProps<Room>["columns"] = [
   {
     title: "Branch",
     key: "branchId",
-    render: (branchs: any) => <span>{branchs?.branch?.name}</span>,
+    render: (record: any) => {
+      let branches: any[] = [];
+
+      if (Array.isArray(record?.branches)) {
+        branches = record.branches;
+      } else if (record?.branch && typeof record.branch === "object") {
+        branches = [record.branch];
+      }
+
+      if (branches.length === 0) return <span>—</span>;
+
+      const firstBranch = branches[0]?.name || "No name";
+
+      return (
+        <Tooltip title={branches.map((b: any) => b.name).join(", ")}>
+          <span style={{ cursor: "pointer" }}>{firstBranch}</span>
+        </Tooltip>
+      );
+    },
   },
+
   {
     title: "Name",
     dataIndex: "name",
