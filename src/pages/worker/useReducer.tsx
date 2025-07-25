@@ -117,8 +117,8 @@ const Reducer = () => {
         <Button onClick={() => dispatch({ type: "toggleColor" })}>
           Rangni o‘zgartir
         </Button>
-        <Button onClick={() => dispatch({ type: "increment" })}>+</Button>
-        <Button onClick={() => dispatch({ type: "decrement" })}>-</Button>
+        <Button onClick={() => dispatch({ type: "incremnet" })}>+</Button>
+        <Button onClick={() => dispatch({ type: "decremnet" })}>-</Button>
         <h2 style={{ color: "red" }}>{state.value1}</h2>
       </Space>
 

@@ -53,6 +53,7 @@ const BranchModal: React.FC<BranchModalProps> = ({
       });
     }
   }, [editData, reset]);
+  console.log("editData", editData?.call_number);
 
   const onSubmit = (values: Branch) => {
     if (mode === "create") {
@@ -60,12 +61,15 @@ const BranchModal: React.FC<BranchModalProps> = ({
       createFn(createData as Omit<Branch, "id">, {
         onSuccess: onClose,
       });
+      console.log("balues", values);
     } else if (mode === "update" && editData) {
       const updateData = {
         name: values.name,
         address: values.address,
         call_number: values.call_number,
       };
+      console.log("balues", values);
+
       const id = editData.id!;
       updateFn(
         { model: updateData, id },
@@ -115,7 +119,7 @@ const BranchModal: React.FC<BranchModalProps> = ({
           />
         </AntForm.Item>
 
-        <AntForm.Item
+        {/* <AntForm.Item
           label="Phone"
           labelCol={{ span: 24 }}
           validateStatus={errors.call_number ? "error" : ""}
@@ -129,6 +133,26 @@ const BranchModal: React.FC<BranchModalProps> = ({
                 {...field}
                 mask="+\9\9\8 (00) 000-00-00"
                 placeholder="+998 (__) ___-__-__"
+              />
+            )}
+          />
+
+        </AntForm.Item> */}
+
+        <AntForm.Item
+          label="Phone"
+          labelCol={{ span: 24 }}
+          validateStatus={errors.call_number ? "error" : ""}
+          help={errors.call_number?.message}
+        >
+          <Controller
+            name="call_number"
+            control={control}
+            render={({ field }) => (
+              <MaskedInput
+                {...field}
+                mask="+\9\9\8 (00) 000-00-00"
+                placeholder="Enter phone number"
               />
             )}
           />

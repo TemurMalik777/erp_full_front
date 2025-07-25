@@ -34,7 +34,6 @@ function Rooms() {
   const deleteItem = (id: number) => {
     deleteFn(id);
   };
-  console.log(data);
 
   const editItem = (record: Room) => {
     setUpdate(record);
