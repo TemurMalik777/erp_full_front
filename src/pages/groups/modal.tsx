@@ -29,6 +29,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
   update,
   mode,
 }) => {
+  console.log("update", update);
   const { useGroupCreate, useGroupUpdate } = useGroup({ page: 1, limit: 10 });
   const { mutate: createFn, isPending: isCreating } = useGroupCreate();
   const { mutate: updateFn, isPending: isUpdating } = useGroupUpdate();
@@ -48,7 +49,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
   } = useForm<Group>({
     defaultValues: {
       name: update?.name || "",
-      course_id: update?.course_id || 0,
+      course_id: update?.course.id || 0,
       status: update?.status || "active",
       start_date: update?.start_date || "",
       end_date: update?.end_date || "",

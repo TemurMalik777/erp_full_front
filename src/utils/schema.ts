@@ -52,6 +52,11 @@ export const GroupValidation = Yup.object({
   start_time: Yup.string().required("Start date is required"),
   end_time: Yup.string().required("End date is required"),
   roomId: Yup.number().required("Course is required"),
+    course: Yup.object({
+    id: Yup.number()
+      .typeError("Course is required")
+      .required("Course is required"),
+  }).required("Course object is required"),
 });
 
 

@@ -29,6 +29,7 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
   editData,
   mode,
 }) => {
+  console.log("update", editData);
   const isEdit = mode === "update";
 
   const { data: branchData, isLoading } = useBranch();
@@ -44,6 +45,10 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
     phone: editData?.phone || "",
     role: editData?.role || "",
     branchId: editData?.branchId || [],
+    // branches: editData?.branches.id ? number | never[]
+    // branches: editData?.branches?.id ? [{ id: editData.branches.id }] : [],
+
+
   };
 
   const handleSubmit = async (values: Teacher) => {
