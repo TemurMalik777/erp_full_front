@@ -3,5 +3,8 @@ export interface Room {
   branchId: number;
   name: string;
   capacity: number;
-  
+  branch?: {
+    id: number
+  }
+
 }

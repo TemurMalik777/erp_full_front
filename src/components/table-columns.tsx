@@ -172,8 +172,11 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
   },
   {
     title: "Branch",
-    dataIndex: "phone",
-    key: "phone",
+    key: "branchId",
+    render: (_, record: any) =>
+      record.branches?.length
+        ? record.branches.map((b: any) => b.name).join(", ")
+        : "-",
   },
   {
     title: "Role",
@@ -183,9 +186,18 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
 ];
 
 export const RoomColumns: TableProps<Room>["columns"] = [
-  {
-    title: "Branches",
+  // {
+  //   title: "Branches",
+  //   key: "branchId",
+  //   render: (branchs: any) => <span>{branchs?.branch?.name}</span>,
+  // },
+    {
+    title: "Branch",
     key: "branchId",
+    // render: (_, record: any) =>
+    //   record.branches?.length
+    //     ? record.branches.map((b: any) => b.name).join(", ")
+    //     : "-",
     render: (branchs: any) => <span>{branchs?.branch?.name}</span>,
   },
   {

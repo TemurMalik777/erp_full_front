@@ -61,7 +61,7 @@ function Groups() {
             loading={isDeleting}
           />
           <Link to={`group/${record.id}`}>
-            <EyeOutlined style={{ fontSize: "30px" }} />
+            <EyeOutlined style={{ fontSize: "20px" }} />
           </Link>
         </Space>
       ),

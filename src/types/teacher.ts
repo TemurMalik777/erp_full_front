@@ -7,9 +7,9 @@ export interface Teacher {
   phone: string;
   role: string;
   branchId: number[];
-  // branches: {
-  //   id: number
-  // }
+  branches?: {
+    id: number
+  }[]
 }
 
 export interface GroupTeachers1 {

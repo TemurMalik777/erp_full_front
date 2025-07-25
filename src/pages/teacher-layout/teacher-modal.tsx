@@ -44,9 +44,8 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
     password: "",
     phone: editData?.phone || "",
     role: editData?.role || "",
-    branchId: editData?.branchId || [],
-    // branches: editData?.branches.id ? number | never[]
-    // branches: editData?.branches?.id ? [{ id: editData.branches.id }] : [],
+    // branchId: editData?.branches.id || [],
+    branchId: editData?.branches?.map((b: any) => b.id) || [],
 
 
   };

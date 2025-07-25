@@ -5,16 +5,11 @@ export const BranchValidation = Yup.object({
     .trim()
     .max(50, "Branch nomi 50 belgidan oshmasligi kerak")
     .required("Branch nomi majburiy"),
-    
-  address: Yup.string()
-    .trim()
-    .required("Manzil majburiy"),
 
-  call_number: Yup.string()
-    .required("Telefon raqam majburiy"),
+  address: Yup.string().trim().required("Manzil majburiy"),
+
+  call_number: Yup.string().required("Telefon raqam majburiy"),
 });
-
-
 
 //--Course--
 export const CourseValidation = Yup.object({
@@ -37,9 +32,6 @@ export const CourseValidation = Yup.object({
     .required("Lesson duration is required"),
 });
 
-
-
-
 //--Group--
 export const GroupValidation = Yup.object({
   name: Yup.string().required("Name is required"),
@@ -52,14 +44,12 @@ export const GroupValidation = Yup.object({
   start_time: Yup.string().required("Start date is required"),
   end_time: Yup.string().required("End date is required"),
   roomId: Yup.number().required("Course is required"),
-    course: Yup.object({
+  course: Yup.object({
     id: Yup.number()
       .typeError("Course is required")
       .required("Course is required"),
   }).required("Course object is required"),
 });
-
-
 
 //--Student--
 export const StudentValidation = (isEdit: boolean) =>
@@ -101,9 +91,15 @@ export const TeacherValidation = (isEdit: boolean) =>
             .min(6, "Password must be at least 6 characters")
             .required("Password is required"),
         }),
+
+    branches: Yup.array()
+      .of(
+        Yup.object({
+          id: Yup.number().required(),
+        })
+      )
+      .required("Branches are required"),
   });
-
-
 
 //--Sign-In--
 export const SignInValidation = Yup.object().shape({
@@ -116,12 +112,18 @@ export const SignInValidation = Yup.object().shape({
   role: Yup.string().required("Please select your role!"),
 });
 
-
 //--Room--
 export const RoomValidation = Yup.object({
   branchId: Yup.number()
     .typeError("Filial ID raqam bo'lishi kerak")
     .required("Filial ID majburiy"),
+      //   branches: Yup.array()
+      // .of(
+      //   Yup.object({
+      //     id: Yup.number().required(),
+      //   })
+      // )
+      // .required("Branches are required"),
   name: Yup.string()
     .required("Xona nomi majburiy")
     .min(2, "Xona nomi kamida 2 ta belgidan iborat bo'lishi kerak"),

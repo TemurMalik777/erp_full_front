@@ -27,7 +27,6 @@ const RoomModal: React.FC<RoomModalProps> = ({
   toggle,
   update,
   mode,
-  editData
 }) => {
   const { useRoomCreate, useRoomUpdate } = useRoom({ page: 1, limit: 10 });
   const { mutate: createFn, isPending: isCreating } = useRoomCreate();
@@ -46,8 +45,8 @@ const RoomModal: React.FC<RoomModalProps> = ({
   } = useForm<Room>({
     defaultValues: {
       name: update?.name || "",
-      branchId: update?.branchId || 0,
-      capacity: editData ? editData.capacity : undefined,
+      branchId: update?.branch?.id || 0,
+      capacity: update ? update.capacity : undefined,
     },
     resolver: yupResolver(RoomValidation),
   });
