@@ -6,7 +6,7 @@ import {
   type Student,
   type Teacher,
 } from "@types";
-import type { TableProps } from "antd";
+import { Tooltip, type TableProps } from "antd";
 
 export const GroupColumns: TableProps<Group>["columns"] = [
   {
@@ -47,18 +47,8 @@ export const GroupColumns: TableProps<Group>["columns"] = [
   },
   {
     title: "Rooms",
-    // dataIndex: "roomId",
     key: "roomId",
     render: (rooms: any) => <span>{rooms.name}</span>,
-    // render: (rooms: any) => {
-    //   if (Array.isArray(rooms)) {
-    //     return <span>{rooms.map((r) => r.name).join(", ")}</span>;
-    //   }
-    //   if (rooms?.name) {
-    //     return <span>{rooms.name}</span>; // bitta room bo‘lishi mumkin
-    //   }
-    //   return <span>-</span>; // hech narsa yo‘q
-    // },
   },
 ];
 
@@ -173,10 +163,19 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
   {
     title: "Branch",
     key: "branchId",
-    render: (_, record: any) =>
-      record.branches?.length
-        ? record.branches.map((b: any) => b.name).join(", ")
-        : "-",
+    render: (record: any) => {
+      const branches = record?.branches || [];
+
+      if (branches.length === 0) return <span>—</span>;
+
+      const firstBranch = branches[0]?.name;
+
+      return (
+        <Tooltip title={branches.map((b: any) => b.name).join(", ")}>
+          <span style={{ cursor: "pointer" }}>{firstBranch}</span>
+        </Tooltip>
+      );
+    },
   },
   {
     title: "Role",
@@ -186,18 +185,9 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
 ];
 
 export const RoomColumns: TableProps<Room>["columns"] = [
-  // {
-  //   title: "Branches",
-  //   key: "branchId",
-  //   render: (branchs: any) => <span>{branchs?.branch?.name}</span>,
-  // },
-    {
+  {
     title: "Branch",
     key: "branchId",
-    // render: (_, record: any) =>
-    //   record.branches?.length
-    //     ? record.branches.map((b: any) => b.name).join(", ")
-    //     : "-",
     render: (branchs: any) => <span>{branchs?.branch?.name}</span>,
   },
   {
