@@ -148,7 +148,7 @@ function GroupTeachers({ teachers }: any) {
               {/* Work Period */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <CalendarOutlined style={{ color: '#1890ff', fontSize: '14px', width: '16px' }} />
-                <Text strong style={{ color: '#595959', fontSize: '13px' }}>Ish davri:</Text>
+                <Text strong style={{ color: '#595959', fontSize: '13px' }}>Time to work:</Text>
               </div>
               <div style={{ marginLeft: '24px', marginTop: '-8px' }}>
                 <Text style={{ fontSize: '13px', color: '#262626' }}>

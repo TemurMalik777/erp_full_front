@@ -171,6 +171,11 @@ export const TeacherColumns: TableProps<Teacher>["columns"] = [
     key: "phone",
   },
   {
+    title: "Branch",
+    dataIndex: "phone",
+    key: "phone",
+  },
+  {
     title: "Role",
     dataIndex: "role",
     key: "role",

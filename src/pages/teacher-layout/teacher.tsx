@@ -106,7 +106,7 @@ function TeacherPage() {
       <Table<Teacher>
         bordered
         columns={columns}
-        dataSource={data?.data.teachers}
+        dataSource={data?.data.data}
         rowKey={(row) => row.id!}
         pagination={{
           current: params.page,
