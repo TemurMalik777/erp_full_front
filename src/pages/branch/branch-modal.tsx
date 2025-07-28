@@ -53,7 +53,6 @@ const BranchModal: React.FC<BranchModalProps> = ({
       });
     }
   }, [editData, reset]);
-  console.log("editData", editData?.call_number);
 
   const onSubmit = (values: Branch) => {
     if (mode === "create") {
@@ -61,14 +60,12 @@ const BranchModal: React.FC<BranchModalProps> = ({
       createFn(createData as Omit<Branch, "id">, {
         onSuccess: onClose,
       });
-      console.log("balues", values);
     } else if (mode === "update" && editData) {
       const updateData = {
         name: values.name,
         address: values.address,
         call_number: values.call_number,
       };
-      console.log("balues", values);
 
       const id = editData.id!;
       updateFn(

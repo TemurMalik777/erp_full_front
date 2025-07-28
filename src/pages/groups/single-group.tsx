@@ -16,7 +16,6 @@ const SingleGroup = () => {
     ? dataById.data.group
     : { course: { title: "", price: 0 } };
 
-  // console.log("groupData", groupData);
 
   const getStatusConfig = (status: string) => {
     switch (status) {

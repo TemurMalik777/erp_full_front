@@ -29,7 +29,6 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
   editData,
   mode,
 }) => {
-  console.log("update", editData);
   const isEdit = mode === "update";
 
   const { data: branchData, isLoading } = useBranch();

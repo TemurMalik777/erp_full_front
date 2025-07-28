@@ -30,7 +30,9 @@ function Student() {
     }
   }, [location.search]);
 
-  const { data, useStudentDelete } = useStudent();
+  const { data, useStudentDelete } = useStudent(params);
+  // const { data } = useStudent();
+
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useStudentDelete();
 
@@ -54,7 +56,6 @@ function Student() {
   const handleTableChange = (pagination: TablePaginationConfig) => {
     handlePagination({ pagination, setParams });
   };
-
   const columns = [
     ...(StudentColumns ?? []),
     {
@@ -106,7 +107,7 @@ function Student() {
       <Table<Student>
         bordered
         columns={columns}
-        dataSource={data?.data.students}
+        dataSource={data?.data.data}
         rowKey={(row) => row.id!}
         pagination={{
           current: params.page,
