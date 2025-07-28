@@ -161,7 +161,7 @@ const Reducer = () => {
 
     const interval = setInterval(() => {
       dispatch({ type: "progress" });
-    }, 100);
+    }, 300);
     return () => clearInterval(interval);
   }, [state.loading]);
 
@@ -203,7 +203,7 @@ const Reducer = () => {
           {state.loading ? (
             <div className="flex items-center gap-2">
               <Spin indicator={antIcon}/>
-              <Text className="text-black-500"> Yuklanmoqda...</Text>
+              <Text className="text-black-500"> ...loading...</Text>
             </div>
           ) : (
             <Button
@@ -217,17 +217,7 @@ const Reducer = () => {
             </Button>
           )}
         </div>
-        <Title
-          level={1}
-          style={{
-            textAlign: "center",
-            color: "white",
-            marginBottom: "30px",
-            textShadow: "2px 2px 4px rgba(0,0,0,0.3)",
-          }}
-        >
-          ⚡ State Manager Demo
-        </Title>
+        <br />
 
         {/* Counter Section */}
         <Card
@@ -301,7 +291,7 @@ const Reducer = () => {
                   boxShadow: "0 4px 15px rgba(114, 46, 209, 0.4)",
                 }}
               >
-                Rangni o'zgartir
+                Change color
               </Button>
             </Space>
           </div>
