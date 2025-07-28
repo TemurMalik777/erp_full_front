@@ -55,8 +55,8 @@ const Router = () => {
           <Route path="group/:id" element={<SingleGroup />}></Route>
           <Route path="rooms" element={<Room />}></Route>
           <Route path="reducer" element={<Reducer />}></Route>
-          <Route path="nightt" element={<StarryNight />}></Route>
         </Route>
+          <Route path="nightt" element={<StarryNight />}></Route>
         <Route path="worker" element={<Worker />}></Route>
         <Route path="*" element={<Notfoun />}></Route>
       </Route>
