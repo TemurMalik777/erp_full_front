@@ -161,7 +161,7 @@ const Reducer = () => {
 
     const interval = setInterval(() => {
       dispatch({ type: "progress" });
-    }, 300);
+    }, 800);
     return () => clearInterval(interval);
   }, [state.loading]);
 
