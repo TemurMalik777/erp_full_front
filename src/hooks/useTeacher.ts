@@ -4,15 +4,16 @@ import type { Teacher } from "@types";
 import { message } from "antd";
 
 // GET ALL TEACHERS
-export const useTeachers = () => {
+export const useTeachers = (params:any) => {
   return useQuery({
-    queryKey: ["teacher"],
+    queryKey: ["teacher", params],
     queryFn: async () => {
-      const res = await TeacherService.getTeachers();
+      const res = await TeacherService.getTeachers(params);
       return res; // faqat o'qituvchilar arrayi
     },
   });
 };
+
 
 // CREATE TEACHER
 export const useCreateTeacher = () => {

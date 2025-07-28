@@ -20,7 +20,8 @@ import {
   SingleGroup,
   Notfoun,
   Room,
-  Reducer
+  Reducer,
+  StarryNight
 } from "@pages";
 const App = lazy(() => import("../App"));
 
@@ -54,6 +55,7 @@ const Router = () => {
           <Route path="group/:id" element={<SingleGroup />}></Route>
           <Route path="rooms" element={<Room />}></Route>
           <Route path="reducer" element={<Reducer />}></Route>
+          <Route path="nightt" element={<StarryNight />}></Route>
         </Route>
         <Route path="worker" element={<Worker />}></Route>
         <Route path="*" element={<Notfoun />}></Route>

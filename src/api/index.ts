@@ -1,5 +1,5 @@
 import axios from "axios";
-import { clearStorage, getItem } from "@helpers";
+import { clearStorage, getItem, Notification } from "@helpers";
 const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
 });
@@ -26,6 +26,7 @@ axiosInstance.interceptors.response.use(
 
 export const logout = () => {
   clearStorage();
+  Notification("success", "Siz yoq siz endi");
   window.location.href = "/";
 }
 

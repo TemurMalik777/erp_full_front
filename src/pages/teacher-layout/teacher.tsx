@@ -30,7 +30,7 @@ function TeacherPage() {
     }
   }, [location.search]);
 
-  const { data } = useTeachers();
+  const { data } = useTeachers(params);
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useDeleteTeacher();
 

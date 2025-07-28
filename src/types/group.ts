@@ -6,7 +6,7 @@ export interface Group {
   id?: number;
   name: string;
   courseId?: number;
-  status: "active" | "inactive";
+  status: "new" | "active" | "completed" | "cancelled" | "pending";
   start_date: string;
   start_time: string;
   roomId: number;
@@ -25,4 +25,13 @@ export interface GroupStudents {
 
 export interface GroupTeachers {
   teachers: Teacher[];
+}
+
+
+
+export interface AddGroupTeacher {
+  groupId: number;
+  teacherId: number[];
+  status: boolean;
+  start_date: string;
 }

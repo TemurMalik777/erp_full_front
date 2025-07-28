@@ -1,6 +1,6 @@
 import { ApiUrls } from "@api/api-urls";
 import { apiConfig } from "@api/config";
-import type { Group, ParamsType } from "@types";
+import type { AddGroupTeacher, Group, ParamsType } from "@types";
 
 export const GroupService = {
   async getGroups(params: ParamsType) {
@@ -32,6 +32,17 @@ export const GroupService = {
     return res;
   },
 
+  
+  async assignTeachersToGroup(payload: AddGroupTeacher) {
+    const res = await apiConfig().postRequest(ApiUrls.GROUP_TEACHERS, payload);
+    return res;
+  },
+  async assignStudentsToGroup(payload: AddGroupTeacher) {
+    const res = await apiConfig().postRequest(ApiUrls.GROUP_STUDENTS, payload);
+    return res;
+  },
+
+
   async createGroup(model: Group) {
     const res = await apiConfig().postRequest(ApiUrls.GROUPS, model);
     return res;
@@ -49,4 +60,6 @@ export const GroupService = {
     const res = await apiConfig().deleteRequest(`${ApiUrls.GROUPS}/${id}`);
     return res;
   },
+
+
 };

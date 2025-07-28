@@ -11,6 +11,7 @@ import { useParams } from "react-router-dom";
 
 const SingleGroup = () => {
   const { id } = useParams<{ id: string }>();
+  const groupId = Number(id);
   const { dataById, students, lessons, teachers } = useGroup({}, Number(id));
   const groupData: any = dataById
     ? dataById.data.group
@@ -186,7 +187,6 @@ const SingleGroup = () => {
 
         </div>
 
-        {/* // dangerous item dont touch */}
 
         {teachers?.data && teachers.data.length > 0 && (
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl border-indigo-200 shadow-lg shadow-blue-900/5 overflow-hidden">
@@ -197,7 +197,7 @@ const SingleGroup = () => {
               </h2>
             </div>
             <div className="p-6">
-              <GroupTeacher teachers={teachers.data} />
+              <GroupTeacher teachers={teachers.data} groupId={groupId} />
             </div>
           </div>
         )}
@@ -225,7 +225,7 @@ const SingleGroup = () => {
               </h2>
             </div>
             <div className="p-6">
-              <GroupStudent students={students.data} id={id} />
+              <GroupStudent students={students.data} groupId={groupId} />
             </div>
           </div>
         )}
@@ -235,3 +235,6 @@ const SingleGroup = () => {
 };
 
 export default SingleGroup;
+
+
+

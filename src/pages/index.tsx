@@ -16,6 +16,7 @@ const Reducer = lazy(() => import("./worker/useReducer"));
 const SingleGroup = lazy(() => import("./groups/single-group"));
 const Notfoun = lazy(() => import("./not-found/notfound"));
 const Room = lazy(() => import("./rooms/room"));
+const StarryNight = lazy(() => import("./night/night"));
 
 export {
   SignIn,
@@ -34,4 +35,5 @@ export {
   Notfoun,
   Room,
   Reducer,
+  StarryNight,
 };

@@ -80,6 +80,31 @@ export const useGroup = (params: any, id?: number) => {
     });
   };
 
+  
+  const useAssignTeacherToGroup = () => {
+    return useMutation({
+      mutationFn: (payload: {
+        groupId: number;
+        teacherId: number[];
+        status: boolean;
+        start_date: string;
+      }) => GroupService.assignTeachersToGroup(payload),
+      onSuccess: () => {
+        // O'qituvchilar ro'yxatini yangilash
+        queryClient.invalidateQueries({ queryKey: ["group-teachers"] });
+      },
+    });
+  };
+  const useAssignStudentToGroup = () => {
+    return useMutation({
+      mutationFn: (payload: any) => GroupService.assignStudentsToGroup(payload),
+      onSuccess: () => {
+        // O'qituvchilar ro'yxatini yangilash
+        queryClient.invalidateQueries({ queryKey: ["group-students"] });
+      },
+    });
+  };
+
   return {
     dataById,
     data,
@@ -90,5 +115,7 @@ export const useGroup = (params: any, id?: number) => {
     useGroupDelete,
     useGroupUpdate,
     handlePagination,
+    useAssignTeacherToGroup,
+    useAssignStudentToGroup,
   };
 };

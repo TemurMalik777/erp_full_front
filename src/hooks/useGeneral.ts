@@ -19,18 +19,18 @@ export const useGeneral = () => {
   };
 
   const updateLessonStatus = () => {
-  return useMutation({
-    mutationFn: ({
-      id,
-      status,
-      note,
-    }: {
-      id: number;
-      status: string;
-      note?: string;
-    }) => GeneralService.updateLessonStatus(id, { status, note }),
-  });
-};
+    return useMutation({
+      mutationFn: ({
+        id,
+        status,
+        note,
+      }: {
+        id: number;
+        status: string;
+        note?: string;
+      }) => GeneralService.updateLessonStatus(id, { status, note }),
+    });
+  };
 
   return { handlePagination, updateLessonStatus };
 };
