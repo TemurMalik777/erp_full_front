@@ -31,19 +31,9 @@ export const GroupColumns: TableProps<Group>["columns"] = [
     key: "start_date",
   },
   {
-    title: "End Date",
-    dataIndex: "end_date",
-    key: "end_date",
-  },
-  {
     title: "Start time",
     dataIndex: "start_time",
     key: "start_time",
-  },
-  {
-    title: "End Time",
-    dataIndex: "end_time",
-    key: "end_time",
   },
   {
     title: "Rooms",

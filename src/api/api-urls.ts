@@ -33,4 +33,7 @@ export class ApiUrls {
   public static GROUP_STUDENTS: string = "/group-students";
   public static GROUP_STUDENTS_BY_GROUP_ID: string =
     this.GROUP_STUDENTS + "/by-group";
+
+  // UPDATE_LESSON_STATUS
+  public static UPDATE_LESSONS_STATUS_AND_NOTES=(id:number):string=>`${this.LESSONS}/${id}/status`
 }

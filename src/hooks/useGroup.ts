@@ -1,8 +1,10 @@
 import { GroupService } from "@service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { type Group, type ParamsType } from "@types";
+import { type Group, 
+  // type ParamsType
+ } from "@types";
 import { useNavigate } from "react-router-dom";
-export const useGroup = (params: ParamsType, id?: number) => {
+export const useGroup = (params: any, id?: number) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { data } = useQuery({
@@ -11,6 +13,12 @@ export const useGroup = (params: ParamsType, id?: number) => {
     queryFn: async () => GroupService.getGroups(params),
   });
 
+  const { data: dataById } = useQuery({
+    enabled: !!id,
+		queryKey: ["groupById"],
+		queryFn: async () => GroupService.getGroupById(id!),
+	});
+  
   const groupStudentsQuery = useQuery({
     enabled: !!id,
     queryKey: ["group-students"],
@@ -73,6 +81,7 @@ export const useGroup = (params: ParamsType, id?: number) => {
   };
 
   return {
+    dataById,
     data,
     students,
     lessons,

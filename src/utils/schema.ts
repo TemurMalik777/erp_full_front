@@ -35,20 +35,16 @@ export const CourseValidation = Yup.object({
 //--Group--
 export const GroupValidation = Yup.object({
   name: Yup.string().required("Name is required"),
-  course_id: Yup.number().required("Course is required"),
+  courseId: Yup.number().required("Course is required"),
   status: Yup.string()
     .oneOf(["active", "inactive"], "Invalid status")
     .required("Status is required"),
   start_date: Yup.string().required("Start date is required"),
-  end_date: Yup.string().required("End date is required"),
   start_time: Yup.string().required("Start date is required"),
-  end_time: Yup.string().required("End date is required"),
   roomId: Yup.number().required("Course is required"),
   course: Yup.object({
-    id: Yup.number()
-      .typeError("Course is required")
-      .required("Course is required"),
-  }).required("Course object is required"),
+    id: Yup.number(),
+  }).notRequired(),
 });
 
 //--Student--
@@ -117,13 +113,13 @@ export const RoomValidation = Yup.object({
   branchId: Yup.number()
     .typeError("Filial ID raqam bo'lishi kerak")
     .required("Filial ID majburiy"),
-      //   branches: Yup.array()
-      // .of(
-      //   Yup.object({
-      //     id: Yup.number().required(),
-      //   })
-      // )
-      // .required("Branches are required"),
+  //   branches: Yup.array()
+  // .of(
+  //   Yup.object({
+  //     id: Yup.number().required(),
+  //   })
+  // )
+  // .required("Branches are required"),
   name: Yup.string()
     .required("Xona nomi majburiy")
     .min(2, "Xona nomi kamida 2 ta belgidan iborat bo'lishi kerak"),

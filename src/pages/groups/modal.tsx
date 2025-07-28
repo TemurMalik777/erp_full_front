@@ -29,12 +29,10 @@ const GroupModal: React.FC<GroupModalProps> = ({
   update,
   mode,
 }) => {
-  console.log("update", update);
   const { useGroupCreate, useGroupUpdate } = useGroup({ page: 1, limit: 10 });
   const { mutate: createFn, isPending: isCreating } = useGroupCreate();
   const { mutate: updateFn, isPending: isUpdating } = useGroupUpdate();
   const { data } = useCourse();
-  // const { data: dataRomm } = useRoom();
   const { data: dataRomm } = useRoom({ page: 1, limit: 100 });
   const courses = data?.data.courses || [];
   const rooms = dataRomm?.data.rooms || [];
@@ -49,27 +47,38 @@ const GroupModal: React.FC<GroupModalProps> = ({
   } = useForm<Group>({
     defaultValues: {
       name: update?.name || "",
-      course_id: update?.course.id || 0,
+      courseId: update?.course?.id || 0,
       status: update?.status || "active",
       start_date: update?.start_date || "",
-      end_date: update?.end_date || "",
-      start_time: update?.start_time || "",
-      end_time: update?.end_time || "",
+      start_time: update?.start_time || "HH:mm",
       roomId: update?.roomId || 0,
     },
-    resolver: yupResolver(GroupValidation),
+    resolver: yupResolver(GroupValidation) as any,
   });
-console.log("hello", rooms.name);
-console.log("Courses list:", courses);
+  console.log("update:", update);
 
   const onSubmit = (values: Group) => {
+    const payload = {
+      ...values,
+      courseId: Number(values.courseId),
+      course: undefined,
+    };
+
+    console.log("Submitting payload:", payload);
+
     if (mode === "create") {
-      createFn(values, { onSuccess: toggle });
+      createFn(payload, { onSuccess: toggle });
     } else if (mode === "update" && update?.id) {
-      updateFn({ model: values, id: update.id }, { onSuccess: toggle });
+        const model = {
+      ...values,
+      start_time: values.start_time
+        ? dayjs(values.start_time, "HH:mm").format("HH:mm")
+        : null
+    };
+      updateFn({ model: payload, id: update.id }, { onSuccess: toggle });
+      console.log(model);
     }
   };
-
   return (
     <Modal
       open={open}
@@ -86,21 +95,20 @@ console.log("Courses list:", courses);
           label="Name"
           validateStatus={errors.name && "error"}
           help={errors.name?.message}
-          >
+        >
           <Controller
             name="name"
             control={control}
             render={({ field }) => <Input {...field} placeholder="Name" />}
-            
           />
         </AntForm.Item>
         <AntForm.Item
           label="Course"
-          validateStatus={errors.course_id && "error"}
-          help={errors.course_id?.message}
+          validateStatus={errors.courseId && "error"}
+          help={errors.courseId?.message}
         >
           <Controller
-            name="course_id"
+            name="courseId"
             control={control}
             render={({ field }) => (
               <Select
@@ -152,47 +160,12 @@ console.log("Courses list:", courses);
           />
         </AntForm.Item>
         <AntForm.Item
-          label="End Date"
-          validateStatus={errors.end_date && "error"}
-          help={errors.end_date?.message}
-        >
-          <Controller
-            name="end_date"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value) : null}
-                onChange={(_, dateString) => field.onChange(dateString)}
-              />
-            )}
-          />
-        </AntForm.Item>
-        <AntForm.Item
           label="Start Time"
           validateStatus={errors.start_time && "error"}
           help={errors.start_time?.message}
         >
           <Controller
             name="start_time"
-            control={control}
-            render={({ field }) => (
-              <TimePicker
-                format="HH:mm"
-                style={{ width: "100%" }}
-                value={field.value ? dayjs(field.value, "HH:mm") : null}
-                onChange={(value) => field.onChange(value?.format("HH:mm"))}
-              />
-            )}
-          />
-        </AntForm.Item>
-        <AntForm.Item
-          label="End Time"
-          validateStatus={errors.end_time && "error"}
-          help={errors.end_time?.message}
-        >
-          <Controller
-            name="end_time"
             control={control}
             render={({ field }) => (
               <TimePicker
@@ -226,7 +199,7 @@ console.log("Courses list:", courses);
                 ))}
               </Select>
             )}
-            />
+          />
         </AntForm.Item>
         <AntForm.Item>
           <Button type="primary" htmlType="submit" block loading={isLoading}>

@@ -5,14 +5,12 @@ import type { Teacher } from "./teacher";
 export interface Group {
   id?: number;
   name: string;
-  course_id: number;
+  courseId?: number;
   status: "active" | "inactive";
   start_date: string;
-  end_date: string;
   start_time: string;
-  end_time: string;
   roomId: number;
-  course: {
+  course?: {
     id: number
   }
 }
