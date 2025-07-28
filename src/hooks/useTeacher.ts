@@ -3,19 +3,16 @@ import { TeacherService } from "@service";
 import type { Teacher } from "@types";
 import { message } from "antd";
 
-// GET ALL TEACHERS
-export const useTeachers = (params:any) => {
+export const useTeachers = (params: any) => {
   return useQuery({
     queryKey: ["teacher", params],
     queryFn: async () => {
       const res = await TeacherService.getTeachers(params);
-      return res; // faqat o'qituvchilar arrayi
+      return res;
     },
   });
 };
 
-
-// CREATE TEACHER
 export const useCreateTeacher = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -30,7 +27,6 @@ export const useCreateTeacher = () => {
   });
 };
 
-// UPDATE TEACHER
 export const useUpdateTeacher = () => {
   const queryClient = useQueryClient();
   return useMutation({
@@ -46,7 +42,6 @@ export const useUpdateTeacher = () => {
   });
 };
 
-// DELETE TEACHER
 export const useDeleteTeacher = () => {
   const queryClient = useQueryClient();
   return useMutation({

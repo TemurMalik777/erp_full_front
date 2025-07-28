@@ -9,8 +9,6 @@ export const useCourse = () => {
     queryFn: async () => CoursService.getCourses(),
   });
 
-
-
   const useCourseCreate = () => {
     return useMutation({
       mutationFn: async (data: Course) => CoursService.createCourses(data),

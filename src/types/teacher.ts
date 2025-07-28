@@ -8,8 +8,8 @@ export interface Teacher {
   role: string;
   branchId: number[];
   branches?: {
-    id: number
-  }[]
+    id: number;
+  }[];
 }
 
 export interface GroupTeachers1 {

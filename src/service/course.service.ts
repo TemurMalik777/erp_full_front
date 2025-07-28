@@ -14,7 +14,10 @@ export const CoursService = {
   },
 
   async updateCourses(model: Course, id: number): Promise<any> {
-    const res = await apiConfig().patchRequest(`${ApiUrls.COURSE}/${id}`, model);
+    const res = await apiConfig().patchRequest(
+      `${ApiUrls.COURSE}/${id}`,
+      model
+    );
     return res;
   },
 

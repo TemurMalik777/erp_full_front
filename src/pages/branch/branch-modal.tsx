@@ -116,26 +116,6 @@ const BranchModal: React.FC<BranchModalProps> = ({
           />
         </AntForm.Item>
 
-        {/* <AntForm.Item
-          label="Phone"
-          labelCol={{ span: 24 }}
-          validateStatus={errors.call_number ? "error" : ""}
-          help={errors.call_number?.message}
-        >
-          <Controller
-            control={control}
-            name="call_number"
-            render={({ field }) => (
-              <MaskedInput
-                {...field}
-                mask="+\9\9\8 (00) 000-00-00"
-                placeholder="+998 (__) ___-__-__"
-              />
-            )}
-          />
-
-        </AntForm.Item> */}
-
         <AntForm.Item
           label="Phone"
           labelCol={{ span: 24 }}

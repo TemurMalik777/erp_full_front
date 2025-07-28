@@ -69,12 +69,12 @@ const GroupModal: React.FC<GroupModalProps> = ({
     if (mode === "create") {
       createFn(payload, { onSuccess: toggle });
     } else if (mode === "update" && update?.id) {
-        const model = {
-      ...values,
-      start_time: values.start_time
-        ? dayjs(values.start_time, "HH:mm").format("HH:mm")
-        : null
-    };
+      const model = {
+        ...values,
+        start_time: values.start_time
+          ? dayjs(values.start_time, "HH:mm").format("HH:mm")
+          : null,
+      };
       updateFn({ model: payload, id: update.id }, { onSuccess: toggle });
       console.log(model);
     }

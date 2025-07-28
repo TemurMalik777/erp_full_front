@@ -1,4 +1,13 @@
-import { Modal, Select, Input, Typography, Space, Tag, Card, Button } from "antd";
+import {
+  Modal,
+  Select,
+  Input,
+  Typography,
+  Space,
+  Tag,
+  Card,
+  Button,
+} from "antd";
 import React from "react";
 
 const { Option } = Select;
@@ -31,7 +40,9 @@ const LessonModal: React.FC<LessonModalProps> = ({
       title={
         <Space>
           {/* <BookOutlined style={{ color: "#1890ff" }} /> */}
-          <span>Dars {lesson?.index + 1} - {lesson?.title || "Nomsiz"}</span>
+          <span>
+            Dars {lesson?.index + 1} - {lesson?.title || "Nomsiz"}
+          </span>
         </Space>
       }
       open={open}
@@ -44,23 +55,26 @@ const LessonModal: React.FC<LessonModalProps> = ({
         <Button key="cancel" onClick={onCancel}>
           Bekor qilish
         </Button>,
-        <Button
-          key="save"
-          type="primary"
-          onClick={onOk}
-        >
+        <Button key="save" type="primary" onClick={onOk}>
           Saqlash
         </Button>,
       ]}
     >
       <div style={{ padding: "20px 0" }}>
         <Space direction="vertical" size="large" style={{ width: "100%" }}>
-          {/* Basic Info */}
           <Card size="small" style={{ background: "#f8f9fa" }}>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: "20px",
+              }}
+            >
               <div>
                 <Space>
-                  <Text strong style={{ color: "#666" }}>Sarlavha</Text>
+                  <Text strong style={{ color: "#666" }}>
+                    Sarlavha
+                  </Text>
                 </Space>
                 <div style={{ marginTop: "8px" }}>
                   <Title level={4} style={{ margin: 0 }}>
@@ -70,7 +84,9 @@ const LessonModal: React.FC<LessonModalProps> = ({
               </div>
               <div>
                 <Space>
-                  <Text strong style={{ color: "#666" }}>Sana</Text>
+                  <Text strong style={{ color: "#666" }}>
+                    Sana
+                  </Text>
                 </Space>
                 <div style={{ marginTop: "8px" }}>
                   <Title level={4} style={{ margin: 0 }}>
@@ -116,7 +132,6 @@ const LessonModal: React.FC<LessonModalProps> = ({
             </Space>
           </Card>
 
-          {/* Notes */}
           <Card
             title={
               <Space>
@@ -132,7 +147,14 @@ const LessonModal: React.FC<LessonModalProps> = ({
               placeholder="Darsga oid izoh yozing..."
               className="mt-1"
             />
-            <div style={{ marginTop: "12px", padding: "12px", background: "#f0f2f5", borderRadius: "6px" }}>
+            <div
+              style={{
+                marginTop: "12px",
+                padding: "12px",
+                background: "#f0f2f5",
+                borderRadius: "6px",
+              }}
+            >
               <Text type="secondary" style={{ fontSize: "13px" }}>
                 Korinish: {description || "Izoh yo'q"}
               </Text>

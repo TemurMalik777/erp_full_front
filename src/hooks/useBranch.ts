@@ -1,6 +1,6 @@
 import { BranchService } from "@service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import type { Branch,  } from "@types";
+import type { Branch } from "@types";
 
 export const useBranch = () => {
   const queryClient = useQueryClient();

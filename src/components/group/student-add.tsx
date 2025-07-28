@@ -1,13 +1,13 @@
 import { Modal, Select, Form, DatePicker, message, Switch } from "antd";
 import { useEffect } from "react";
 import dayjs from "dayjs";
-import { useGroup } from "../../hooks";
+import { useGroup } from "@hooks";
 
 interface AddStudentToGroupModalProps {
   open: boolean;
   onCancel: () => void;
-  allStudents: any[]; // Barcha studentlar
-  groupStudents: any[]; // Guruhga biriktirilganlar
+  allStudents: any[];
+  groupStudents: any[];
   groupId: number;
 }
 
@@ -40,7 +40,7 @@ const AddStudentToGroupModal: React.FC<AddStudentToGroupModalProps> = ({
       mutate({
         groupId,
         studentId: data.studentId,
-        status:data.status,
+        status: data.status,
         start_date: data.start_date,
       });
       onCancel();

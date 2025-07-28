@@ -6,8 +6,8 @@ import {
   MailOutlined,
   IdcardOutlined,
 } from "@ant-design/icons";
-import { useStudent } from "../../hooks/useStudent";
 import AddStudentToGroupModal from "./student-add";
+import { useStudent } from "@hooks";
 
 const { Panel } = Collapse;
 const { Text } = Typography;

@@ -21,7 +21,7 @@ import {
   Notfoun,
   Room,
   Reducer,
-  StarryNight
+  StarryNight,
 } from "@pages";
 const App = lazy(() => import("../App"));
 
@@ -56,7 +56,7 @@ const Router = () => {
           <Route path="rooms" element={<Room />}></Route>
           <Route path="reducer" element={<Reducer />}></Route>
         </Route>
-          <Route path="nightt" element={<StarryNight />}></Route>
+        <Route path="nightt" element={<StarryNight />}></Route>
         <Route path="worker" element={<Worker />}></Route>
         <Route path="*" element={<Notfoun />}></Route>
       </Route>

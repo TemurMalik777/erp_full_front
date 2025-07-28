@@ -43,10 +43,7 @@ const TeacherModal: React.FC<TeacherModalProps> = ({
     password: "",
     phone: editData?.phone || "",
     role: editData?.role || "",
-    // branchId: editData?.branches.id || [],
     branchId: editData?.branches?.map((b: any) => b.id) || [],
-
-
   };
 
   const handleSubmit = async (values: Teacher) => {

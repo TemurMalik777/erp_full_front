@@ -8,7 +8,6 @@ import { useAuth } from "@hooks";
 const { Option } = Select;
 const { Title } = Typography;
 
-
 const SignIn = () => {
   const navigate = useNavigate();
   const { mutate, isPending } = useAuth();

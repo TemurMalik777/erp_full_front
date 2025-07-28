@@ -198,4 +198,3 @@ const StudentModal: React.FC<StudentModalProps> = ({
 };
 
 export default StudentModal;
-

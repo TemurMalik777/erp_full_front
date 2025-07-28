@@ -3,8 +3,8 @@ import { apiConfig } from "@api/config";
 import type { Teacher } from "@types";
 
 export const TeacherService = {
-  async getTeachers(params:any) {
-    const res = await apiConfig().getRequest(ApiUrls.TEACHER,params);
+  async getTeachers(params: any) {
+    const res = await apiConfig().getRequest(ApiUrls.TEACHER, params);
     return res;
   },
   async createTeacher(model: Teacher) {

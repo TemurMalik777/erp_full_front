@@ -1,8 +1,6 @@
 import { GroupService } from "@service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { type Group, 
-  // type ParamsType
- } from "@types";
+import { type Group } from "@types";
 import { useNavigate } from "react-router-dom";
 export const useGroup = (params: any, id?: number) => {
   const navigate = useNavigate();
@@ -15,14 +13,14 @@ export const useGroup = (params: any, id?: number) => {
 
   const { data: dataById } = useQuery({
     enabled: !!id,
-		queryKey: ["groupById"],
-		queryFn: async () => GroupService.getGroupById(id!),
-	});
-  
+    queryKey: ["groupById"],
+    queryFn: async () => GroupService.getGroupById(id!),
+  });
+
   const groupStudentsQuery = useQuery({
     enabled: !!id,
     queryKey: ["group-students"],
-    queryFn: async () => GroupService.getGroupsStudent( id!),
+    queryFn: async () => GroupService.getGroupsStudent(id!),
   });
   const students = groupStudentsQuery.data;
 
@@ -80,7 +78,6 @@ export const useGroup = (params: any, id?: number) => {
     });
   };
 
-  
   const useAssignTeacherToGroup = () => {
     return useMutation({
       mutationFn: (payload: {
@@ -90,7 +87,6 @@ export const useGroup = (params: any, id?: number) => {
         start_date: string;
       }) => GroupService.assignTeachersToGroup(payload),
       onSuccess: () => {
-        // O'qituvchilar ro'yxatini yangilash
         queryClient.invalidateQueries({ queryKey: ["group-teachers"] });
       },
     });
@@ -99,7 +95,6 @@ export const useGroup = (params: any, id?: number) => {
     return useMutation({
       mutationFn: (payload: any) => GroupService.assignStudentsToGroup(payload),
       onSuccess: () => {
-        // O'qituvchilar ro'yxatini yangilash
         queryClient.invalidateQueries({ queryKey: ["group-students"] });
       },
     });

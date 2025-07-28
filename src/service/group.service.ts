@@ -32,7 +32,6 @@ export const GroupService = {
     return res;
   },
 
-  
   async assignTeachersToGroup(payload: AddGroupTeacher) {
     const res = await apiConfig().postRequest(ApiUrls.GROUP_TEACHERS, payload);
     return res;
@@ -41,7 +40,6 @@ export const GroupService = {
     const res = await apiConfig().postRequest(ApiUrls.GROUP_STUDENTS, payload);
     return res;
   },
-
 
   async createGroup(model: Group) {
     const res = await apiConfig().postRequest(ApiUrls.GROUPS, model);
@@ -60,6 +58,4 @@ export const GroupService = {
     const res = await apiConfig().deleteRequest(`${ApiUrls.GROUPS}/${id}`);
     return res;
   },
-
-
 };

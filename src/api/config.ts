@@ -5,11 +5,10 @@ export function apiConfig() {
   async function getRequest(url: string, params: object = {}) {
     try {
       const res = await axiosInstance.get(url, { params });
-      // Notification("success", res?.data?.message || "Muvaffaqiyatli");
       return res;
     } catch (err) {
       console.log(err);
-      Notification("error", "Error");
+      Notification("error", "No sog'lom cod bor !");
     }
   }
   async function postRequest(url: string, body: object = {}) {

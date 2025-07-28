@@ -1,12 +1,6 @@
 import { GroupLesson, GroupStudent, GroupTeacher } from "@components";
 import { useGroup } from "@hooks";
-import {
-  Calendar,
-  Clock,
-  Users,
-  BookOpen,
-  Timer,
-} from "lucide-react";
+import { Calendar, Clock, Users, BookOpen, Timer } from "lucide-react";
 import { useParams } from "react-router-dom";
 
 const SingleGroup = () => {
@@ -16,7 +10,6 @@ const SingleGroup = () => {
   const groupData: any = dataById
     ? dataById.data.group
     : { course: { title: "", price: 0 } };
-
 
   const getStatusConfig = (status: string) => {
     switch (status) {
@@ -48,7 +41,7 @@ const SingleGroup = () => {
   console.log(statusConfig);
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 gap-3" 
+      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 gap-3"
       style={{ margin: "-23px", borderRadius: "8px" }}
     >
       <div className="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 space-y-6">
@@ -120,73 +113,68 @@ const SingleGroup = () => {
           </div>
 
           <div className="bg-gradient-to-r from-gray-50 to-blue-50/40 rounded-2xl p-6 border-gray-100">
-  <div className="flex items-center gap-3 mb-4">
-    <div className="p-2 bg-indigo-100 rounded-lg">
-      <BookOpen className="w-6 h-6 text-indigo-600" />
-    </div>
-    <h3 className="text-xl font-bold text-gray-900">
-      {groupData.course?.title}
-    </h3>
-  </div>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-indigo-100 rounded-lg">
+                <BookOpen className="w-6 h-6 text-indigo-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900">
+                {groupData.course?.title}
+              </h3>
+            </div>
 
-  <p className="text-gray-700 leading-relaxed mb-6">
-    {groupData.course?.description}
-  </p>
+            <p className="text-gray-700 leading-relaxed mb-6">
+              {groupData.course?.description}
+            </p>
 
-  {/* Cardlar 1 qatorga olingan */}
-  <div className="flex justify-center items-stretch gap-4">
-    {/* Duration */}
-    <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-orange-100">
-      <div className="flex justify-center mb-2">
-        <div className="p-2 bg-orange-100 rounded-lg">
-          <Calendar className="w-4 h-4 text-orange-600" />
+            {/* Cardlar 1 qatorga olingan */}
+            <div className="flex justify-center items-stretch gap-4">
+              {/* Duration */}
+              <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-orange-100">
+                <div className="flex justify-center mb-2">
+                  <div className="p-2 bg-orange-100 rounded-lg">
+                    <Calendar className="w-4 h-4 text-orange-600" />
+                  </div>
+                </div>
+                <p className="text-2xl font-bold text-orange-600">
+                  {groupData.course?.duration || "--"}
+                </p>
+                <p className="text-xs text-gray-600 uppercase tracking-wide">
+                  Months
+                </p>
+              </div>
+
+              {/* Lessons Per Week */}
+              <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-teal-100">
+                <div className="flex justify-center mb-2">
+                  <div className="p-2 bg-teal-100 rounded-lg">
+                    <BookOpen className="w-4 h-4 text-teal-600" />
+                  </div>
+                </div>
+                <p className="text-2xl font-bold text-teal-600">
+                  {groupData.course?.lessons_in_a_week || "--"}
+                </p>
+                <p className="text-xs text-gray-600 uppercase tracking-wide">
+                  Per Week
+                </p>
+              </div>
+
+              {/* Lesson Duration */}
+              <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-indigo-100">
+                <div className="flex justify-center mb-2">
+                  <div className="p-2 bg-indigo-100 rounded-lg">
+                    <Timer className="w-4 h-4 text-indigo-600" />
+                  </div>
+                </div>
+                <p className="text-2xl font-bold text-indigo-600">
+                  {groupData.course?.lesson_duration || "--"}
+                </p>
+                <p className="text-xs text-gray-600 uppercase tracking-wide">
+                  Minutes
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <p className="text-2xl font-bold text-orange-600">
-        {groupData.course?.duration || "--"}
-      </p>
-      <p className="text-xs text-gray-600 uppercase tracking-wide">
-        Months
-      </p>
-    </div>
-
-    {/* Lessons Per Week */}
-    <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-teal-100">
-      <div className="flex justify-center mb-2">
-        <div className="p-2 bg-teal-100 rounded-lg">
-          <BookOpen className="w-4 h-4 text-teal-600" />
-        </div>
-      </div>
-      <p className="text-2xl font-bold text-teal-600">
-        {groupData.course?.lessons_in_a_week || "--"}
-      </p>
-      <p className="text-xs text-gray-600 uppercase tracking-wide">
-        Per Week
-      </p>
-    </div>
-
-    {/* Lesson Duration */}
-    <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-indigo-100">
-      <div className="flex justify-center mb-2">
-        <div className="p-2 bg-indigo-100 rounded-lg">
-          <Timer className="w-4 h-4 text-indigo-600" />
-        </div>
-      </div>
-      <p className="text-2xl font-bold text-indigo-600">
-        {groupData.course?.lesson_duration || "--"}
-      </p>
-      <p className="text-xs text-gray-600 uppercase tracking-wide">
-        Minutes
-      </p>
-    </div>
-  </div>
-</div>
-
-
-
-
-        </div>
-
 
         {teachers?.data && teachers.data.length > 0 && (
           <div className="bg-white/80 backdrop-blur-sm rounded-2xl border-indigo-200 shadow-lg shadow-blue-900/5 overflow-hidden">
@@ -235,6 +223,3 @@ const SingleGroup = () => {
 };
 
 export default SingleGroup;
-
-
-

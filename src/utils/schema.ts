@@ -113,13 +113,6 @@ export const RoomValidation = Yup.object({
   branchId: Yup.number()
     .typeError("Filial ID raqam bo'lishi kerak")
     .required("Filial ID majburiy"),
-  //   branches: Yup.array()
-  // .of(
-  //   Yup.object({
-  //     id: Yup.number().required(),
-  //   })
-  // )
-  // .required("Branches are required"),
   name: Yup.string()
     .required("Xona nomi majburiy")
     .min(2, "Xona nomi kamida 2 ta belgidan iborat bo'lishi kerak"),

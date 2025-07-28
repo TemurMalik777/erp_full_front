@@ -3,9 +3,9 @@ import { apiConfig } from "@api/config";
 import type { ParamsType, Student } from "@types";
 
 export const StudentService = {
-  async getStudents(params:ParamsType) {
+  async getStudents(params: ParamsType) {
     const res = await apiConfig().getRequest(ApiUrls.STUDENT, params);
-    return res
+    return res;
   },
 
   async createStudent(model: Student) {

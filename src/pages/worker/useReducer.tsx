@@ -53,12 +53,12 @@ import {
   DeleteOutlined,
   BgColorsOutlined,
   ReloadOutlined,
-  SyncOutlined ,
+  SyncOutlined,
 } from "@ant-design/icons";
 
 const { Title, Text } = Typography;
 
-const antIcon = <SyncOutlined style={{ fontSize: 25, color: 'black' }} spin />;
+const antIcon = <SyncOutlined style={{ fontSize: 25, color: "black" }} spin />;
 
 interface Todo {
   id: number;
@@ -202,7 +202,7 @@ const Reducer = () => {
           {/* Loading or Restart Button */}
           {state.loading ? (
             <div className="flex items-center gap-2">
-              <Spin indicator={antIcon}/>
+              <Spin indicator={antIcon} />
               <Text className="text-black-500"> ...loading...</Text>
             </div>
           ) : (

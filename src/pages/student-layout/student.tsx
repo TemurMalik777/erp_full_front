@@ -31,7 +31,6 @@ function Student() {
   }, [location.search]);
 
   const { data, useStudentDelete } = useStudent(params);
-  // const { data } = useStudent();
 
   const { handlePagination } = useGeneral();
   const { mutate: deleteFn, isPending: isDeleting } = useStudentDelete();

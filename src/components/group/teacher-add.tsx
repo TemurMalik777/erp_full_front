@@ -6,8 +6,8 @@ import { useGroup } from "@hooks";
 interface AddTeacherToGroupModalProps {
   open: boolean;
   onCancel: () => void;
-  allTeachers: any[]; // Barcha mavjud ustozlar
-  groupTeachers: any[]; // Faqat shu guruhga biriktirilgan ustozlar
+  allTeachers: any[];
+  groupTeachers: any[];
   groupId: number;
 }
 
@@ -28,7 +28,6 @@ const AddTeacherToGroupModal: React.FC<AddTeacherToGroupModalProps> = ({
     }
   }, [open, form]);
 
-  // Faqat hali guruhga biriktirilmagan ustozlar
   const availableTeachers = allTeachers
     .filter(
       (teacher) =>
@@ -39,22 +38,21 @@ const AddTeacherToGroupModal: React.FC<AddTeacherToGroupModalProps> = ({
       value: teacher.id,
     }));
 
-   const handleSubmit = (data: any) => {
-     try {
-       mutate({
-         teacherId: data.teacherId,
-         groupId,
-         status: data.status,
-         start_date: data.start_date,
-       });
-       onCancel();
-       message.success("Teacher successfully assigned!");
-     } catch (error) {
-       message.error("Failed to assign teacher. Please try again.");
-       console.error("Error assigning teacher:", error);
-     }
-   };
-
+  const handleSubmit = (data: any) => {
+    try {
+      mutate({
+        teacherId: data.teacherId,
+        groupId,
+        status: data.status,
+        start_date: data.start_date,
+      });
+      onCancel();
+      message.success("Teacher successfully assigned!");
+    } catch (error) {
+      message.error("Failed to assign teacher. Please try again.");
+      console.error("Error assigning teacher:", error);
+    }
+  };
 
   return (
     <Modal
@@ -98,7 +96,7 @@ const AddTeacherToGroupModal: React.FC<AddTeacherToGroupModalProps> = ({
         </Form.Item>
 
         <Form.Item label="Active Status" name="status" valuePropName="checked">
-          <Switch   />
+          <Switch />
         </Form.Item>
       </Form>
     </Modal>

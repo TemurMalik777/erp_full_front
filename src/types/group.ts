@@ -11,8 +11,8 @@ export interface Group {
   start_time: string;
   roomId: number;
   course?: {
-    id: number
-  }
+    id: number;
+  };
 }
 
 export interface GroupLessons {
@@ -26,8 +26,6 @@ export interface GroupStudents {
 export interface GroupTeachers {
   teachers: Teacher[];
 }
-
-
 
 export interface AddGroupTeacher {
   groupId: number;

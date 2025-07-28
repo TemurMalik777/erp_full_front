@@ -94,7 +94,6 @@ function LessonLists({ lessons }: any) {
 
   return (
     <div className="relative mt-6">
-      {/* Header */}
       <div className="mb-4">
         <h2 className="text-xl font-bold text-gray-800 mb-1">
           Darslar Jadvali
@@ -102,15 +101,11 @@ function LessonLists({ lessons }: any) {
         <p className="text-sm text-gray-500">Jami {lessons.length} ta dars</p>
       </div>
 
-      {/* Container */}
       <div className="relative bg-white rounded-2xl  overflow-hidden">
-        {/* Gradient Overlays */}
         <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        {/* Lesson List */}
         <div className="flex items-center p-4 gap-2">
-          {/* Prev Button */}
           <Button
             shape="circle"
             icon={<LeftOutlined />}
@@ -118,7 +113,6 @@ function LessonLists({ lessons }: any) {
             disabled={isStartDisabled()}
           />
 
-          {/* Scrollable Lessons */}
           <div
             ref={containerRef}
             onScroll={handleScroll}
@@ -129,7 +123,7 @@ function LessonLists({ lessons }: any) {
               const dayName = dayjs(lesson.date).format("ddd").toUpperCase();
               const statusColor = getStatusColor(lesson.status);
               console.log(lesson);
-              
+
               return (
                 <Tooltip
                   key={lesson.id}
@@ -137,9 +131,7 @@ function LessonLists({ lessons }: any) {
                     <div className="text-center">
                       <div className="font-semibold">Dars {index + 1}</div>
                       {lesson.notes && (
-                        <div className="text-xs  mt-1">
-                          {lesson.notes}
-                        </div>
+                        <div className="text-xs  mt-1">{lesson.notes}</div>
                       )}
                     </div>
                   }
@@ -158,7 +150,6 @@ function LessonLists({ lessons }: any) {
             })}
           </div>
 
-          {/* Next Button */}
           <Button
             shape="circle"
             icon={<RightOutlined />}
@@ -168,7 +159,6 @@ function LessonLists({ lessons }: any) {
         </div>
       </div>
 
-      {/* Modal */}
       <LessonModal
         open={isModalOpen}
         lesson={selectedLesson}

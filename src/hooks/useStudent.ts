@@ -7,7 +7,6 @@ export const useStudent = (params?: ParamsType) => {
   const { data } = useQuery({
     queryKey: ["student", params],
     queryFn: async () => StudentService.getStudents(params!),
-    
   });
 
   const useStudentCreate = () => {

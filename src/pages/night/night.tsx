@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import "./star-night.css"; // CSS ni alohida faylga ajratganmiz
+import "./star-night.css";
 
 const StarryNight = () => {
   useEffect(() => {
     const starsContainer = document.querySelector(".stars");
     const shootingStarsContainer = document.querySelector(".shooting-stars");
 
-    // Static stars
     if (starsContainer) {
       for (let i = 0; i < 200; i++) {
         const star = document.createElement("div");
@@ -18,7 +17,6 @@ const StarryNight = () => {
       }
     }
 
-    // Shooting stars
     const createShootingStar = () => {
       if (!shootingStarsContainer) return;
       const shootingStar = document.createElement("div");

@@ -34,7 +34,6 @@ const RoomModal: React.FC<RoomModalProps> = ({
   const { data } = useBranch();
   const branches = data?.data.branch || [];
 
-
   const isLoading = isCreating || isUpdating;
 
   const {
@@ -117,7 +116,11 @@ const RoomModal: React.FC<RoomModalProps> = ({
             name="capacity"
             control={control}
             render={({ field }) => (
-              <InputNumber {...field} value={field.value ?? null} style={{ width: "100%" }} />
+              <InputNumber
+                {...field}
+                value={field.value ?? null}
+                style={{ width: "100%" }}
+              />
             )}
           />
         </AntForm.Item>
