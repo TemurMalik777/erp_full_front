@@ -62,10 +62,10 @@ function LessonLists({ lessons }: any) {
       },
       {
         onSuccess: () => {
-          message.success("Dars holati muvaffaqiyatli o'zgartirildi");
+          message.success("The lesson status has been successfully updated");
         },
         onError: () => {
-          message.error("Xatolik yuz berdi");
+          message.error("An error has occurred");
         },
       }
     );
@@ -81,17 +81,16 @@ function LessonLists({ lessons }: any) {
     switch (status) {
       case "cancelled":
         return "bg-red-400";
-      case "kechiktirilgan":
+      case "in_progress":
         return "bg-yellow-400";
-      case "yakunlangan":
+      case "completed":
         return "bg-green-200";
-      case "yangi":
-        return "bg-[#ccc]";
+      case "new":
+        return "bg-[#fff]";
       default:
         return;
     }
   };
-
   return (
     <div className="relative mt-6">
       <div className="mb-4">

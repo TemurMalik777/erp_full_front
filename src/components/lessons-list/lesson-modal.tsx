@@ -39,24 +39,23 @@ const LessonModal: React.FC<LessonModalProps> = ({
     <Modal
       title={
         <Space>
-          {/* <BookOutlined style={{ color: "#1890ff" }} /> */}
           <span>
-            Dars {lesson?.index + 1} - {lesson?.title || "Nomsiz"}
+            Dars {lesson?.index + 1} - {lesson?.title || "No Name"}
           </span>
         </Space>
       }
       open={open}
       onOk={onOk}
       onCancel={onCancel}
-      okText="Saqlash"
-      cancelText="Bekor qilish"
+      okText="Save"
+      cancelText="Cancel"
       width={700}
       footer={[
         <Button key="cancel" onClick={onCancel}>
-          Bekor qilish
+          Cancel
         </Button>,
         <Button key="save" type="primary" onClick={onOk}>
-          Saqlash
+          Save
         </Button>,
       ]}
     >
@@ -73,24 +72,24 @@ const LessonModal: React.FC<LessonModalProps> = ({
               <div>
                 <Space>
                   <Text strong style={{ color: "#666" }}>
-                    Sarlavha
+                    Title
                   </Text>
                 </Space>
                 <div style={{ marginTop: "8px" }}>
                   <Title level={4} style={{ margin: 0 }}>
-                    {lesson?.title || "Sarlavha yo'q"}
+                    {lesson?.title || "No title"}
                   </Title>
                 </div>
               </div>
               <div>
                 <Space>
                   <Text strong style={{ color: "#666" }}>
-                    Sana
+                    Date
                   </Text>
                 </Space>
                 <div style={{ marginTop: "8px" }}>
                   <Title level={4} style={{ margin: 0 }}>
-                    {lesson?.date || "Sana kiritilmagan"}
+                    {lesson?.date || "Date is not entered"}
                   </Title>
                 </div>
               </div>
@@ -100,14 +99,14 @@ const LessonModal: React.FC<LessonModalProps> = ({
           <Card
             title={
               <Space>
-                <span>Dars holati</span>
+                <span>Lesson status</span>
               </Space>
             }
             size="small"
           >
             <Space direction="vertical" size="middle" style={{ width: "100%" }}>
               <div>
-                <Text strong>Holatni tanlang:</Text>
+                <Text strong>Select status:</Text>
                 <Select
                   value={status}
                   onChange={onChangeStatus}
@@ -116,16 +115,16 @@ const LessonModal: React.FC<LessonModalProps> = ({
                   size="large"
                 >
                   <Option value="new">
-                    <Tag color="blue">Yangi</Tag>
+                    <Tag color="blue">New</Tag>
                   </Option>
                   <Option value="cancelled">
-                    <Tag color="red">Bekor qilingan</Tag>
+                    <Tag color="red">Cancelled</Tag>
                   </Option>
                   <Option value="completed">
-                    <Tag color="green">Yakunlangan</Tag>
+                    <Tag color="green">Completed</Tag>
                   </Option>
                   <Option value="in_progress">
-                    <Tag color="orange">Jarayonda</Tag>
+                    <Tag color="orange">In Progress</Tag>
                   </Option>
                 </Select>
               </div>
@@ -135,7 +134,7 @@ const LessonModal: React.FC<LessonModalProps> = ({
           <Card
             title={
               <Space>
-                <span>Izoh</span>
+                <span>Note</span>
               </Space>
             }
             size="small"
@@ -144,7 +143,7 @@ const LessonModal: React.FC<LessonModalProps> = ({
               rows={4}
               value={description}
               onChange={(e) => onChangeDescription(e.target.value)}
-              placeholder="Darsga oid izoh yozing..."
+              placeholder="Write a comment about the lesson..."
               className="mt-1"
             />
             <div
@@ -156,7 +155,7 @@ const LessonModal: React.FC<LessonModalProps> = ({
               }}
             >
               <Text type="secondary" style={{ fontSize: "13px" }}>
-                Korinish: {description || "Izoh yo'q"}
+                View:{description || "No title"}
               </Text>
             </div>
           </Card>

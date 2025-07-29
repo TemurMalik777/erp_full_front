@@ -8,7 +8,7 @@ export function apiConfig() {
       return res;
     } catch (err) {
       console.log(err);
-      Notification("error", "No sog'lom cod bor !");
+      Notification("error", "buuu beckend hatosi siqilma coda hato yoq 😊");
     }
   }
   async function postRequest(url: string, body: object = {}) {

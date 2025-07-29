@@ -21,9 +21,9 @@ const StarryNight = () => {
       if (!shootingStarsContainer) return;
       const shootingStar = document.createElement("div");
       shootingStar.className = "shooting-star";
-      const isShortTrail = Math.random() < 0.01;
+      const isShortTrail = Math.random() < 1;
       shootingStar.classList.add(isShortTrail ? "short-trail" : "long-trail");
-      shootingStar.style.left = `${Math.random() * 100}%`;
+      shootingStar.style.left = `${Math.random() * 110}%`;
       shootingStar.style.top = `${Math.random() * 110}%`;
       const angle = Math.random() * 1480;
       shootingStar.style.transform = `rotate(${angle}deg)`;

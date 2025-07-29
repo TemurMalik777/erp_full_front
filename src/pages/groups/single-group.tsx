@@ -28,6 +28,10 @@ const SingleGroup = () => {
     ? dataById.data.group
     : { course: { title: "", price: 0 } };
 
+      if (!groupData) {
+    return <div>Loading...</div>; // yoki Spinner qo‘yish mumkin
+  }
+
   return (
     <div
       style={{
