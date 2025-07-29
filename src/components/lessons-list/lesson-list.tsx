@@ -1,5 +1,5 @@
-import { Button, message, Tooltip } from "antd";
-import { useRef, useState } from "react";
+import { Button, message, Tooltip, Tag } from "antd";
+import { useRef, useState, useMemo } from "react";
 import dayjs from "dayjs";
 import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useGeneral } from "@hooks";
@@ -78,33 +78,61 @@ function LessonLists({ lessons }: any) {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    switch (status?.toLowerCase()) {
       case "cancelled":
-        return "bg-red-400";
+        return "#f87171";
       case "in_progress":
-        return "bg-yellow-400";
+        return "#facc15";
       case "completed":
-        return "bg-green-200";
+        return "#bbf7d0";
       case "new":
-        return "bg-[#fff]";
+        return "#60a5fa";
       default:
-        return;
+        return "#e5e7eb";
     }
   };
+
+  // ✅ Status bo‘yicha hisob-kitob
+  const statusCounts = useMemo(() => {
+    return lessons.reduce(
+      (acc: any, lesson: any) => {
+        const s = lesson.status?.toLowerCase() || "pending";
+        acc[s] = (acc[s] || 0) + 1;
+        return acc;
+      },
+      { new: 0, cancelled: 0, completed: 0, in_progress: 0 }
+    );
+  }, [lessons]);
+
   return (
-    <div className="relative mt-6">
+    <div
+      className="relative mt-6"
+      style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+    >
       <div className="mb-4">
         <h2 className="text-xl font-bold text-gray-800 mb-1">
           Darslar Jadvali
         </h2>
-        <p className="text-sm text-gray-500">Jami {lessons.length} ta dars</p>
+        <div className="flex justify-between items-center text-sm">
+          <span className="text-gray-600">
+            Jami <span className="font-semibold">{lessons.length}</span> ta dars
+          </span>
+
+          <div className="flex items-center gap-2">
+            <Tag color="blue">New: {statusCounts.new}</Tag>
+            <Tag color="red">Cancelled: {statusCounts.cancelled}</Tag>
+            <Tag color="green">Completed: {statusCounts.completed}</Tag>
+            <Tag color="gold">In Progress: {statusCounts.in_progress}</Tag>
+          </div>
+        </div>
       </div>
 
-      <div className="relative bg-white rounded-2xl  overflow-hidden">
+      <div className="relative bg-white rounded-2xl overflow-hidden">
+        {/* Gradient soyalar chetlarga */}
         <div className="absolute left-0 top-0 bottom-0 w-6 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
         <div className="absolute right-0 top-0 bottom-0 w-6 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
 
-        <div className="flex items-center p-4 gap-2">
+        <div className="flex items-center p-4 gap-3">
           <Button
             shape="circle"
             icon={<LeftOutlined />}
@@ -115,30 +143,36 @@ function LessonLists({ lessons }: any) {
           <div
             ref={containerRef}
             onScroll={handleScroll}
-            className="flex-1 overflow-x-auto overflow-y-hidden py-2 px-1 flex gap-3 scroll-smooth [&::-webkit-scrollbar]:hidden"
+            className="flex-1 flex overflow-x-auto overflow-y-hidden py-4 px-3 gap-4 scroll-smooth rounded-3xl bg-gray-50 shadow-inner [&::-webkit-scrollbar]:hidden"
+            style={{ display: "flex", gap: "5px" }}
           >
             {lessons.map((lesson: any, index: number) => {
               const formattedDate = dayjs(lesson.date).format("DD.MM");
               const dayName = dayjs(lesson.date).format("ddd").toUpperCase();
-              const statusColor = getStatusColor(lesson.status);
-              console.log(lesson);
+              const backgroundColor = getStatusColor(lesson.status);
 
               return (
                 <Tooltip
                   key={lesson.id}
                   title={
-                    <div className="text-center">
+                    <div
+                      className="text-center"
+                      style={{ display: "flex", gap: "10px" }}
+                    >
                       <div className="font-semibold">Dars {index + 1}</div>
                       {lesson.notes && (
-                        <div className="text-xs  mt-1">{lesson.notes}</div>
+                        <div className="text-xs mt-1">{lesson.notes}</div>
                       )}
                     </div>
                   }
                 >
                   <div
-                    className={`
-                      min-w-[70px] h-[70px] 
-                      ${statusColor} rounded-xl flex flex-col items-center justify-center cursor-pointer hover:scale-105 transition-all`}
+                    className="min-w-[70px] h-[70px] rounded-3xl flex flex-col items-center justify-center cursor-pointer transition-transform duration-200 hover:scale-105 !border !border-gray-300 shadow-md hover:shadow-lg"
+                    style={{
+                      borderRadius: "20px",
+                      backgroundColor,
+                      border: "1px solid #e5e7eb",
+                    }}
                     onClick={() => handleLessonClick(lesson, index)}
                   >
                     <div className="text-xs opacity-75">{dayName}</div>

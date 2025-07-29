@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Card, Avatar, Tag, Typography, Row, Col, Empty } from "antd";
+import { Button, Card, Avatar, Tag, Typography, Empty } from "antd";
 import { UserOutlined, PlusOutlined } from "@ant-design/icons";
 import { useTeachers } from "@hooks";
 import AddTeacherToGroupModal from "./teacher-add";
@@ -194,82 +194,24 @@ const GroupTeachers: React.FC<GroupTeachersProps> = ({ teachers, groupId }) => {
         </Button>
       </div>
 
-      <Row gutter={16} style={{ marginBottom: 32 }}>
-        {[
-          {
-            value: teachers.length,
-            title: "Total Teachers",
-            gradient: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-            color: "white",
-          },
-          {
-            value: activeTeachersCount,
-            title: "Active",
-            gradient: "linear-gradient(135deg, #11998e 0%, #38ef7d 100%)",
-            color: "white",
-          },
-          {
-            value: teachers.length - activeTeachersCount,
-            title: "Inactive",
-            gradient: "linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%)",
-            color: "white",
-          },
-          {
-            value: mainTeachersCount,
-            title: "Main Teachers",
-            gradient: "linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)",
-            color: "white",
-          },
-          {
-            value: assistantTeachersCount,
-            title: "Assistant Teachers",
-            gradient: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-            color: "#2c3e50",
-          },
-        ].map((stat, index) => (
-          <Col
-            xs={24}
-            sm={12}
-            md={8}
-            lg={4}
-            xl={4}
-            key={index}
-            style={{ marginBottom: 16 }}
-          >
-            <Card
-              style={{
-                textAlign: "center",
-                borderRadius: 12,
-                background: stat.gradient,
-                border: "none",
-                color: stat.color,
-                height: 120,
-              }}
-              bodyStyle={{
-                padding: "20px 16px",
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                height: "100%",
-              }}
-            >
-              <div
-                style={{ fontSize: 28, fontWeight: "bold", marginBottom: 4 }}
-              >
-                {stat.value}
-              </div>
-              <div
-                style={{
-                  fontSize: 14,
-                  opacity: stat.color === "white" ? 0.9 : 0.8,
-                }}
-              >
-                {stat.title}
-              </div>
-            </Card>
-          </Col>
-        ))}
-      </Row>
+      <div className="mb-4 flex justify-between items-center">
+        <h2 className="text-xl font-bold text-gray-800">
+          Teachers Statistics
+        </h2>
+
+        <div
+          className="text-sm text-gray-600"
+          style={{ display: "flex", gap: "4px" }}
+        >
+          <Tag color="blue">Total: {teachers.length}</Tag>
+          <Tag color="green">Active: {activeTeachersCount}</Tag>
+          <Tag color="red">
+            Inactive: {teachers.length - activeTeachersCount}
+          </Tag>
+          <Tag color="geekblue">Main: {mainTeachersCount}</Tag>
+          <Tag color="orange">Assistant: {assistantTeachersCount}</Tag>
+        </div>
+      </div>
 
       <div>
         {teachers.length > 0 ? (
