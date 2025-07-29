@@ -73,8 +73,8 @@ const GroupTeachers: React.FC<GroupTeachersProps> = ({ teachers, groupId }) => {
           border: "1px solid #f0f0f0",
           boxShadow: "0 2px 8px rgba(0,0,0,0.04)",
           transition: "all 0.3s ease",
+          padding: 20,
         }}
-        bodyStyle={{ padding: 20 }}
       >
         <div
           style={{
@@ -195,9 +195,7 @@ const GroupTeachers: React.FC<GroupTeachersProps> = ({ teachers, groupId }) => {
       </div>
 
       <div className="mb-4 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-800">
-          Teachers Statistics
-        </h2>
+        <h2 className="text-xl font-bold text-gray-800">Teachers Statistics</h2>
 
         <div
           className="text-sm text-gray-600"
