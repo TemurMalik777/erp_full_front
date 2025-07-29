@@ -46,6 +46,7 @@ function Groups() {
   const handleTableChange = (pagination: TablePaginationConfig) => {
     handlePagination({ pagination, setParams });
   };
+  console.log("data", data);
   const columns = [
     ...(GroupColumns ?? []),
     {

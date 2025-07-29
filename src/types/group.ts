@@ -13,6 +13,9 @@ export interface Group {
   course?: {
     id: number;
   };
+  room?:{
+    id:number
+  }
 }
 
 export interface GroupLessons {

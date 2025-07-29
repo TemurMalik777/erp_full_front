@@ -51,7 +51,7 @@ const GroupModal: React.FC<GroupModalProps> = ({
       status: update?.status || "active",
       start_date: update?.start_date || "",
       start_time: update?.start_time || "HH:mm",
-      roomId: update?.roomId || 0,
+      roomId: update?.room?.id || 0,
     },
     resolver: yupResolver(GroupValidation) as any,
   });

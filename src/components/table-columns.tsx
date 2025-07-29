@@ -38,7 +38,7 @@ export const GroupColumns: TableProps<Group>["columns"] = [
   {
     title: "Rooms",
     key: "roomId",
-    render: (rooms: any) => <span>{rooms.name}</span>,
+    render: (room: any) => <span>{room.name}</span>,
   },
 ];
 

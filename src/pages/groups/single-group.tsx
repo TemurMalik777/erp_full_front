@@ -1,7 +1,24 @@
 import { GroupLesson, GroupStudent, GroupTeacher } from "@components";
 import { useGroup } from "@hooks";
-import { Calendar, Clock, Users, BookOpen, Timer } from "lucide-react";
 import { useParams } from "react-router-dom";
+import {
+  Card,
+  Row,
+  Col,
+  Typography,
+  Statistic,
+  Tag,
+  Space,
+  Avatar,
+} from "antd";
+import {
+  CalendarOutlined,
+  ClockCircleOutlined,
+  UserOutlined,
+  BookOutlined,
+} from "@ant-design/icons";
+
+const { Title, Paragraph } = Typography;
 
 const SingleGroup = () => {
   const { id } = useParams<{ id: string }>();
@@ -11,213 +28,221 @@ const SingleGroup = () => {
     ? dataById.data.group
     : { course: { title: "", price: 0 } };
 
-  const getStatusConfig = (status: string) => {
-    switch (status) {
-      case "new":
-        return {
-          bg: "bg-gradient-to-r from-amber-50 to-yellow-50",
-          text: "text-amber-700",
-          border: "border-amber-200",
-          dot: "bg-amber-400",
-        };
-      case "active":
-        return {
-          bg: "bg-gradient-to-r from-emerald-50 to-green-50",
-          text: "text-emerald-700",
-          border: "border-emerald-200",
-          dot: "bg-emerald-400",
-        };
-      default:
-        return {
-          bg: "bg-gradient-to-r from-gray-50 to-slate-50",
-          text: "text-gray-700",
-          border: "border-gray-200",
-          dot: "bg-gray-400",
-        };
-    }
-  };
-
-  const statusConfig = getStatusConfig(groupData.status);
-  console.log(statusConfig);
   return (
     <div
-      className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50/40 gap-3"
-      style={{ margin: "-23px", borderRadius: "8px" }}
+      style={{
+        padding: "24px",
+        backgroundColor: "#f5f5f5",
+        minHeight: "100vh",
+      }}
     >
-      <div className="max-w-7xl mx-auto p-2 sm:p-4 md:p-6 space-y-6">
-        <div className="bg-gradient-to-br from-white to-blue-50/30 rounded-2xl border-blue-100/50 shadow-lg hover:shadow-xl transition-all duration-300 p-6 mb-6">
-          <div className="mb-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border-green-100 hover:border-green-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <Calendar className="w-5 h-5 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">
-                      Start Date
-                    </p>
-                    <p className="font-semibold text-gray-900">
-                      {groupData.start_date}
-                    </p>
-                  </div>
-                </div>
-              </div>
+      <Card style={{ marginBottom: "24px" }} bodyStyle={{ padding: "32px" }}>
+        <Row gutter={[24, 24]} align="middle">
+          <Col xs={24} lg={12}>
+            <Row gutter={[16, 16]}>
+              <Col xs={12} sm={6}>
+                <Card size="small" className="stat-card">
+                  <Statistic
+                    title={
+                      <Space>
+                        <CalendarOutlined />
+                        <span>Start Date</span>
+                      </Space>
+                    }
+                    value={groupData.start_date || "--"}
+                    valueStyle={{ fontSize: "16px", fontWeight: "bold" }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={12} sm={6}>
+                <Card size="small" className="stat-card">
+                  <Statistic
+                    title={
+                      <Space>
+                        <CalendarOutlined />
+                        <span>End Date</span>
+                      </Space>
+                    }
+                    value={groupData.end_date || "--"}
+                    valueStyle={{ fontSize: "16px", fontWeight: "bold" }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={12} sm={6}>
+                <Card size="small" className="stat-card">
+                  <Statistic
+                    title={
+                      <Space>
+                        <ClockCircleOutlined />
+                        <span>Schedule</span>
+                      </Space>
+                    }
+                    value={
+                      groupData.start_time && groupData.end_time
+                        ? `${groupData.start_time} - ${groupData.end_time}`
+                        : "--"
+                    }
+                    valueStyle={{ fontSize: "16px", fontWeight: "bold" }}
+                  />
+                </Card>
+              </Col>
+              <Col xs={12} sm={6}>
+                <Card size="small" className="stat-card">
+                  <Statistic
+                    title={
+                      <Space>
+                        <UserOutlined />
+                        <span>Students</span>
+                      </Space>
+                    }
+                    value="12/15"
+                    valueStyle={{
+                      fontSize: "16px",
+                      fontWeight: "bold",
+                      color: "#1890ff",
+                    }}
+                  />
+                </Card>
+              </Col>
+            </Row>
+          </Col>
 
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border-red-100 hover:border-red-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-red-100 rounded-lg">
-                    <Calendar className="w-5 h-5 text-red-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">
-                      End Date
-                    </p>
-                    <p className="font-semibold text-gray-900">
-                      {groupData.end_date}
-                    </p>
-                  </div>
-                </div>
-              </div>
+          <Col xs={24} lg={12}>
+            <Card
+              style={{
+                height: "100%",
+                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+              }}
+              bodyStyle={{ color: "white" }}
+            >
+              <Space
+                direction="vertical"
+                size="middle"
+                style={{ width: "100%" }}
+              >
+                <Title level={3} style={{ color: "white", margin: 0 }}>
+                  <BookOutlined style={{ marginRight: "8px" }} />
+                  {groupData.course?.title || "Course Title"}
+                </Title>
+                <Paragraph
+                  style={{ color: "rgba(255,255,255,0.9)", margin: 0 }}
+                  ellipsis={{ rows: 2, expandable: true }}
+                >
+                  {groupData.course?.description || "No description available"}
+                </Paragraph>
 
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border-blue-100 hover:border-blue-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Clock className="w-5 h-5 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">
-                      Schedule
-                    </p>
-                    <p className="font-semibold text-gray-900">
-                      {groupData.start_time} - {groupData.end_time}
-                    </p>
-                  </div>
-                </div>
-              </div>
+                <Row gutter={16}>
+                  <Col span={8}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+                        {groupData.course?.duration || "--"}
+                      </div>
+                      <div style={{ fontSize: "12px", opacity: 0.8 }}>
+                        Months
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={8}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+                        {groupData.course?.lessons_in_a_week || "--"}
+                      </div>
+                      <div style={{ fontSize: "12px", opacity: 0.8 }}>
+                        Per Week
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={8}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: "24px", fontWeight: "bold" }}>
+                        {groupData.course?.lesson_duration || "--"}
+                      </div>
+                      <div style={{ fontSize: "12px", opacity: 0.8 }}>
+                        Minutes
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </Space>
+            </Card>
+          </Col>
+        </Row>
+      </Card>
 
-              <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 border-purple-100 hover:border-purple-200 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <Users className="w-5 h-5 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">
-                      Students
-                    </p>
-                    <p className="font-semibold text-gray-900">12/15</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-gray-50 to-blue-50/40 rounded-2xl p-6 border-gray-100">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-indigo-100 rounded-lg">
-                <BookOpen className="w-6 h-6 text-indigo-600" />
-              </div>
-              <h3 className="text-xl font-bold text-gray-900">
-                {groupData.course?.title}
-              </h3>
-            </div>
-
-            <p className="text-gray-700 leading-relaxed mb-6">
-              {groupData.course?.description}
-            </p>
-
-            {/* Cardlar 1 qatorga olingan */}
-            <div className="flex justify-center items-stretch gap-4">
-              {/* Duration */}
-              <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-orange-100">
-                <div className="flex justify-center mb-2">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <Calendar className="w-4 h-4 text-orange-600" />
-                  </div>
-                </div>
-                <p className="text-2xl font-bold text-orange-600">
-                  {groupData.course?.duration || "--"}
-                </p>
-                <p className="text-xs text-gray-600 uppercase tracking-wide">
-                  Months
-                </p>
-              </div>
-
-              {/* Lessons Per Week */}
-              <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-teal-100">
-                <div className="flex justify-center mb-2">
-                  <div className="p-2 bg-teal-100 rounded-lg">
-                    <BookOpen className="w-4 h-4 text-teal-600" />
-                  </div>
-                </div>
-                <p className="text-2xl font-bold text-teal-600">
-                  {groupData.course?.lessons_in_a_week || "--"}
-                </p>
-                <p className="text-xs text-gray-600 uppercase tracking-wide">
-                  Per Week
-                </p>
-              </div>
-
-              {/* Lesson Duration */}
-              <div className="flex-1 text-center p-3 bg-white/70 rounded-xl border-indigo-100">
-                <div className="flex justify-center mb-2">
-                  <div className="p-2 bg-indigo-100 rounded-lg">
-                    <Timer className="w-4 h-4 text-indigo-600" />
-                  </div>
-                </div>
-                <p className="text-2xl font-bold text-indigo-600">
-                  {groupData.course?.lesson_duration || "--"}
-                </p>
-                <p className="text-xs text-gray-600 uppercase tracking-wide">
-                  Minutes
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
+      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
         {teachers?.data && teachers.data.length > 0 && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl border-indigo-200 shadow-lg shadow-blue-900/5 overflow-hidden">
-            <div className="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                {/* <Award className="w-5 h-5" /> */}
-                Teachers
-              </h2>
-            </div>
-            <div className="p-6">
-              <GroupTeacher teachers={teachers.data} groupId={groupId} />
-            </div>
-          </div>
+          <Card
+            title={
+              <Space>
+                <Avatar
+                  icon={<UserOutlined />}
+                  style={{ backgroundColor: "#52c41a" }}
+                />
+                <span>Teachers</span>
+                <Tag color="green">{teachers.data.length}</Tag>
+              </Space>
+            }
+            headStyle={{ borderBottom: "2px solid #52c41a" }}
+          >
+            <GroupTeacher teachers={teachers.data} groupId={groupId} />
+          </Card>
         )}
 
         {lessons?.data?.lessons && lessons.data.lessons.length > 0 && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl border-emerald-200 shadow-lg shadow-blue-900/5 overflow-hidden">
-            <div className="bg-gradient-to-r from-emerald-500 to-teal-600 px-6 py-4">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <BookOpen className="w-5 h-5" />
-                Lessons
-              </h2>
-            </div>
-            <div className="p-6">
-              <GroupLesson lessons={lessons.data.lessons} />
-            </div>
-          </div>
+          <Card
+            title={
+              <Space>
+                <Avatar
+                  icon={<BookOutlined />}
+                  style={{ backgroundColor: "#1890ff" }}
+                />
+                <span>Lessons</span>
+                <Tag color="blue">{lessons.data.lessons.length}</Tag>
+              </Space>
+            }
+            headStyle={{ borderBottom: "2px solid #1890ff" }}
+          >
+            <GroupLesson lessons={lessons.data.lessons} />
+          </Card>
         )}
 
         {students?.data && students.data.length > 0 && (
-          <div className="bg-white/80 backdrop-blur-sm rounded-2xl border-blue-200 shadow-lg shadow-blue-900/5 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-500 to-cyan-600 px-6 py-4">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                Students ({students.data.length})
-              </h2>
-            </div>
-            <div className="p-6">
-              <GroupStudent students={students.data} groupId={groupId} />
-            </div>
-          </div>
+          <Card
+            title={
+              <Space>
+                <Avatar
+                  icon={<UserOutlined />}
+                  style={{ backgroundColor: "#722ed1" }}
+                />
+                <span>Students</span>
+                <Tag color="purple">{students.data.length}</Tag>
+              </Space>
+            }
+            headStyle={{ borderBottom: "2px solid #722ed1" }}
+          >
+            <GroupStudent students={students.data} groupId={groupId} />
+          </Card>
         )}
       </div>
+
+      <style>{`
+        .stat-card .ant-card-body {
+          padding: 16px !important;
+        }
+        .stat-card {
+          transition: all 0.3s ease;
+          border: 1px solid #f0f0f0;
+        }
+        .stat-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+          border-color: #1890ff;
+        }
+        .ant-statistic-title {
+          font-size: 12px !important;
+          margin-bottom: 4px !important;
+        }
+      `}</style>
     </div>
   );
 };
