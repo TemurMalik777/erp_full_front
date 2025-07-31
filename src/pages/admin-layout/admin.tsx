@@ -197,7 +197,7 @@ const Admin: React.FC = () => {
             padding: "24px 50px",
           }}
         >
-          №1 programmer ©{new Date().getFullYear()} Created by Khuja
+          №1 programmer ©{new Date().getFullYear()} Created by My_Dev
         </Footer>
       </Layout>
     </Layout>
