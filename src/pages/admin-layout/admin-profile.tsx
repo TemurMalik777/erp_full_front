@@ -12,47 +12,50 @@ import {
   Input,
   Alert,
   Upload,
-  Space,
+  Spin, // Qo'shildi
+  Tag,
+  Space,    // Qo'shildi
 } from 'antd';
 import {
   UserOutlined,
   MailOutlined,
   PhoneOutlined,
   LockOutlined,
-  CameraOutlined,
   SaveOutlined,
 } from '@ant-design/icons';
 import type { TabsProps } from 'antd';
+import { useAdmin } from "@hooks"; // Sizning hook'ingiz import qilindi
+import dayjs from "dayjs"; // Sanani formatlash uchun
 
 const { Title, Text } = Typography;
 
-// Namunaviy ma'lumotlar (keyinchalik API'dan keladi)
-const adminData = {
-  id: 1,
-  fullName: 'Ali Valiyev',
-  role: 'Administrator',
-  email: 'ali.valiyev@example.com',
-  phone: '+998 90 123 45 67',
-  joinDate: '2024-01-15',
-  avatarUrl: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-};
-
 // =============================================================
 // Profil ma'lumotlarini ko'rsatish uchun komponent
+// Endi ma'lumotlarni 'props' orqali qabul qiladi
 // =============================================================
-const ProfileDetails = () => (
-  <Descriptions bordered column={1} labelStyle={{ fontWeight: 600 }}>
-    <Descriptions.Item label="To'liq ism">{adminData.fullName}</Descriptions.Item>
-    <Descriptions.Item label="Email manzil">{adminData.email}</Descriptions.Item>
-    <Descriptions.Item label="Telefon raqam">{adminData.phone}</Descriptions.Item>
-    <Descriptions.Item label="Tizimga qo'shilgan sana">{adminData.joinDate}</Descriptions.Item>
+const ProfileDetails = ({ admin }: { admin: any }) => (
+  <Descriptions bordered column={1} labelStyle={{ fontWeight: 600, width: '200px' }}>
+    <Descriptions.Item label="To'liq ism">{admin.first_name} {admin.last_name}</Descriptions.Item>
+    <Descriptions.Item label="Email manzil">{admin.email}</Descriptions.Item>
+    <Descriptions.Item label="Telefon raqam">{admin.phone}</Descriptions.Item>
+    <Descriptions.Item label="Status">
+      <Tag color={admin.is_active ? 'green' : 'red'}>
+        {admin.is_active ? "Faol" : "Nofaol"}
+      </Tag>
+    </Descriptions.Item>
+    <Descriptions.Item label="Ro'yxatdan o'tgan vaqt">
+      {dayjs(admin.created_at).format("DD.MM.YYYY, HH:mm")}
+    </Descriptions.Item>
+    <Descriptions.Item label="Oxirgi yangilangan">
+      {dayjs(admin.updated_at).format("DD.MM.YYYY, HH:mm")}
+    </Descriptions.Item>
   </Descriptions>
 );
 
 // =============================================================
 // Profil ma'lumotlarini tahrirlash uchun forma
 // =============================================================
-const EditProfileForm = () => {
+const EditProfileForm = ({ admin }: { admin: any }) => {
   const onFinish = (values: any) => {
     console.log('Yuborilgan ma\'lumotlar:', values);
     // Bu yerda API'ga so'rov yuborish logikasi bo'ladi
@@ -62,16 +65,34 @@ const EditProfileForm = () => {
     <Form
       name="edit_profile"
       layout="vertical"
-      initialValues={adminData}
+      initialValues={{
+        first_name: admin.first_name,
+        last_name: admin.last_name,
+        email: admin.email,
+        phone: admin.phone,
+      }}
       onFinish={onFinish}
     >
-      <Form.Item
-        name="fullName"
-        label="To'liq ism"
-        rules={[{ required: true, message: "Iltimos, ismingizni kiriting!" }]}
-      >
-        <Input prefix={<UserOutlined />} placeholder="To'liq ism" />
-      </Form.Item>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item
+            name="first_name"
+            label="Ism"
+            rules={[{ required: true, message: "Iltimos, ismingizni kiriting!" }]}
+          >
+            <Input prefix={<UserOutlined />} placeholder="Ism" />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+           <Form.Item
+            name="last_name"
+            label="Familiya"
+            rules={[{ required: true, message: "Iltimos, familiyangizni kiriting!" }]}
+          >
+            <Input prefix={<UserOutlined />} placeholder="Familiya" />
+          </Form.Item>
+        </Col>
+      </Row>
       <Form.Item
         name="email"
         label="Email manzil"
@@ -95,7 +116,7 @@ const EditProfileForm = () => {
 };
 
 // =============================================================
-// Parolni o'zgartirish uchun forma
+// Parolni o'zgartirish uchun forma (o'zgarishsiz qoldi)
 // =============================================================
 const ChangePasswordForm = () => {
   const onFinish = (values: any) => {
@@ -111,41 +132,15 @@ const ChangePasswordForm = () => {
         showIcon
         style={{ marginBottom: 24 }}
       />
-      <Form
-        name="change_password"
-        layout="vertical"
-        onFinish={onFinish}
-      >
-        <Form.Item
-          name="currentPassword"
-          label="Joriy parol"
-          rules={[{ required: true, message: "Iltimos, joriy parolni kiriting!" }]}
-        >
+      <Form name="change_password" layout="vertical" onFinish={onFinish}>
+        {/* Form.Item'lar o'zgarishsiz qoldi */}
+        <Form.Item name="currentPassword" label="Joriy parol" rules={[{ required: true, message: "Iltimos, joriy parolni kiriting!" }]}>
           <Input.Password prefix={<LockOutlined />} placeholder="Joriy parol" />
         </Form.Item>
-        <Form.Item
-          name="newPassword"
-          label="Yangi parol"
-          rules={[{ required: true, message: "Iltimos, yangi parolni kiriting!" }]}
-        >
+        <Form.Item name="newPassword" label="Yangi parol" rules={[{ required: true, message: "Iltimos, yangi parolni kiriting!" }]}>
           <Input.Password prefix={<LockOutlined />} placeholder="Yangi parol" />
         </Form.Item>
-        <Form.Item
-          name="confirmPassword"
-          label="Yangi parolni tasdiqlang"
-          dependencies={['newPassword']}
-          rules={[
-            { required: true, message: "Iltimos, yangi parolni tasdiqlang!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('newPassword') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject(new Error('Parollar mos kelmadi!'));
-              },
-            }),
-          ]}
-        >
+        <Form.Item name="confirmPassword" label="Yangi parolni tasdiqlang" dependencies={['newPassword']} rules={[{ required: true, message: "Iltimos, yangi parolni tasdiqlang!" }, ({ getFieldValue }) => ({ validator(_, value) { if (!value || getFieldValue('newPassword') === value) { return Promise.resolve(); } return Promise.reject(new Error('Parollar mos kelmadi!')); }, }),]}>
           <Input.Password prefix={<LockOutlined />} placeholder="Yangi parolni tasdiqlang" />
         </Form.Item>
         <Form.Item>
@@ -162,16 +157,35 @@ const ChangePasswordForm = () => {
 // Asosiy Profil Sahifasi Komponenti
 // =============================================================
 const ProfilePage: React.FC = () => {
+  // Haqiqiy ma'lumotlarni hook orqali olamiz
+  const { data, isLoading, error } = useAdmin();
+
+  // Yuklanish holatini tekshirish
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '50vh' }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  // Xatolikni tekshirish
+  if (error || !data?.data) {
+    return <Alert message="Xatolik" description="Profil ma'lumotlarini yuklashda xatolik yuz berdi." type="error" showIcon />;
+  }
+
+  const admin = data.data; // Haqiqiy admin ma'lumotlari
+
   const tabItems: TabsProps['items'] = [
     {
       key: '1',
       label: 'Shaxsiy ma\'lumot',
-      children: <ProfileDetails />,
+      children: <ProfileDetails admin={admin} />, // Ma'lumotni props orqali uzatamiz
     },
     {
       key: '2',
       label: 'Ma\'lumotlarni tahrirlash',
-      children: <EditProfileForm />,
+      children: <EditProfileForm admin={admin} />, // Ma'lumotni props orqali uzatamiz
     },
     {
       key: '3',
@@ -189,13 +203,14 @@ const ProfilePage: React.FC = () => {
             <Upload>
               <Avatar
                 size={128}
-                src={adminData.avatarUrl}
                 icon={<UserOutlined />}
-              >
-              </Avatar>
+                // src={admin.avatarUrl} // Agar API'dan rasm kelsa, shu yerni ochasiz
+              />
             </Upload>
-            <Title level={4} style={{ marginTop: 16, marginBottom: 0 }}>{adminData.fullName}</Title>
-            <Text type="secondary">{adminData.role}</Text>
+            <Title level={4} style={{ marginTop: 16, marginBottom: 0 }}>
+              {admin.first_name} {admin.last_name}
+            </Title>
+            <Text type="secondary">Administrator</Text>
           </Space>
         </Card>
       </Col>

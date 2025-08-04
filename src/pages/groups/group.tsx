@@ -9,8 +9,8 @@ import {
 } from "antd";
 import GroupModal from "./modal";
 import type { Group } from "@types";
-import { PopConfirm, GroupColumns } from "@components";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { GroupColumns } from "@components";
+import { Link, useLocation } from "react-router-dom";
 import { useGroup } from "@hooks";
 import {
   ArrowRightOutlined,
@@ -28,7 +28,7 @@ function Groups() {
   });
 
   const location = useLocation();
-  const navigate = useNavigate(); // useNavigate hook'ini chaqiramiz
+  // const navigate = useNavigate(); // useNavigate hook'ini chaqiramiz
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

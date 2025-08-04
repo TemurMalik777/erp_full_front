@@ -6,3 +6,4 @@ export * from "./branch.service.ts";
 export * from "./teacher.service.ts";
 export * from "./room.service.ts";
 export * from "./general.service.ts";
+export * from "./admin.service.ts";

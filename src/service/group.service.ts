@@ -2,6 +2,19 @@ import { ApiUrls } from "@api/api-urls";
 import { apiConfig } from "@api/config";
 import type { AddGroupTeacher, Group, ParamsType } from "@types";
 
+// YANGI: O'chirish uchun payload type'lari
+// Bu type'larni umumiy @types/index.ts fayliga qo'shsangiz ham bo'ladi
+interface DeleteStudentPayload {
+  groupId: number;
+  studentId: number;
+}
+
+interface DeleteTeacherPayload {
+  groupId: number;
+  teacherId: number;
+}
+
+
 export const GroupService = {
   async getGroups(params: ParamsType) {
     const res = await apiConfig().getRequest(ApiUrls.GROUPS, params);
@@ -56,6 +69,37 @@ export const GroupService = {
 
   async deleteGroup(id: number) {
     const res = await apiConfig().deleteRequest(`${ApiUrls.GROUPS}/${id}`);
+    return res;
+  },
+
+  // =======================================================
+  // YANGI QO'SHILGAN METODLAR
+  // =======================================================
+
+  /**
+   * Guruhdan o'quvchini o'chiradi.
+   * Backend endpoint'i: DELETE /groups/{groupId}/students/{studentId}
+   */
+  async deleteStudentFromGroup(payload: DeleteStudentPayload) {
+    const { groupId, studentId } = payload;
+    // Bu yerda endpoint manzili sizning backend'ingizga mos bo'lishi kerak.
+    // Men standart RESTful yondashuvidan foydalandim.
+    // Agar sizning endpoint'ingiz boshqacha bo'lsa (masalan, /group-students/delete), shunga moslab o'zgartiring.
+    const res = await apiConfig().deleteRequest(
+      `${ApiUrls.GROUPS}/${groupId}/students/${studentId}`
+    );
+    return res;
+  },
+
+  /**
+   * Guruhdan o'qituvchini o'chiradi.
+   * Backend endpoint'i: DELETE /groups/{groupId}/teachers/{teacherId}
+   */
+  async deleteTeacherFromGroup(payload: DeleteTeacherPayload) {
+    const { groupId, teacherId } = payload;
+    const res = await apiConfig().deleteRequest(
+      `${ApiUrls.GROUPS}/${groupId}/teachers/${teacherId}`
+    );
     return res;
   },
 };

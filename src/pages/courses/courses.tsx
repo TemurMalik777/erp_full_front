@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import Coursesmodal from "./course-modal";
 import type { Course } from "@types";
-import { PopConfirm, CourseColumns } from "@components";
+import { CourseColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useCourse } from "@hooks";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";

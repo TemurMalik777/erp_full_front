@@ -23,6 +23,7 @@ import {
   Reducer,
   StarryNight,
   Dashboard,
+  AdminProfile,
 } from "@pages";
 
 const App = lazy(() => import("../App"));
@@ -56,7 +57,7 @@ const Router = () => {
           <Route path="student" element={<StudentLayout />} />
           <Route path="teacher" element={<TeacherLayout />} />
           <Route path="groups/:id" element={<SingleGroup />} />
-          {/* <Route path="profile/:id" element={</>}/> */}
+          <Route path="profile" element={<AdminProfile />} />
           <Route path="rooms" element={<Room />} />
           <Route path="reducer" element={<Reducer />} />
         </Route>

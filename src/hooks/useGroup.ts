@@ -3,6 +3,17 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type Group } from "@types";
 import { useNavigate } from "react-router-dom";
 
+// YANGI QO'SHILDI: O'chirish uchun payload type'lari
+interface DeleteStudentPayload {
+  groupId: number;
+  studentId: number;
+}
+
+interface DeleteTeacherPayload {
+  groupId: number;
+  teacherId: number;
+}
+
 export const useGroup = (params: any, id?: number) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -42,12 +53,11 @@ export const useGroup = (params: any, id?: number) => {
     enabled: !!id,
   });
 
-  // Yagona yuklanish holati: agar bitta guruh sahifasi ochilgan bo'lsa,
-  // barcha kerakli query'lar yuklanishini kutadi.
-  const isSingleGroupLoading = 
-    groupByIdQuery.isLoading || 
-    groupStudentsQuery.isLoading || 
-    groupLessonsQuery.isLoading || 
+  // Yagona yuklanish holati
+  const isSingleGroupLoading =
+    groupByIdQuery.isLoading ||
+    groupStudentsQuery.isLoading ||
+    groupLessonsQuery.isLoading ||
     groupTeachersQuery.isLoading;
 
   const handlePagination = (pagination: any, setParams: any) => {
@@ -92,8 +102,6 @@ export const useGroup = (params: any, id?: number) => {
     });
   };
 
-  // ...boshqa mutatsiyalar o'zgarishsiz qoladi
-
   const useAssignTeacherToGroup = () => {
     return useMutation({
       mutationFn: (payload: {
@@ -116,6 +124,37 @@ export const useGroup = (params: any, id?: number) => {
     });
   };
 
+  // YANGI QO'SHILDI: Guruhdan o'qituvchini o'chirish mutatsiyasi
+  const useDeleteTeacherFromGroup = () => {
+    return useMutation({
+      mutationFn: (payload: DeleteTeacherPayload) =>
+        GroupService.deleteTeacherFromGroup(payload),
+      onSuccess: (_, variables) => {
+        // O'qituvchilar ro'yxatini yangilash uchun
+        queryClient.invalidateQueries({
+          queryKey: ["group-teachers", variables.groupId],
+        });
+        // Asosiy ma'lumotdagi o'qituvchi nomini ham yangilash uchun
+        queryClient.invalidateQueries({
+            queryKey: ["groupById", variables.groupId],
+        });
+      },
+    });
+  };
+
+  // YANGI QO'SHILDI: Guruhdan o'quvchini o'chirish mutatsiyasi
+  const useDeleteStudentFromGroup = () => {
+    return useMutation({
+      mutationFn: (payload: DeleteStudentPayload) =>
+        GroupService.deleteStudentFromGroup(payload),
+      onSuccess: (_, variables) => {
+        // O'quvchilar ro'yxatini yangilash uchun
+        queryClient.invalidateQueries({
+          queryKey: ["group-students", variables.groupId],
+        });
+      },
+    });
+  };
 
   return {
     // Guruhlar ro'yxati uchun
@@ -127,8 +166,8 @@ export const useGroup = (params: any, id?: number) => {
     students: groupStudentsQuery.data,
     lessons: groupLessonsQuery.data,
     teachers: groupTeachersQuery.data,
-    isSingleGroupLoading, // Barcha ma'lumotlar uchun yagona yuklanish holati
-    groupByIdError: groupByIdQuery.error, // Xatolikni ham qaytaramiz
+    isSingleGroupLoading,
+    groupByIdError: groupByIdQuery.error,
 
     // Mutatsiyalar va boshqa funksiyalar
     useGroupCreate,
@@ -137,5 +176,7 @@ export const useGroup = (params: any, id?: number) => {
     handlePagination,
     useAssignTeacherToGroup,
     useAssignStudentToGroup,
+    useDeleteTeacherFromGroup, // <-- YANGI
+    useDeleteStudentFromGroup, // <-- YANGI
   };
 };

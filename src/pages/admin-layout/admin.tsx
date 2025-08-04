@@ -74,9 +74,9 @@ const Admin: React.FC = () => {
   // Foydalanuvchi menyusi (Dropdown) o'zgarishsiz qoladi
   const userMenuItems: MenuProps["items"] = [
     {
-      key: "profile",
+      key: "/admin/profile",
       icon: <UserOutlined />,
-      label: "Profil",
+      label: <Link to="/admin/profile">Profil</Link>,
     },
     {
       key: "settings",

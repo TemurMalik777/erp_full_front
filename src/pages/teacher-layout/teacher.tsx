@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import type { Teacher } from "@types";
 import TeacherModal from "./teacher-modal";
-import { PopConfirm, TeacherColumns } from "@components";
+import { TeacherColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useTeachers, useDeleteTeacher } from "@hooks";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";

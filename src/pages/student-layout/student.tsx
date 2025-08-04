@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Button, Popconfirm, Space, Table, type TablePaginationConfig, Tag, Tooltip } from "antd";
 import StudentModal from "./student-model";
-import { PopConfirm } from "@components";
-import { useLocation, useNavigate } from "react-router-dom";
+// import { PopConfirm } from "@components";
+import { useLocation } from "react-router-dom";
 import { useStudent } from "@hooks";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import type { Student } from "@types";
@@ -17,7 +17,7 @@ function Student() {
   });
 
   const location = useLocation();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);

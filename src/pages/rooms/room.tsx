@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import RoomModal from "./room-modal";
 import type { Room } from "@types";
-import { PopConfirm, RoomColumns } from "@components";
+import {  RoomColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useRoom } from "@hooks";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";

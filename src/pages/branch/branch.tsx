@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import BranchModal from "./branch-modal";
 import type { Branch } from "@types";
-import { PopConfirm, BranchColumns } from "@components";
+import {  BranchColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useBranch } from "@hooks";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
