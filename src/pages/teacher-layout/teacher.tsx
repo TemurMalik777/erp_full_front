@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Space, Table, type TablePaginationConfig } from "antd";
+import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import type { Teacher } from "@types";
 import TeacherModal from "./teacher-modal";
 import { PopConfirm, TeacherColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useTeachers, useDeleteTeacher } from "@hooks";
-import { EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 function TeacherPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -56,19 +56,48 @@ function TeacherPage() {
   };
 
   const columns = [
+    // 1. Asosiy ustunlar saqlab qolindi
     ...(TeacherColumns ?? []),
+
+    // 2. YANGI DIZAYNDAGI "ACTIONS" USTUNI
     {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Teacher) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
-            <EditOutlined />
-          </Button>
-          <PopConfirm
-            onConfirm={() => deleteItem(record.id!)}
-            loading={isDeleting}
-          />
+          {/* Tahrirlash (Update) ikonasi */}
+          <Tooltip title="Tahrirlash">
+            <Button
+              type="text"
+              shape="circle"
+              icon={
+                <EditOutlined style={{ fontSize: "18px", color: "#52c41a" }} />
+              }
+              onClick={() => editItem(record)} // Sizning editItem funksiyangiz
+            />
+          </Tooltip>
+
+          {/* O'chirish (Delete) ikonasi */}
+          <Popconfirm
+            title="O'chirish"
+            description="Haqiqatan ham o'chirmoqchimisiz?"
+            onConfirm={() => deleteItem(record.id!)} // Sizning deleteItem funksiyangiz
+            okText="Ha"
+            cancelText="Yo'q"
+            okButtonProps={{ loading: isDeleting }} // Sizning isDeleting o'zgaruvchingiz
+          >
+            <Tooltip title="O'chirish">
+              <Button
+                type="text"
+                shape="circle"
+                icon={
+                  <DeleteOutlined
+                    style={{ fontSize: "18px", color: "#faad14" }}
+                  />
+                }
+              />
+            </Tooltip>
+          </Popconfirm>
         </Space>
       ),
     },

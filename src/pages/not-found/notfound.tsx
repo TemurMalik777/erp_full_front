@@ -8,7 +8,7 @@ const Notfoun = () => {
         height: "100vh",
       }}
     >
-      <h1>san adashdin 💔</h1>
+      <h1>Noto'g'ri saxifaga murojoat qilidng</h1>
     </div>
   );
 };

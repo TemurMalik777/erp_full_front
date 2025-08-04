@@ -1,20 +1,35 @@
 import { useEffect, useState } from "react";
-import { Button, Space, Table, type TablePaginationConfig } from "antd";
+import {
+  Button,
+  Popconfirm,
+  Space,
+  Table,
+  Tooltip,
+  type TablePaginationConfig,
+} from "antd";
 import GroupModal from "./modal";
 import type { Group } from "@types";
 import { PopConfirm, GroupColumns } from "@components";
-import { Link, useLocation } from "react-router-dom";
-import { useGeneral, useGroup } from "@hooks";
-import { EditOutlined, EyeOutlined } from "@ant-design/icons";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useGroup } from "@hooks";
+import {
+  ArrowRightOutlined,
+  DeleteOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
+
 function Groups() {
   const [open, setOpen] = useState(false);
   const [mode, setMode] = useState<"create" | "update">("create");
   const [update, setUpdate] = useState<Group | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 3,
+    limit: 10,
   });
+
   const location = useLocation();
+  const navigate = useNavigate(); // useNavigate hook'ini chaqiramiz
+
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const page = searchParams.get("page");
@@ -26,48 +41,96 @@ function Groups() {
       }));
     }
   }, [location.search]);
-  const { data, useGroupDelete } = useGroup(params);
-  const { handlePagination } = useGeneral();
+
+  const { groups, isGroupsLoading, useGroupDelete, handlePagination } =
+    useGroup(params);
+
   const { mutate: deleteFn, isPending: isDeleting } = useGroupDelete();
+
   const deleteItem = (id: number) => {
     deleteFn(id);
   };
+
   const editItem = (record: Group) => {
     setUpdate(record);
     setMode("update");
     setOpen(true);
   };
+
   const toggle = () => {
     setOpen(!open);
     if (update) {
       setUpdate(null);
     }
   };
+
   const handleTableChange = (pagination: TablePaginationConfig) => {
-    handlePagination({ pagination, setParams });
+    handlePagination(pagination, setParams);
   };
-  console.log("data", data);
+
   const columns = [
     ...(GroupColumns ?? []),
+
     {
       title: "Actions",
       key: "actions",
       render: (_: any, record: Group) => (
         <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
-            <EditOutlined />
-          </Button>
-          <PopConfirm
-            onConfirm={() => deleteItem(record.id!)}
-            loading={isDeleting}
-          />
-          <Link to={`group/${record.id}`}>
-            <EyeOutlined style={{ fontSize: "20px" }} />
-          </Link>
+          {/* 1. Tahrirlash (Update) ikonasi */}
+          <Tooltip title="Tahrirlash">
+            <Button
+              type="text" // Faqat ikona ko'rinishi uchun
+              shape="circle" // Dumaloq shakl
+              icon={
+                <EditOutlined style={{ fontSize: "18px", color: "#52c41a" }} />
+              } // Yashil rang
+              onClick={() => editItem(record)} // editItem funksiyangiz
+            />
+          </Tooltip>
+
+          {/* 2. O'chirish (Delete) ikonasi - XATOLIK TUZATILDI */}
+          <Popconfirm
+            title="O'chirish"
+            description="Haqiqatan ham o'chirmoqchimisiz?"
+            onConfirm={() => deleteItem(record.id!)} // deleteItem funksiyangiz
+            okText="Ha"
+            cancelText="Yo'q"
+            okButtonProps={{ loading: isDeleting }} // isDeleting o'zgaruvchingiz
+          >
+            <Tooltip title="O'chirish">
+              <Button
+                type="text"
+                shape="circle"
+                icon={
+                  <DeleteOutlined
+                    style={{ fontSize: "18px", color: "#faad14" }}
+                  />
+                } // Chiroyli sarg'ish rang
+              />
+            </Tooltip>
+          </Popconfirm>
+
+          {/* 3. Ko'rish (View) ikonasi */}
+          <Tooltip title="Batafsil ko'rish">
+            <Link to={`/admin/groups/${record.id}`}>
+              {" "}
+              {/* Manzilni to'g'rilashni unutmang */}
+              <Button
+                type="text"
+                shape="circle"
+                icon={
+                  <ArrowRightOutlined
+                    style={{ fontSize: "18px", color: "rgba(0, 0, 0, 0.45)" }}
+                  />
+                } // Neytral kulrang
+              />
+            </Link>
+          </Tooltip>
         </Space>
       ),
     },
   ];
+
   return (
     <>
       {open && (
@@ -95,12 +158,16 @@ function Groups() {
       <Table<Group>
         bordered
         columns={columns}
-        dataSource={data?.data.data}
+        // YANGILANDI: `data` o'rniga `groups` ishlatiladi
+        dataSource={groups?.data.data}
         rowKey={(row) => row.id!}
+        // YANGILANDI: Jadval yuklanayotganda 'loading' holatini ko'rsatadi
+        loading={isGroupsLoading}
         pagination={{
           current: params.page,
           pageSize: params.limit,
-          total: data?.data.total,
+          // YANGILANDI: `data` o'rniga `groups` ishlatiladi
+          total: groups?.data.total,
           showSizeChanger: true,
           pageSizeOptions: ["3", "4", "5", "6", "10"],
         }}

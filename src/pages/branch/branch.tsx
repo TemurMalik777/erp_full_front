@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Space, Table, type TablePaginationConfig } from "antd";
+import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import BranchModal from "./branch-modal";
 import type { Branch } from "@types";
 import { PopConfirm, BranchColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useBranch } from "@hooks";
-import { EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 interface BranchWithId extends Branch {
   id: number;
@@ -17,7 +17,7 @@ const Branch = () => {
   const [editData, setEditData] = useState<BranchWithId | null>(null);
   const [params, setParams] = useState({
     page: 1,
-    limit: 3,
+    limit: 10,
   });
 
   const location = useLocation();
@@ -60,23 +60,46 @@ const Branch = () => {
   };
 
   const columns = [
-    ...(BranchColumns<BranchWithId>() ?? []),
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: BranchWithId) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
-            <EditOutlined />
-          </Button>
-          <PopConfirm
-            onConfirm={() => deleteItem(record.id!)}
-            loading={isDeleting}
+  // 1. Asosiy ustunlar saqlab qolindi
+  ...(BranchColumns<BranchWithId>() ?? []),
+
+  // 2. YANGI DIZAYNDAGI "ACTIONS" USTUNI
+  {
+    title: "Actions",
+    key: "actions",
+    render: (_: any, record: BranchWithId) => (
+      <Space size="middle">
+        {/* Tahrirlash (Update) ikonasi */}
+        <Tooltip title="Tahrirlash">
+          <Button
+            type="text"
+            shape="circle"
+            icon={<EditOutlined style={{ fontSize: '18px', color: '#52c41a' }} />}
+            onClick={() => editItem(record)} // Sizning editItem funksiyangiz
           />
-        </Space>
-      ),
-    },
-  ];
+        </Tooltip>
+
+        {/* O'chirish (Delete) ikonasi */}
+        <Popconfirm
+          title="O'chirish"
+          description="Haqiqatan ham o'chirmoqchimisiz?"
+          onConfirm={() => deleteItem(record.id!)} // Sizning deleteItem funksiyangiz
+          okText="Ha"
+          cancelText="Yo'q"
+          okButtonProps={{ loading: isDeleting }} // Sizning isDeleting o'zgaruvchingiz
+        >
+          <Tooltip title="O'chirish">
+            <Button
+              type="text"
+              shape="circle"
+              icon={<DeleteOutlined style={{ fontSize: '18px', color: '#faad14' }} />}
+            />
+          </Tooltip>
+        </Popconfirm>
+      </Space>
+    ),
+  },
+];
 
   return (
     <>

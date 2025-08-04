@@ -1,614 +1,188 @@
 import { GroupLesson, GroupStudent, GroupTeacher } from "@components";
 import { useGroup } from "@hooks";
 import { useParams } from "react-router-dom";
-import { Card, Row, Col, Typography, Tag, Space, Avatar } from "antd";
+import {
+  Card,
+  Row,
+  Col,
+  Typography,
+  Tag,
+  Space,
+  Avatar,
+  Spin,
+  Alert,
+  Descriptions,
+  Statistic,
+  Tabs,
+} from "antd";
 import {
   CalendarOutlined,
   ClockCircleOutlined,
   UserOutlined,
   BookOutlined,
+  TeamOutlined,
+  ContainerOutlined,
+  InfoCircleOutlined,
 } from "@ant-design/icons";
+import type { TabsProps } from 'antd';
 
-const { Title, Paragraph } = Typography;
+const { Title, Text } = Typography;
 
 const SingleGroup = () => {
   const { id } = useParams<{ id: string }>();
   const groupId = Number(id);
-  const { dataById, students, lessons, teachers } = useGroup({}, groupId);
 
-  const groupData: any = dataById
-    ? dataById.data.group
-    : {
-        name: "",
-        start_date: "",
-        end_date: "",
-        start_time: "",
-        end_time: "",
-        status: "",
-        course: {
-          title: "",
-          description: "",
-          duration: 0,
-          lessons_in_a_week: 0,
-          lesson_duration: 0,
-          price: 0,
-        },
-      };
+  // YANGILANDI: Hook'dan to'g'ri qiymatlarni olamiz
+  const { 
+    group, 
+    students, 
+    lessons, 
+    teachers, 
+    isSingleGroupLoading, 
+    groupByIdError 
+  } = useGroup({}, groupId);
 
-  // Status ranglarini xaritalash
-  const getStatusColor = (status: string) => {
+  // Status uchun ranglarni belgilash funksiyasi
+  const getStatusInfo = (status: string) => {
     switch (status) {
       case "new":
-        return "gold";
+        return { color: "gold", text: "Yangi" };
       case "active":
-        return "green";
+        return { color: "green", text: "Aktiv" };
       case "completed":
-        return "blue";
-      case "cancelled":
-        return "red";
-      case "pending":
-        return "orange";
+        return { color: "blue", text: "Tugallangan" };
       default:
-        return "default";
+        return { color: "default", text: status };
     }
   };
-
-  if (!groupData) {
-    return <div>Loading...</div>;
+  
+  // YANGILANDI: Yuklanish holatini tekshirish
+  if (isSingleGroupLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '80vh' }}>
+        <Spin size="large" tip="Ma'lumotlar yuklanmoqda..." />
+      </div>
+    );
   }
 
+  // YANGILANDI: Xatolikni tekshirish
+  if (groupByIdError) {
+    return <Alert message="Xatolik" description="Guruh haqida ma'lumot yuklashda xatolik yuz berdi." type="error" showIcon />;
+  }
+  
+  // Ma'lumot kelganidan keyin uning ichidagi 'group' obyektini olamiz
+  const groupData = group?.data?.group;
+
+  // Agar ma'lumot muvaffaqiyatli kelsa-yu, lekin ichi bo'sh bo'lsa
+  if (!groupData) {
+     return <Alert message="Ma'lumot topilmadi" description="Bu IDga ega guruh mavjud emas." type="warning" showIcon />;
+  }
+
+  const statusInfo = getStatusInfo(groupData.status);
+  
+  // O'ng tarafdagi Tabs uchun kontent
+  const items: TabsProps['items'] = [
+    {
+      key: '1',
+      label: (
+        <Space>
+          <TeamOutlined />
+          O'quvchilar
+          <Tag color="purple">{students?.data?.length || 0}</Tag>
+        </Space>
+      ),
+      children: <GroupStudent students={students?.data || []} groupId={groupId} />,
+    },
+    {
+      key: '2',
+      label: (
+        <Space>
+          <UserOutlined />
+          O'qituvchilar
+          <Tag color="cyan">{teachers?.data?.length || 0}</Tag>
+        </Space>
+      ),
+      children: <GroupTeacher teachers={teachers?.data || []} groupId={groupId} />,
+    },
+    {
+      key: '3',
+      label: (
+        <Space>
+          <ContainerOutlined />
+          Darslar
+           <Tag color="blue">{lessons?.data?.lessons?.length || 0}</Tag>
+        </Space>
+      ),
+      children: <GroupLesson lessons={lessons?.data?.lessons || []} />,
+    },
+  ];
+
   return (
-    <div
-      style={{
-        padding: "24px",
-        backgroundColor: "#f5f5f5",
-        minHeight: "100vh",
-      }}
-    >
-      <Card style={{ marginBottom: "24px", padding: "32px"  }}>
-        <Row gutter={[24, 24]}>
-          <Col xs={24} lg={24} className="helllooo">
-            <Card
-              style={{
-                height: "100%",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-                borderRadius: "12px",
-                boxShadow: "0 8px 32px rgba(102, 126, 234, 0.3)", color: "white", padding: "32px" 
-              }}
-            >
-              <Space
-                direction="vertical"
-                size="large"
-                style={{ width: "100%" }}
-              >
-                {/* Kurs ma'lumotlari - Tepada */}
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                  }}
-                >
-                  <Title level={3} style={{ color: "white", margin: 0 }}>
-                    <BookOutlined style={{ marginRight: "8px" }} />
-                    {groupData.course?.title || "Course Title"}
-                  </Title>
-                  <Paragraph
-                    style={{
-                      color: "rgba(255,255,255,0.9)",
-                      margin: 0,
-                      fontSize: "16px",
-                    }}
-                    ellipsis={{ rows: 2, expandable: true }}
-                  >
-                    {groupData.course?.description ||
-                      "No description available"}
-                  </Paragraph>
+    <div style={{ padding: '24px' }}>
+      {/* Guruh sarlavhasi va statusi */}
+      <Card style={{ marginBottom: 24 }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <Space align="center" size="middle">
+                <Avatar size={64} icon={<BookOutlined />} style={{ backgroundColor: '#722ed1' }}/>
+                <div>
+                    <Title level={3} style={{ marginBottom: 0 }}>
+                        {groupData.name}
+                    </Title>
+                    <Text type="secondary">{groupData.course?.title || "Noma'lum kurs"}</Text>
                 </div>
-
-                {/* Asosiy statistikalar - Gradient cardlar */}
-                <Row gutter={16}>
-                  <Col span={6}>
-                    <div
-                      style={{
-                        textAlign: "center",
-                        padding: "20px",
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)",
-                        borderRadius: "12px",
-                        backdropFilter: "blur(10px)",
-                        border: "1px solid rgba(255,255,255,0.2)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "28px",
-                          fontWeight: "bold",
-                          color: "#fff",
-                        }}
-                      >
-                        {groupData.course?.duration || "--"}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          opacity: 0.8,
-                          color: "rgba(255,255,255,0.7)",
-                        }}
-                      >
-                        Months
-                      </div>
-                    </div>
-                  </Col>
-                  <Col span={6}>
-                    <div
-                      style={{
-                        textAlign: "center",
-                        padding: "20px",
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)",
-                        borderRadius: "12px",
-                        backdropFilter: "blur(10px)",
-                        border: "1px solid rgba(255,255,255,0.2)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "28px",
-                          fontWeight: "bold",
-                          color: "#fff",
-                        }}
-                      >
-                        {groupData.course?.lessons_in_a_week || "--"}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          opacity: 0.8,
-                          color: "rgba(255,255,255,0.7)",
-                        }}
-                      >
-                        Per Week
-                      </div>
-                    </div>
-                  </Col>
-                  <Col span={6}>
-                    <div
-                      style={{
-                        textAlign: "center",
-                        padding: "20px",
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)",
-                        borderRadius: "12px",
-                        backdropFilter: "blur(10px)",
-                        border: "1px solid rgba(255,255,255,0.2)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "28px",
-                          fontWeight: "bold",
-                          color: "#fff",
-                        }}
-                      >
-                        {groupData.course?.lesson_duration || "--"}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          opacity: 0.8,
-                          color: "rgba(255,255,255,0.7)",
-                        }}
-                      >
-                        Minutes
-                      </div>
-                    </div>
-                  </Col>
-                  <Col span={6}>
-                    <div
-                      style={{
-                        textAlign: "center",
-                        padding: "20px",
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.05) 100%)",
-                        borderRadius: "12px",
-                        backdropFilter: "blur(10px)",
-                        border: "1px solid rgba(255,255,255,0.2)",
-                      }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "28px",
-                          fontWeight: "bold",
-                          color: "#fff",
-                        }}
-                      >
-                        {groupData.course?.price?.toLocaleString() || "--"}
-                      </div>
-                      <div
-                        style={{
-                          fontSize: "13px",
-                          opacity: 0.8,
-                          color: "rgba(255,255,255,0.7)",
-                        }}
-                      >
-                        Price (sum)
-                      </div>
-                    </div>
-                  </Col>
-                </Row>
-
-                <Row gutter={[16, 16]} align="middle" justify="center">
-                  <Col xs={24} sm={12} md={8} lg={4}>
-                    <Card
-                      size="small"
-                      className="stat-card"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: "8px",
-                        height: "120px",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "16px",
-                        width: "100%",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div style={{ textAlign: "center", width: "100%" }}>
-                        <div
-                          style={{
-                            marginBottom: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          <CalendarOutlined
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "14px",
-                            }}
-                          />
-                          <span
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "12px",
-                            }}
-                          >
-                            Start Date
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#fff",
-                          }}
-                        >
-                          {groupData.start_date || "--"}
-                        </div>
-                      </div>
-                    </Card>
-                  </Col>
-
-                  <Col xs={24} sm={12} md={8} lg={4}>
-                    <Card
-                      size="small"
-                      className="stat-card"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: "8px",
-                        height: "120px",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "16px",
-                        width: "100%",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div style={{ textAlign: "center", width: "100%" }}>
-                        <div
-                          style={{
-                            marginBottom: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          <CalendarOutlined
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "14px",
-                            }}
-                          />
-                          <span
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "12px",
-                            }}
-                          >
-                            End Date
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#fff",
-                          }}
-                        >
-                          {groupData.end_date || "--"}
-                        </div>
-                      </div>
-                    </Card>
-                  </Col>
-
-                  <Col xs={24} sm={12} md={8} lg={4}>
-                    <Card
-                      size="small"
-                      className="stat-card"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: "8px",
-                        height: "120px",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "16px",
-                        width: "100%",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div style={{ textAlign: "center", width: "100%" }}>
-                        <div
-                          style={{
-                            marginBottom: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          <ClockCircleOutlined
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "14px",
-                            }}
-                          />
-                          <span
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "12px",
-                            }}
-                          >
-                            Schedule
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#fff",
-                          }}
-                        >
-                          {groupData.start_time && groupData.end_time
-                            ? `${groupData.start_time} - ${groupData.end_time}`
-                            : "--"}
-                        </div>
-                      </div>
-                    </Card>
-                  </Col>
-
-                  <Col xs={24} sm={12} md={8} lg={4}>
-                    <Card
-                      size="small"
-                      className="stat-card"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: "8px",
-                        height: "120px",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "16px",
-                        width: "100%",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div style={{ textAlign: "center", width: "100%" }}>
-                        <div
-                          style={{
-                            marginBottom: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          <UserOutlined
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "14px",
-                            }}
-                          />
-                          <span
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "12px",
-                            }}
-                          >
-                            Students
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            fontSize: "16px",
-                            fontWeight: "bold",
-                            color: "#91d5ff",
-                          }}
-                        >
-                          {`${students?.data?.length || 0}`}
-                        </div>
-                      </div>
-                    </Card>
-                  </Col>
-
-                  <Col xs={24} sm={12} md={8} lg={4}>
-                    <Card
-                      size="small"
-                      className="stat-card"
-                      style={{
-                        background:
-                          "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)",
-                        border: "1px solid rgba(255,255,255,0.15)",
-                        borderRadius: "8px",
-                        height: "120px",
-                        display: "flex",
-                        alignItems: "center",
-                        padding: "16px",
-                        width: "100%",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <div style={{ textAlign: "center", width: "100%" }}>
-                        <div
-                          style={{
-                            marginBottom: "8px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            gap: "6px",
-                          }}
-                        >
-                          <span
-                            style={{
-                              color: "rgba(255,255,255,0.8)",
-                              fontSize: "12px",
-                            }}
-                          >
-                            Status
-                          </span>
-                        </div>
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <Tag
-                            color={getStatusColor(groupData.status)}
-                            style={{
-                              background: "rgba(255,255,255,0.15)",
-                              border: "1px solid rgba(255,255,255,0.3)",
-                              color: "#fff",
-                              fontWeight: "bold",
-                              fontSize: "14px",
-                              padding: "4px 12px",
-                              borderRadius: "6px",
-                            }}
-                          >
-                            {groupData.status
-                              ? groupData.status.charAt(0).toUpperCase() +
-                                groupData.status.slice(1)
-                              : "Unknown"}
-                          </Tag>
-                        </div>
-                      </div>
-                    </Card>
-                  </Col>
-                </Row>
-              </Space>
-            </Card>
-          </Col>
-        </Row>
+            </Space>
+            <Tag color={statusInfo.color} style={{ fontSize: '14px', padding: '6px 12px' }}>
+                {statusInfo.text}
+            </Tag>
+        </div>
       </Card>
-
-      {/* //----------------------------------------- */}
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
-        {teachers?.data && teachers.data.length > 0 && (
-          <Card
-            title={
-              <Space>
-                <Avatar
-                  icon={<UserOutlined />}
-                  style={{ backgroundColor: "#52c41a" }}
-                />
-                <span>Teachers</span>
-                <Tag color="green">{teachers.data.length}</Tag>
-              </Space>
-            }
-            headStyle={{ borderBottom: "2px solid #52c41a" }}
-          >
-            <GroupTeacher teachers={teachers.data} groupId={groupId} />
+      
+      <Row gutter={[24, 24]}>
+        {/* Chap ustun: Asosiy ma'lumotlar */}
+        <Col xs={24} lg={8}>
+          <Card title={<Space><InfoCircleOutlined/>Asosiy ma'lumot</Space>} style={{ height: '100%' }}>
+            <Descriptions bordered column={1} size="small">
+              <Descriptions.Item label="Boshlanish sanasi">
+                <Space>
+                  <CalendarOutlined />
+                  {groupData.start_date}
+                </Space>
+              </Descriptions.Item>
+              <Descriptions.Item label="Tugash sanasi">
+                 <Space>
+                  <CalendarOutlined />
+                  {groupData.end_date}
+                </Space>
+              </Descriptions.Item>
+              <Descriptions.Item label="Dars vaqti">
+                 <Space>
+                  <ClockCircleOutlined />
+                  {`${groupData.start_time} - ${groupData.end_time}`}
+                </Space>
+              </Descriptions.Item>
+               <Descriptions.Item label="O'qituvchi(lar)">
+                 {teachers?.data?.map((t: any) => t.name).join(', ') || 'Biriktirilmagan'}
+              </Descriptions.Item>
+            </Descriptions>
+            
+            <Row gutter={16} style={{ marginTop: 24 }}>
+                <Col span={12}>
+                    <Statistic title="Kurs narxi" value={groupData.course?.price} suffix="so'm" />
+                </Col>
+                 <Col span={12}>
+                    <Statistic title="Darslar soni" value={lessons?.data?.lessons?.length || 0} />
+                </Col>
+            </Row>
           </Card>
-        )}
+        </Col>
 
-        {lessons?.data?.lessons && lessons.data.lessons.length > 0 && (
-          <Card
-            title={
-              <Space>
-                <Avatar
-                  icon={<BookOutlined />}
-                  style={{ backgroundColor: "#1890ff" }}
-                />
-                <span>Lessons</span>
-                <Tag color="blue">{lessons.data.lessons.length}</Tag>
-              </Space>
-            }
-            headStyle={{ borderBottom: "2px solid #1890ff" }}
-          >
-            <GroupLesson lessons={lessons.data.lessons} />
+        {/* O'ng ustun: O'quvchilar, o'qituvchilar va darslar */}
+        <Col xs={24} lg={16}>
+          <Card style={{ height: '100%' }}>
+             <Tabs defaultActiveKey="1" items={items} />
           </Card>
-        )}
-
-        {students?.data && students.data.length > 0 && (
-          <Card
-            title={
-              <Space>
-                <Avatar
-                  icon={<UserOutlined />}
-                  style={{ backgroundColor: "#722ed1" }}
-                />
-                <span>Students</span>
-                <Tag color="purple">{students.data.length}</Tag>
-              </Space>
-            }
-            headStyle={{ borderBottom: "2px solid #722ed1" }}
-          >
-            <GroupStudent students={students.data} groupId={groupId} />
-          </Card>
-        )}
-      </div>
-
-      <style>{`
-        .stat-card .ant-card-body {
-          padding: 16px !important;
-        }
-        .stat-card {
-          transition: all 0.3s ease;
-          border: 1px solid #f0f0f0;
-        }
-        .stat-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-          border-color: #1890ff;
-        }
-        .ant-statistic-title {
-          font-size: 12px !important;
-          margin-bottom: 4px !important;
-        }
-      `}</style>
+        </Col>
+      </Row>
     </div>
   );
 };

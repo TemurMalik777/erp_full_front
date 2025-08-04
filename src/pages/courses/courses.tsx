@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { Button, Space, Table, type TablePaginationConfig } from "antd";
+import { Button, Popconfirm, Space, Table, Tooltip, type TablePaginationConfig } from "antd";
 import Coursesmodal from "./course-modal";
 import type { Course } from "@types";
 import { PopConfirm, CourseColumns } from "@components";
 import { useLocation } from "react-router-dom";
 import { useGeneral, useCourse } from "@hooks";
-import { EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 interface CourseWithId extends Course {
   id: number;
@@ -60,23 +60,46 @@ function Courses() {
   };
 
   const columns = [
-    ...(CourseColumns<CourseWithId>() ?? []),
-    {
-      title: "Actions",
-      key: "actions",
-      render: (_: any, record: CourseWithId) => (
-        <Space size="middle">
-          <Button type="primary" onClick={() => editItem(record)}>
-            <EditOutlined />
-          </Button>
-          <PopConfirm
-            onConfirm={() => deleteItem(record.id!)}
-            loading={isDeleting}
+  // 1. Asosiy ustunlar saqlab qolindi
+  ...(CourseColumns<CourseWithId>() ?? []),
+
+  // 2. YANGI DIZAYNDAGI "ACTIONS" USTUNI
+  {
+    title: "Actions",
+    key: "actions",
+    render: (_: any, record: CourseWithId) => (
+      <Space size="middle">
+        {/* Tahrirlash (Update) ikonasi */}
+        <Tooltip title="Tahrirlash">
+          <Button
+            type="text"
+            shape="circle"
+            icon={<EditOutlined style={{ fontSize: '18px', color: '#52c41a' }} />}
+            onClick={() => editItem(record)} // Sizning editItem funksiyangiz
           />
-        </Space>
-      ),
-    },
-  ];
+        </Tooltip>
+
+        {/* O'chirish (Delete) ikonasi */}
+        <Popconfirm
+          title="O'chirish"
+          description="Haqiqatan ham o'chirmoqchimisiz?"
+          onConfirm={() => deleteItem(record.id!)} // Sizning deleteItem funksiyangiz
+          okText="Ha"
+          cancelText="Yo'q"
+          okButtonProps={{ loading: isDeleting }} // Sizning isDeleting o'zgaruvchingiz
+        >
+          <Tooltip title="O'chirish">
+            <Button
+              type="text"
+              shape="circle"
+              icon={<DeleteOutlined style={{ fontSize: '18px', color: '#faad14' }} />}
+            />
+          </Tooltip>
+        </Popconfirm>
+      </Space>
+    ),
+  },
+];
 
   return (
     <>

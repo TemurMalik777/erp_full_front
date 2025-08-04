@@ -9,22 +9,40 @@ import {
   SettingOutlined,
   LogoutOutlined,
   AppstoreOutlined,
+  MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  DownOutlined, // Qo'shildi
 } from "@ant-design/icons";
 import type { MenuProps } from "antd";
-import { Layout, Menu, Avatar, Dropdown, Space } from "antd";
+import {
+  Layout,
+  Menu,
+  Avatar,
+  Dropdown,
+  Space,
+  Button,
+  Typography,
+} from "antd"; // Typography qo'shildi
 import { logout } from "@api/index";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Header, Content, Sider } = Layout;
+const { Text } = Typography;
 
-const items: MenuProps["items"] = [
+// Sider menyusi o'zgarishsiz qoladi
+const menuItems: MenuProps["items"] = [
   {
     key: "/admin",
     icon: <AppstoreOutlined />,
-    label: <Link to="/admin">Group</Link>,
+    label: <Link to="/admin">Dashboard</Link>, // "Dashboart" -> "Dashboard"
+  },
+  {
+    key: "/admin/groups",
+    icon: <TeamOutlined />,
+    label: <Link to="/admin/groups">Groups</Link>, // Inglizcha nomlar o'zbekchaga o'girildi
   },
   {
     key: "/admin/student",
-    icon: <TeamOutlined />,
+    icon: <UserOutlined />,
     label: <Link to="/admin/student">Students</Link>,
   },
   {
@@ -53,16 +71,17 @@ const Admin: React.FC = () => {
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
 
+  // Foydalanuvchi menyusi (Dropdown) o'zgarishsiz qoladi
   const userMenuItems: MenuProps["items"] = [
     {
       key: "profile",
       icon: <UserOutlined />,
-      label: "Profile",
+      label: "Profil",
     },
     {
       key: "settings",
       icon: <SettingOutlined />,
-      label: "Settings",
+      label: "Sozlamalar",
     },
     {
       type: "divider" as const,
@@ -70,20 +89,18 @@ const Admin: React.FC = () => {
     {
       key: "logout",
       icon: <LogoutOutlined />,
-      label: "Logout",
+      label: "Chiqish",
       danger: true,
-      onClick: () => {
-        logout();
-      },
+      onClick: () => logout(),
     },
   ];
 
   return (
-    <Layout hasSider style={{ minHeight: "100vh" }}>
+    <Layout style={{ minHeight: "100vh" }}>
       <Sider
+        trigger={null}
         collapsible
         collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
         style={{
           overflow: "auto",
           height: "100vh",
@@ -91,114 +108,109 @@ const Admin: React.FC = () => {
           left: 0,
           top: 0,
           bottom: 0,
-          boxShadow: "2px 0 8px 0 rgba(29, 35, 41, 0.05)",
         }}
       >
+        {/* YANGILANDI: Logotip dizayni */}
         <div
           style={{
             height: 64,
-            margin: 16,
-            background: "rgba(255, 255, 255, 0.1)",
-            borderRadius: 8,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            fontSize: 18,
-            fontWeight: "bold",
             color: "white",
+            cursor: "pointer",
           }}
         >
-          {collapsed ? "AP" : "Admin Panel"}
+          <AppstoreOutlined style={{ fontSize: 28, color: "#1677ff" }} />
+          {!collapsed && (
+            <Text
+              style={{
+                color: "white",
+                fontSize: 20,
+                fontWeight: 600,
+                marginLeft: 12,
+                whiteSpace: "nowrap",
+              }}
+            >
+              Admin Panel
+            </Text>
+          )}
         </div>
+
         <Menu
           theme="dark"
           mode="inline"
           selectedKeys={[location.pathname]}
-          items={items}
-          style={{
-            borderRight: 0,
-          }}
+          items={menuItems}
+          style={{ borderRight: 0 }}
         />
       </Sider>
 
       <Layout
         style={{
           marginLeft: collapsed ? 80 : 200,
-          transition: "margin-left 0.2s",
+          transition: "margin-left 0.2s ease-in-out", // O'tish animatsiyasi yaxshilandi
         }}
       >
         <Header
           style={{
-            padding: "0 32px",
+            padding: "0 24px", // Padding o'zgartirildi
+            background: "#fff",
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            background: "#fff",
-            boxShadow: "0 1px 4px rgba(0,21,41,.08)",
+            borderBottom: "1px solid #f0f0f0", // Chiroyli chiziq qo'shildi
             position: "sticky",
             top: 0,
-            zIndex: 100,
+            zIndex: 10,
           }}
         >
-          <h1
-            style={{
-              margin: 0,
-              color: "#000",
-              fontSize: 24,
-              fontWeight: 600,
-            }}
+          <Button
+            type="text"
+            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+            onClick={() => setCollapsed(!collapsed)}
+            style={{ fontSize: 18, width: 48, height: 48 }}
+          />
+
+          {/* YANGILANDI: Profil ikonasi dizayni */}
+          <Dropdown
+            menu={{ items: userMenuItems }}
+            placement="bottomRight"
+            trigger={["click"]}
           >
-            Admin Dashboard
-          </h1>
-          <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-            <Space
-              style={{
-                cursor: "pointer",
-                padding: "8px 12px",
-                borderRadius: 8,
-              }}
-            >
-              <Avatar
-                icon={<UserOutlined />}
-                size={35}
-                style={{
-                  background: "black",
-                }}
-              />
-            </Space>
+            <a onClick={(e) => e.preventDefault()}>
+              <Space style={{ cursor: "pointer" }}>
+                <Avatar
+                  style={{ backgroundColor: "#1677ff" }}
+                  icon={<UserOutlined />}
+                />
+                <Text strong>Admin</Text>
+                <DownOutlined style={{ color: "rgba(0,0,0,0.45)" }} />
+              </Space>
+            </a>
           </Dropdown>
         </Header>
 
         <Content
           style={{
-            margin: "24px 24px 0",
-            overflow: "initial",
+            padding: 24,
+            margin: 0,
+            minHeight: 280,
+            background: "#f5f5f5", // Orqa fon o'zgartirildi
           }}
         >
+          {/* Outlet uchun chiroyli konteyner */}
           <div
             style={{
-              padding: 32,
-              minHeight: "calc(100vh - 134px)",
+              padding: 24,
+              minHeight: "calc(100vh - 112px)",
               background: "#fff",
-              borderRadius: 12,
-              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+              borderRadius: 8,
             }}
           >
             <Outlet />
           </div>
         </Content>
-
-        <Footer
-          style={{
-            textAlign: "center",
-            background: "transparent",
-            color: "#8c8c8c",
-            fontSize: 14,
-            padding: "24px 50px",
-          }}
-        >
-          №1 programmer ©{new Date().getFullYear()} Created by My_Dev
-        </Footer>
       </Layout>
     </Layout>
   );

@@ -42,6 +42,7 @@ const StudentModal: React.FC<StudentModalProps> = ({
     confirm_password: "",
     gender: editData?.gender || "",
     date_of_birth: editData?.date_of_birth || "",
+    is_active: editData ? editData.is_active : true,
   };
 
   const handleSubmit = async (values: Student) => {

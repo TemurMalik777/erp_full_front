@@ -2,43 +2,56 @@ import { GroupService } from "@service";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { type Group } from "@types";
 import { useNavigate } from "react-router-dom";
+
 export const useGroup = (params: any, id?: number) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const { data } = useQuery({
-    enabled: !id,
+
+  // Guruhlar ro'yxatini olish uchun query
+  const groupsQuery = useQuery({
     queryKey: ["groups", params],
-    queryFn: async () => GroupService.getGroups(params),
+    queryFn: () => GroupService.getGroups(params),
+    enabled: !id, // Faqat id yo'q bo'lganda ishlasin
   });
 
-  const { data: dataById } = useQuery({
-    enabled: !!id,
-    queryKey: ["groupById"],
-    queryFn: async () => GroupService.getGroupById(id!),
+  // ID bo'yicha bitta guruh ma'lumotini olish uchun query
+  const groupByIdQuery = useQuery({
+    queryKey: ["groupById", id],
+    queryFn: () => GroupService.getGroupById(id!),
+    enabled: !!id, // Faqat id mavjud bo'lganda ishlasin
   });
 
+  // Guruh o'quvchilarini olish
   const groupStudentsQuery = useQuery({
+    queryKey: ["group-students", id],
+    queryFn: () => GroupService.getGroupsStudent(id!),
     enabled: !!id,
-    queryKey: ["group-students"],
-    queryFn: async () => GroupService.getGroupsStudent(id!),
   });
-  const students = groupStudentsQuery.data;
 
+  // Guruh darslarini olish
   const groupLessonsQuery = useQuery({
+    queryKey: ["group-lessons", id],
+    queryFn: () => GroupService.getGroupsLessons(id!),
     enabled: !!id,
-    queryKey: ["group-lessons"],
-    queryFn: async () => GroupService.getGroupsLessons(id!),
   });
-  const lessons = groupLessonsQuery.data;
 
+  // Guruh o'qituvchilarini olish
   const groupTeachersQuery = useQuery({
+    queryKey: ["group-teachers", id],
+    queryFn: () => GroupService.getGroupsTeachers(id!),
     enabled: !!id,
-    queryKey: ["group-teachers"],
-    queryFn: async () => GroupService.getGroupsTeachers(id!),
   });
-  const teachers = groupTeachersQuery.data;
+
+  // Yagona yuklanish holati: agar bitta guruh sahifasi ochilgan bo'lsa,
+  // barcha kerakli query'lar yuklanishini kutadi.
+  const isSingleGroupLoading = 
+    groupByIdQuery.isLoading || 
+    groupStudentsQuery.isLoading || 
+    groupLessonsQuery.isLoading || 
+    groupTeachersQuery.isLoading;
 
   const handlePagination = (pagination: any, setParams: any) => {
+    // ...bu qism o'zgarishsiz qoladi
     const { current, pageSize } = pagination;
     setParams({
       page: current!,
@@ -52,7 +65,7 @@ export const useGroup = (params: any, id?: number) => {
 
   const useGroupCreate = () => {
     return useMutation({
-      mutationFn: async (data: Group) => GroupService.createGroup(data),
+      mutationFn: (data: Group) => GroupService.createGroup(data),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["groups"] });
       },
@@ -61,22 +74,25 @@ export const useGroup = (params: any, id?: number) => {
 
   const useGroupUpdate = () => {
     return useMutation({
-      mutationFn: async ({ model, id }: { model: Group; id: number }) =>
+      mutationFn: ({ model, id }: { model: Group; id: number }) =>
         GroupService.updateGroup(model, id),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["groups"] });
+        queryClient.invalidateQueries({ queryKey: ["groupById", id] });
       },
     });
   };
 
   const useGroupDelete = () => {
     return useMutation({
-      mutationFn: async (id: number) => GroupService.deleteGroup(id),
+      mutationFn: (id: number) => GroupService.deleteGroup(id),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["groups"] });
       },
     });
   };
+
+  // ...boshqa mutatsiyalar o'zgarishsiz qoladi
 
   const useAssignTeacherToGroup = () => {
     return useMutation({
@@ -100,12 +116,21 @@ export const useGroup = (params: any, id?: number) => {
     });
   };
 
+
   return {
-    dataById,
-    data,
-    students,
-    lessons,
-    teachers,
+    // Guruhlar ro'yxati uchun
+    groups: groupsQuery.data,
+    isGroupsLoading: groupsQuery.isLoading,
+
+    // Bitta guruh sahifasi uchun
+    group: groupByIdQuery.data,
+    students: groupStudentsQuery.data,
+    lessons: groupLessonsQuery.data,
+    teachers: groupTeachersQuery.data,
+    isSingleGroupLoading, // Barcha ma'lumotlar uchun yagona yuklanish holati
+    groupByIdError: groupByIdQuery.error, // Xatolikni ham qaytaramiz
+
+    // Mutatsiyalar va boshqa funksiyalar
     useGroupCreate,
     useGroupDelete,
     useGroupUpdate,
